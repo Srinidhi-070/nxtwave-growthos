@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ReactFlow, Controls, Background, MiniMap, Node, Edge } from '@xyflow/react';
+import { ReactFlow, Controls, Background, Node, Edge } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
 export default function ReferralGraphPage() {
@@ -20,7 +20,7 @@ export default function ReferralGraphPage() {
             return {
               id: n.id,
               position: { x: Math.random() * 800, y: Math.random() * 600 },
-              data: { label: `${n.email}\n(${n.campus})` },
+              data: { label: n.label },
               style: { 
                 background: '#111', 
                 color: '#fff', 
@@ -28,7 +28,8 @@ export default function ReferralGraphPage() {
                 borderRadius: '8px',
                 padding: '10px',
                 fontSize: '12px',
-                textAlign: 'center'
+                textAlign: 'center',
+                width: 150
               }
             };
           });
@@ -43,12 +44,12 @@ export default function ReferralGraphPage() {
 
   return (
     <div className="flex-1 flex flex-col p-6 lg:p-10 max-w-7xl mx-auto w-full">
-      <div className="mb-6">
+      <div className="mb-6 shrink-0">
         <h1 className="text-2xl font-semibold text-white tracking-tight mb-1">Referral Network</h1>
         <p className="text-sm text-zinc-500 font-medium">Visualizing the propagation of the campaign</p>
       </div>
 
-      <div className="flex-1 w-full bg-[#111] border border-white/10 rounded-xl overflow-hidden min-h-[600px] shadow-inner">
+      <div className="w-full bg-[#111] border border-white/10 rounded-xl overflow-hidden h-[600px] shadow-inner relative">
         <ReactFlow nodes={nodes} edges={edges} fitView colorMode="dark">
           <Background color="#333" gap={16} />
           <Controls />
