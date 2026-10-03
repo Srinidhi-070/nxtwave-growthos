@@ -58,9 +58,26 @@ export default function CharacterCreatePage() {
   const handleSave = async () => {
     setLoading(true);
     
-    // In a real app we'd save to the DB here via a POST request
-    // For now we simulate the delay and transition
-    setTimeout(() => {
+    try {
+      const userId = localStorage.getItem('growthos_user_id');
+      if (!userId) {
+        throw new Error('User ID not found');
+      }
+
+      const res = await fetch('/api/character', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId,
+          displayName: explorerName || 'Explorer',
+          config
+        })
+      });
+
+      if (!res.ok) throw new Error('Failed to save character');
+
+      // Still keep in localStorage for immediate client reads if needed, 
+      // but truth is now in DB
       localStorage.setItem('growthos_character', JSON.stringify(config));
       localStorage.setItem('growthos_explorer_name', explorerName || 'Explorer');
       
@@ -69,7 +86,12 @@ export default function CharacterCreatePage() {
       setTimeout(() => {
         router.push('/dashboard');
       }, 4000);
-    }, 800);
+
+    } catch (err) {
+      console.error(err);
+      alert('Failed to initialize Explorer. Please check connection.');
+      setLoading(false);
+    }
   };
 
   if (cinematic) {

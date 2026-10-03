@@ -11,12 +11,29 @@ export default function MyLabPage() {
   const [level, setLevel] = useState(1);
 
   useEffect(() => {
-    const saved = localStorage.getItem('growthos_character');
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (saved) setCharacterConfig(JSON.parse(saved));
-    
-    // Stub level derivation
-    setLevel(2); 
+    const fetchProfile = async () => {
+      const userId = localStorage.getItem('growthos_user_id');
+      if (!userId) return;
+      try {
+        const res = await fetch(`/api/user/profile?userId=${userId}`);
+        const { data } = await res.json();
+        if (data?.character) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect
+          setCharacterConfig(data.character);
+        } else {
+          const saved = localStorage.getItem('growthos_character');
+          // eslint-disable-next-line react-hooks/set-state-in-effect
+          if (saved) setCharacterConfig(JSON.parse(saved));
+        }
+        if (data?.stats) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect
+          setLevel(data.stats.level);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchProfile();
   }, []);
 
   return (

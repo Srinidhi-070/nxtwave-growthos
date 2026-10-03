@@ -6,18 +6,67 @@ import CharacterRenderer, { CharacterConfig } from '@/components/character/Chara
 import PixelButton from '@/components/ui/PixelButton';
 
 const MODULES = ['IDEA', 'DATA', 'MODEL', 'APP', 'SHIP'];
+const MOD_KEYS = ['idea', 'data', 'model', 'app', 'shipped'];
 
 export default function ProjectPassportPage() {
   const [characterConfig, setCharacterConfig] = useState<CharacterConfig | null>(null);
-  
-  // Hardcoded for UI demo. In reality fetched from DB `Project` model
-  const [currentStep, setCurrentStep] = useState(1); 
+  const [currentStep, setCurrentStep] = useState(0); 
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem('growthos_character');
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (saved) setCharacterConfig(JSON.parse(saved));
+    const fetchProfile = async () => {
+      const userId = localStorage.getItem('growthos_user_id');
+      if (!userId) return;
+      try {
+        const res = await fetch(`/api/user/profile?userId=${userId}`);
+        const { data } = await res.json();
+        
+        if (data?.character) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect
+          setCharacterConfig(data.character);
+        } else {
+          const saved = localStorage.getItem('growthos_character');
+          // eslint-disable-next-line react-hooks/set-state-in-effect
+          if (saved) setCharacterConfig(JSON.parse(saved));
+        }
+
+        if (data?.project) {
+           let step = 0;
+           for (let i = 0; i < MOD_KEYS.length; i++) {
+             if (data.project[MOD_KEYS[i]]) step = i + 1;
+           }
+           // eslint-disable-next-line react-hooks/set-state-in-effect
+           setCurrentStep(step);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchProfile();
   }, []);
+
+  const handleAdvance = async () => {
+    if (currentStep >= MODULES.length) return;
+    setLoading(true);
+    try {
+      const userId = localStorage.getItem('growthos_user_id');
+      if (!userId) throw new Error('Not logged in');
+      const nextStep = currentStep + 1;
+      
+      const res = await fetch('/api/project/progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, step: nextStep })
+      });
+      if (res.ok) {
+        setCurrentStep(nextStep);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="w-full h-full flex flex-col gap-6 overflow-y-auto">
@@ -62,8 +111,13 @@ export default function ProjectPassportPage() {
            </div>
 
            <div className="mt-8">
-             <PixelButton variant={currentStep >= MODULES.length ? 'secondary' : 'primary'} className="w-full">
-               {currentStep === 0 ? 'START BUILD' : currentStep >= MODULES.length ? 'VIEW DEPLOYMENT' : 'CONTINUE BUILD'}
+             <PixelButton 
+               variant={currentStep >= MODULES.length ? 'secondary' : 'primary'} 
+               className="w-full"
+               onClick={handleAdvance}
+               disabled={loading || currentStep >= MODULES.length}
+             >
+               {loading ? 'COMPILING...' : currentStep === 0 ? 'START BUILD' : currentStep >= MODULES.length ? 'VIEW DEPLOYMENT' : 'CONTINUE BUILD'}
              </PixelButton>
            </div>
         </PixelPanel>
@@ -84,8 +138,8 @@ export default function ProjectPassportPage() {
               {currentStep > 0 && (
                 <div className="absolute top-4 right-4 text-[8px] font-pixel text-blue-400 leading-tight text-right">
                   COMPILING...<br/>
-                  [{'='.repeat(currentStep)}{'.'.repeat(5 - currentStep)}]<br/>
-                  {currentStep * 20}%
+                  [{'='.repeat(Math.min(currentStep, 5))}{'.'.repeat(Math.max(0, 5 - currentStep))}]<br/>
+                  {Math.min(currentStep * 20, 100)}%
                 </div>
               )}
             </div>
