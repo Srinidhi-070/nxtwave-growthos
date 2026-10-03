@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id              String   @id @default(uuid())
+  emailHash       String   @unique
+  phoneHash       String?
+  collegeId       String?
+  graduationYear  Int?
+  consentFlags    String?  // JSON string or comma separated
+  createdAt       DateTime @default(now())
+
+  connector       Connector?
+  givenReferrals  Referral[] @relation("Referrer")
+  receivedReferrals Referral[] @relation("Referee")
+  trackingEvents  TrackingEvent[]
+  assignments     ExperimentAssignment[]
+  rewards         Reward[]
+}
+
+model Connector {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  collegeId    String?
+  referralCode String   @unique
+  status       String   @default("PENDING") // PENDING, ACTIVE, SUSPENDED
+  tier         String   @default("STANDARD")
+  activatedAt  DateTime?
+
+  user         User     @relation(fields: [userId], references: [id])
+}
+
+model CampaignLink {
+  id         String   @id @default(uuid())
+  ownerType  String   // e.g., "CONNECTOR", "USER"
+  ownerId    String
+  source     String?
+  medium     String?
+  campaign   String?
+  content    String?
+  token      String   @unique
+  createdAt  DateTime @default(now())
+}
+
+model Referral {
+  id                 String   @id @default(uuid())
+  referrerId         String
+  refereeId          String
+  referralCode       String
+  firstClickAt       DateTime?
+  lastClickAt        DateTime?
+  attributedAt       DateTime?
+  qualificationState String   @default("PENDING") // PENDING, QUALIFIED, REJECTED
+  attributionRule    String?
+
+  referrer           User     @relation("Referrer", fields: [referrerId], references: [id])
+  referee            User     @relation("Referee", fields: [refereeId], references: [id])
+}
+
+model TrackingEvent {
+  id             String   @id @default(uuid())
+  eventName      String
+  userId         String?
+  sessionId      String?
+  campaignId     String?
+  referralCode   String?
+  propertiesJson String?
+  eventVersion   Int      @default(1)
+  occurredAt     DateTime @default(now())
+  receivedAt     DateTime @default(now())
+  idempotencyKey String   @unique
+
+  user           User?    @relation(fields: [userId], references: [id])
+}
+
+model Experiment {
+  id            String   @id @default(uuid())
+  name          String
+  hypothesis    String
+  primaryMetric String
+  allocationJson String
+  startAt       DateTime?
+  endAt         DateTime?
+  status        String   @default("DRAFT") // DRAFT, RUNNING, ENDED
+
+  assignments   ExperimentAssignment[]
+}
+
+model ExperimentAssignment {
+  experimentId String
+  userId       String
+  variant      String
+  assignedAt   DateTime @default(now())
+
+  experiment   Experiment @relation(fields: [experimentId], references: [id])
+  user         User       @relation(fields: [userId], references: [id])
+
+  @@id([experimentId, userId])
+}
+
+model RiskFlag {
+  id           String   @id @default(uuid())
+  subjectType  String   // USER, CONNECTOR, REFERRAL
+  subjectId    String
+  score        Int
+  signalsJson  String
+  status       String   @default("OPEN") // OPEN, REVIEWED, RESOLVED
+  reviewedBy   String?
+  reviewedAt   DateTime?
+}
+
+model Reward {
+  id         String   @id @default(uuid())
+  userId     String
+  milestone  String
+  state      String   @default("PENDING") // PENDING, ISSUED, HOLD
+  issuedAt   DateTime?
+
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model AbuseAudit {
+  id           String   @id @default(uuid())
+  action       String
+  actorId      String
+  reason       String
+  entityId     String
+  metadataJson String?
+  createdAt    DateTime @default(now())
+}
