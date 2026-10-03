@@ -22,6 +22,8 @@ model User {
   trackingEvents  TrackingEvent[]
   assignments     ExperimentAssignment[]
   rewards         Reward[]
+  character       Character?
+  project         Project?
 }
 
 model Connector {
@@ -133,4 +135,37 @@ model AbuseAudit {
   entityId     String
   metadataJson String?
   createdAt    DateTime @default(now())
+}
+
+model Character {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  displayName  String
+  body         String   @default("base")
+  face         String   @default("default")
+  hair         String   @default("none")
+  hairColor    String   @default("black")
+  outfit       String   @default("explorer")
+  accessory    String   @default("none")
+  effect       String   @default("none")
+  background   String   @default("lab")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  status       String   @default("NOT_STARTED") // NOT_STARTED, IN_PROGRESS, READY, SHIPPED
+  idea         Boolean  @default(false)
+  data         Boolean  @default(false)
+  model        Boolean  @default(false)
+  app          Boolean  @default(false)
+  shipped      Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

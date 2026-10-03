@@ -1,0 +1,78 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import CharacterRenderer, { CharacterConfig } from '@/components/character/CharacterRenderer';
+import PixelButton from '@/components/ui/PixelButton';
+import Link from 'next/link';
+
+export default function MyLabPage() {
+  const [characterConfig, setCharacterConfig] = useState<CharacterConfig | null>(null);
+  const [level, setLevel] = useState(1);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('growthos_character');
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (saved) setCharacterConfig(JSON.parse(saved));
+    
+    // Stub level derivation
+    setLevel(2); 
+  }, []);
+
+  return (
+    <div className="w-full h-full flex flex-col">
+      <div className="mb-6 shrink-0">
+        <h1 className="text-3xl font-pixel text-white tracking-widest mb-1 uppercase">My Lab</h1>
+        <p className="text-sm text-slate-400 font-sans">Your personal workspace in the GrowthOS network.</p>
+      </div>
+
+      <div className="flex-1 w-full bg-[#0a0f1c] border-2 border-slate-800 pixel-corners relative overflow-hidden flex items-end justify-center">
+        
+        {/* Lab Background Grid / Depth */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute bottom-0 w-full h-1/2 bg-[linear-gradient(to_top,rgba(59,130,246,0.3),transparent)]" />
+          <div className="absolute bottom-0 w-full h-[1px] bg-blue-500 shadow-[0_0_10px_#3b82f6]" />
+        </div>
+
+        {/* Level 1: Basic Workstation */}
+        <div className="absolute left-[10%] bottom-8 w-48 h-32 border-2 border-slate-700 bg-slate-900 flex flex-col justify-end p-2 opacity-80">
+          <div className="w-full h-16 bg-slate-950 border border-slate-800 relative overflow-hidden">
+            <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,255,0,0.1)_50%)] bg-[size:100%_4px]" />
+            <div className="text-[8px] text-green-500 font-mono p-1">INITIALIZING ENV...<br/>NODE ACTIVE</div>
+          </div>
+          <div className="text-[10px] text-slate-500 font-pixel text-center mt-2">TERMINAL L1</div>
+        </div>
+
+        {/* Level 2: Referral Terminal (Unlocked) */}
+        {level >= 2 && (
+          <div className="absolute right-[10%] bottom-8 w-32 h-48 border-2 border-blue-900 bg-slate-900 flex flex-col items-center justify-start p-2">
+            <div className="w-full h-24 bg-blue-950 border border-blue-500 relative flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+              <div className="text-blue-400 text-xs font-pixel text-center leading-tight">NETWORK<br/>LINK<br/>ACTIVE</div>
+            </div>
+            <Link href="/crew" className="mt-4">
+              <PixelButton variant="secondary" className="text-[10px] py-1 px-2">ACCESS</PixelButton>
+            </Link>
+          </div>
+        )}
+
+        {/* Level 3: AI Model Display (Locked) */}
+        {level < 3 && (
+          <div className="absolute top-[20%] right-[30%] opacity-20">
+            <div className="w-40 h-40 border-2 border-dashed border-slate-600 rounded-full flex items-center justify-center">
+              <span className="text-[10px] font-pixel text-slate-500">LVL 3 REQ</span>
+            </div>
+          </div>
+        )}
+
+        {/* Character */}
+        <div className="relative z-10 mb-8">
+           {characterConfig && (
+             <CharacterRenderer config={characterConfig} size="lg" />
+           )}
+           {/* Shadow */}
+           <div className="w-32 h-4 bg-black/50 blur-sm rounded-full absolute -bottom-2 left-1/2 -translate-x-1/2 -z-10" />
+        </div>
+      </div>
+    </div>
+  );
+}

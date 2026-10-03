@@ -149,6 +149,41 @@ export default function AdminCommandCenter() {
           </div>
         </div>
 
+        {/* Character Funnel */}
+        <div className="bg-[#111] border border-white/10 rounded-xl p-6">
+          <h3 className="text-sm font-semibold text-zinc-200 mb-6">Explorer Onboarding</h3>
+          <div className="space-y-4">
+             <div className="flex justify-between text-xs mb-1">
+               <span className="text-zinc-400">Account Created</span>
+               <span className="text-zinc-200">1,245</span>
+             </div>
+             <div className="w-full bg-zinc-800 rounded-full h-1.5 mb-4">
+               <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: '100%' }}></div>
+             </div>
+             
+             <div className="flex justify-between text-xs mb-1">
+               <span className="text-zinc-400">Character Started</span>
+               <span className="text-zinc-200">1,210 (97%)</span>
+             </div>
+             <div className="w-full bg-zinc-800 rounded-full h-1.5 mb-4">
+               <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: '97%' }}></div>
+             </div>
+             
+             <div className="flex justify-between text-xs mb-1">
+               <span className="text-zinc-400">Character Completed</span>
+               <span className="text-zinc-200">1,180 (94%)</span>
+             </div>
+             <div className="w-full bg-zinc-800 rounded-full h-1.5 mb-4">
+               <div className="bg-emerald-500 h-1.5 rounded-full" style={{ width: '94%' }}></div>
+             </div>
+             
+             <div className="flex justify-between text-xs mb-1">
+               <span className="text-zinc-400">Time to First Value</span>
+               <span className="text-zinc-200">~2.4 mins</span>
+             </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );

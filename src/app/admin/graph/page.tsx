@@ -70,7 +70,7 @@ export default function ReferralGraphPage() {
             };
           });
           
-          const initialEdges: Edge[] = json.data.edges.map((e: any) => ({
+          const initialEdges: Edge[] = json.data.edges.map((e: Edge) => ({
             ...e,
             animated: true,
             style: { stroke: '#555', strokeWidth: 1.5 }
