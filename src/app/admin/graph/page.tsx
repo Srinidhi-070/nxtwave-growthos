@@ -20,42 +20,40 @@ export default function ReferralGraphPage() {
             return {
               id: n.id,
               position: { x: Math.random() * 800, y: Math.random() * 600 },
-              data: { label: n.label },
-              style: { background: color, color: '#fff', border: 'none', borderRadius: '8px', padding: '10px' }
+              data: { label: `${n.email}\n(${n.campus})` },
+              style: { 
+                background: '#111', 
+                color: '#fff', 
+                border: `2px solid ${color}`,
+                borderRadius: '8px',
+                padding: '10px',
+                fontSize: '12px',
+                textAlign: 'center'
+              }
             };
           });
-
-          const formattedEdges = json.data.edges.map((e: Record<string, string>) => ({
-            id: e.id,
-            source: e.source,
-            target: e.target,
-            animated: true,
-            label: e.label,
-            style: { stroke: '#64748b' }
-          }));
-
           setNodes(positionedNodes);
-          setEdges(formattedEdges);
+          setEdges(json.data.edges);
         }
         setLoading(false);
       });
   }, []);
 
-  if (loading) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">Rendering Graph...</div>;
+  if (loading) return <div className="flex-1 flex items-center justify-center p-8 text-zinc-500 font-mono text-sm">Loading graph...</div>;
 
   return (
-    <main className="h-screen w-full bg-slate-950 flex flex-col">
-      <header className="p-6 border-b border-slate-800 bg-slate-900">
-        <h1 className="text-2xl font-bold text-white">Referral Network Graph</h1>
-        <p className="text-slate-400 text-sm">Visualizing nodes (Blue: Connector, Green: User, Red: Suspicious)</p>
-      </header>
-      <div className="flex-1 w-full">
+    <div className="flex-1 flex flex-col p-6 lg:p-10 max-w-7xl mx-auto w-full">
+      <div className="mb-6">
+        <h1 className="text-2xl font-semibold text-white tracking-tight mb-1">Referral Network</h1>
+        <p className="text-sm text-zinc-500 font-medium">Visualizing the propagation of the campaign</p>
+      </div>
+
+      <div className="flex-1 w-full bg-[#111] border border-white/10 rounded-xl overflow-hidden min-h-[600px] shadow-inner">
         <ReactFlow nodes={nodes} edges={edges} fitView colorMode="dark">
+          <Background color="#333" gap={16} />
           <Controls />
-          <MiniMap nodeColor={(n) => n.style?.background as string} />
-          <Background color="#1e293b" gap={16} />
         </ReactFlow>
       </div>
-    </main>
+    </div>
   );
 }
