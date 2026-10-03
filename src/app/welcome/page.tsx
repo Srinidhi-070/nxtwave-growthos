@@ -24,8 +24,8 @@ export default function WelcomePage() {
   const shareLink = typeof window !== 'undefined' ? `${window.location.origin}/register?ref=${referralCode}&utm_source=referral&utm_medium=community` : '';
 
   const handleShareClick = async (platform: string) => {
-    // Fire tracking event for share intent
-    await fetch('/api/events', {
+    // Fire tracking event for share intent without awaiting it first so we don't lose user gesture trust
+    fetch('/api/events', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -41,7 +41,7 @@ export default function WelcomePage() {
       setTimeout(() => setCopied(false), 2000);
     } else if (platform === 'whatsapp') {
       const text = encodeURIComponent(`I just registered for the free AI project workshop! Join me using my invite link and we can unlock the AI Project Starter Pack together: ${shareLink}`);
-      window.open(`https://wa.me/?text=${text}`, '_blank');
+      window.location.href = `https://wa.me/?text=${text}`;
     }
   };
 
