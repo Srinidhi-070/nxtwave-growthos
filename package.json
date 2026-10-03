@@ -10,7 +10,9 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@types/dagre": "^0.7.54",
     "@xyflow/react": "^12.12.0",
+    "dagre": "^0.8.5",
     "framer-motion": "^14.0.0",
     "lucide-react": "^1.51.0",
     "next": "16.3.8",

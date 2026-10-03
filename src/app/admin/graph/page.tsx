@@ -3,6 +3,42 @@
 import { useEffect, useState } from 'react';
 import { ReactFlow, Controls, Background, Node, Edge } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import dagre from 'dagre';
+
+const dagreGraph = new dagre.graphlib.Graph();
+dagreGraph.setDefaultEdgeLabel(() => ({}));
+
+const nodeWidth = 160;
+const nodeHeight = 50;
+
+const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'TB') => {
+  const isHorizontal = direction === 'LR';
+  dagreGraph.setGraph({ rankdir: direction, ranker: 'network-simplex', nodesep: 40, edgesep: 40, ranksep: 80 });
+
+  nodes.forEach((node) => {
+    dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+  });
+
+  edges.forEach((edge) => {
+    dagreGraph.setEdge(edge.source, edge.target);
+  });
+
+  dagre.layout(dagreGraph);
+
+  const layoutedNodes = nodes.map((node) => {
+    const nodeWithPosition = dagreGraph.node(node.id);
+    const newNode = {
+      ...node,
+      position: {
+        x: nodeWithPosition.x - nodeWidth / 2,
+        y: nodeWithPosition.y - nodeHeight / 2,
+      },
+    };
+    return newNode;
+  });
+
+  return { nodes: layoutedNodes, edges };
+};
 
 export default function ReferralGraphPage() {
   const [nodes, setNodes] = useState<Node[]>([]);
@@ -14,12 +50,11 @@ export default function ReferralGraphPage() {
       .then(res => res.json())
       .then(json => {
         if (json.success) {
-          // A very simple layout algorithm stub (random positioning for demo)
-          const positionedNodes = json.data.nodes.map((n: Record<string, string>) => {
+          const initialNodes: Node[] = json.data.nodes.map((n: Record<string, string>) => {
             const color = n.state === 'connector' ? '#3b82f6' : n.state === 'suspicious' ? '#ef4444' : '#10b981';
             return {
               id: n.id,
-              position: { x: Math.random() * 800, y: Math.random() * 600 },
+              position: { x: 0, y: 0 },
               data: { label: n.label },
               style: { 
                 background: '#111', 
@@ -29,12 +64,26 @@ export default function ReferralGraphPage() {
                 padding: '10px',
                 fontSize: '12px',
                 textAlign: 'center',
-                width: 150
+                width: nodeWidth,
+                boxShadow: n.state === 'suspicious' ? '0 0 15px rgba(239, 68, 68, 0.4)' : undefined
               }
             };
           });
-          setNodes(positionedNodes);
-          setEdges(json.data.edges);
+          
+          const initialEdges: Edge[] = json.data.edges.map((e: any) => ({
+            ...e,
+            animated: true,
+            style: { stroke: '#555', strokeWidth: 1.5 }
+          }));
+
+          const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+            initialNodes,
+            initialEdges,
+            'TB'
+          );
+
+          setNodes(layoutedNodes);
+          setEdges(layoutedEdges);
         }
         setLoading(false);
       });
