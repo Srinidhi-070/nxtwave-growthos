@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import PixelPanel from '@/components/ui/PixelPanel';
+import PixelButton from '@/components/ui/PixelButton';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function RegistrationForm() {
   const router = useRouter();
@@ -16,6 +19,7 @@ export default function RegistrationForm() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
 
   // Persist UTM and referral params
   const referralCode = searchParams.get('ref') || '';
@@ -54,101 +58,140 @@ export default function RegistrationForm() {
       localStorage.setItem('growthos_user_id', data.user.id);
       localStorage.setItem('growthos_referral_code', data.user.referralCode);
 
-      // Navigate to welcome/dashboard
-      router.push('/welcome');
+      setSuccess(true);
+      
+      // Dramatic pause before redirecting
+      setTimeout(() => {
+        router.push('/welcome');
+      }, 2500);
+
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
       } else {
         setError('An unexpected error occurred');
       }
-    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="w-full max-w-md bg-slate-900 rounded-xl p-8 border border-slate-800 shadow-2xl">
-      <h2 className="text-2xl font-bold text-white mb-2">Secure your spot</h2>
-      <p className="text-slate-400 mb-6 text-sm">Build your first AI project in 60 minutes.</p>
-
-      {error && (
-        <div className="bg-red-900/50 border border-red-500 text-red-200 px-4 py-2 rounded mb-4 text-sm">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
-          <input
-            type="email"
-            name="email"
-            required
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            placeholder="student@college.edu"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1">Phone (Optional)</label>
-          <input
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            placeholder="+91..."
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">College ID</label>
-            <input
-              type="text"
-              name="collegeId"
-              required
-              value={formData.collegeId}
-              onChange={handleChange}
-              className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              placeholder="e.g. IITM"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">Graduation Year</label>
-            <select
-              name="graduationYear"
-              required
-              value={formData.graduationYear}
-              onChange={handleChange}
-              className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+    <div className="relative">
+      <AnimatePresence>
+        {success && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="absolute inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center border-4 border-green-500 pixel-corners"
+          >
+            <motion.h2 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="text-4xl font-pixel text-green-400 mb-4"
             >
-              <option value="">Select</option>
-              <option value="2026">2026</option>
-              <option value="2027">2027</option>
-              <option value="2028">2028</option>
-              <option value="2029">2029</option>
-            </select>
-          </div>
-        </div>
+              QUEST ACCEPTED
+            </motion.h2>
+            <motion.div 
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.8, type: 'spring' }}
+              className="bg-green-900/40 text-green-300 font-pixel text-xl px-4 py-2 border-2 border-green-700"
+            >
+              +100 XP
+            </motion.div>
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.5 }}
+              className="mt-8 text-slate-400 font-pixel tracking-widest"
+            >
+              PREPARING DROPSHIP...
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        {referralCode && (
-          <div className="bg-blue-900/20 border border-blue-500/30 rounded px-3 py-2 mt-4 text-xs text-blue-300 flex items-center">
-            <span className="font-semibold mr-1">Invite Code Applied:</span> {referralCode}
+      <PixelPanel title="PLAYER_INTEL" className={success ? 'opacity-0' : ''}>
+        {error && (
+          <div className="bg-red-900/50 border-2 border-red-500 text-red-200 px-4 py-2 pixel-corners mb-6 text-sm font-pixel tracking-wide uppercase">
+            ERR: {error}
           </div>
         )}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 rounded-lg transition-colors mt-6 disabled:opacity-50"
-        >
-          {loading ? 'Processing...' : 'Register for Workshop'}
-        </button>
-      </form>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-xs font-pixel text-slate-400 mb-2 uppercase tracking-widest">Email Address</label>
+            <input
+              type="email"
+              name="email"
+              required
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full bg-slate-900 border-2 border-slate-700 p-3 text-white focus:border-blue-500 focus:outline-none font-sans text-sm transition-colors"
+              placeholder="student@college.edu"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-pixel text-slate-400 mb-2 uppercase tracking-widest">Phone (Optional)</label>
+            <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full bg-slate-900 border-2 border-slate-700 p-3 text-white focus:border-blue-500 focus:outline-none font-sans text-sm transition-colors"
+              placeholder="+91..."
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-pixel text-slate-400 mb-2 uppercase tracking-widest">College ID</label>
+              <input
+                type="text"
+                name="collegeId"
+                required
+                value={formData.collegeId}
+                onChange={handleChange}
+                className="w-full bg-slate-900 border-2 border-slate-700 p-3 text-white focus:border-blue-500 focus:outline-none font-sans text-sm transition-colors uppercase"
+                placeholder="e.g. IITM"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-pixel text-slate-400 mb-2 uppercase tracking-widest">Grad. Year</label>
+              <select
+                name="graduationYear"
+                required
+                value={formData.graduationYear}
+                onChange={handleChange}
+                className="w-full bg-slate-900 border-2 border-slate-700 p-3 text-white focus:border-blue-500 focus:outline-none font-sans text-sm transition-colors"
+              >
+                <option value="">Select</option>
+                <option value="2026">2026</option>
+                <option value="2027">2027</option>
+                <option value="2028">2028</option>
+                <option value="2029">2029</option>
+              </select>
+            </div>
+          </div>
+
+          {referralCode && (
+            <div className="bg-blue-900/20 border-2 border-blue-800 p-3 text-xs text-blue-300 flex items-center font-pixel tracking-wide uppercase">
+              <span className="text-blue-500 mr-2">▶</span> INVITE CODE DETECTED: {referralCode}
+            </div>
+          )}
+
+          <PixelButton
+            type="submit"
+            disabled={loading}
+            variant="primary"
+            className="w-full mt-4"
+          >
+            {loading ? 'PROCESSING...' : 'CONFIRM QUEST'}
+          </PixelButton>
+        </form>
+      </PixelPanel>
     </div>
   );
 }
