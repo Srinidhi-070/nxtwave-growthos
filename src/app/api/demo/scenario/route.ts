@@ -121,3 +121,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+
+export async function GET() {
+  // Hack to allow easy browser triggering of the baseline scenario
+  const mockReq = new Request('http://localhost', {
+    method: 'POST',
+    body: JSON.stringify({ scenario: 'Baseline' }),
+  });
+  return POST(mockReq);
+}
