@@ -8,10 +8,10 @@ function getStableVariant(userId: string, experimentId: string, variants: string
   return variants[index];
 }
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { userId } = await req.json();
-    const experimentKey = params.id;
+    const { id: experimentKey } = await params;
 
     if (!userId) {
       return NextResponse.json({ error: 'User ID is required' }, { status: 400 });

@@ -63,7 +63,7 @@ export async function POST(req: Request) {
     // 4. Generate Tracking Events (Aggregated to avoid inserting 10k rows)
     // To satisfy the 5k-15k requirement visually, we'll generate the events that matter most 
     // for the funnels and cohorts, keeping the DB insert around 3000 rows.
-    const eventsToInsert = [];
+    const eventsToInsert: Record<string, unknown>[] = [];
     
     users.forEach((u, i) => {
       eventsToInsert.push({

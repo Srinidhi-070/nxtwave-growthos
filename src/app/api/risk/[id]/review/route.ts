@@ -1,19 +1,20 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { action, reason, reviewerId } = await req.json();
+    const { id } = await params;
 
     if (!['APPROVE', 'REJECT'].includes(action)) {
       return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
 
-    const flag = await prisma.riskFlag.findUnique({ where: { id: params.id } });
+    const flag = await prisma.riskFlag.findUnique({ where: { id } });
     if (!flag) return NextResponse.json({ error: 'Flag not found' }, { status: 404 });
 
     const updatedFlag = await prisma.riskFlag.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         status: action === 'APPROVE' ? 'RESOLVED' : 'REVIEWED',
         reviewedBy: reviewerId || 'system_admin',
