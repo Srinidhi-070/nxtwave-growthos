@@ -184,6 +184,53 @@ export default function AdminCommandCenter() {
           </div>
         </div>
 
+        {/* Campaign Controls */}
+        <div className="col-span-1 lg:col-span-3 bg-[#111] border border-red-900/50 rounded-xl p-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-red-500/5 blur-[100px] rounded-full pointer-events-none" />
+          
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <h3 className="text-sm font-semibold text-zinc-200 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                Live Campaign Operations
+              </h3>
+              <p className="text-xs text-zinc-500 mt-1">Global overrides and communication triggers.</p>
+            </div>
+            <div className="text-[10px] font-mono text-red-500 border border-red-900/50 bg-red-950/30 px-2 py-1 rounded">
+              RESTRICTED ACCESS
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="border border-white/5 bg-[#0a0a0a] p-4 rounded-lg">
+              <div className="text-sm font-medium text-zinc-300 mb-1">Workshop Status</div>
+              <div className="text-xs text-zinc-500 mb-4">Overrides the countdown timer across all clients.</div>
+              <div className="flex gap-2">
+                <button className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-xs py-2 rounded text-zinc-300 transition-colors">STANDBY</button>
+                <button className="flex-1 bg-blue-600 hover:bg-blue-500 text-xs py-2 rounded text-white transition-colors">GO LIVE</button>
+              </div>
+            </div>
+
+            <div className="border border-white/5 bg-[#0a0a0a] p-4 rounded-lg">
+              <div className="text-sm font-medium text-zinc-300 mb-1">Registration Gate</div>
+              <div className="text-xs text-zinc-500 mb-4">Force active waitlist mode even if capacity &lt; 500.</div>
+              <div className="flex gap-2">
+                <button className="flex-1 bg-emerald-900/30 border border-emerald-900 text-emerald-500 text-xs py-2 rounded transition-colors">OPEN</button>
+                <button className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-xs py-2 rounded text-zinc-300 transition-colors">WAITLIST</button>
+              </div>
+            </div>
+
+            <div className="border border-white/5 bg-[#0a0a0a] p-4 rounded-lg">
+              <div className="text-sm font-medium text-zinc-300 mb-1">Mass Comms (WhatsApp)</div>
+              <div className="text-xs text-zinc-500 mb-4">Trigger broadcast to all 380+ registered students.</div>
+              <button className="w-full bg-zinc-800 hover:bg-zinc-700 text-xs py-2 rounded text-zinc-300 transition-colors border border-zinc-700 flex items-center justify-center gap-2">
+                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>
+                SEND &quot;-1HR REMINDER&quot;
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );

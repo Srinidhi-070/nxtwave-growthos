@@ -82,6 +82,42 @@ export default function MyCrewPage() {
              </PixelPanel>
           )}
 
+          <PixelPanel title="MILESTONE REWARD" className="bg-slate-900 border-yellow-700/50 relative overflow-hidden">
+             {/* bg glow */}
+             <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 blur-3xl rounded-full" />
+             
+             <div className="relative z-10">
+               <div className="font-pixel text-yellow-500 mb-2 uppercase text-xs tracking-widest flex items-center gap-2">
+                 <span>⭐</span> AI STARTER PACK
+               </div>
+               <p className="text-xs text-slate-400 font-sans mb-4">
+                 Invite 3 friends to your crew to unlock an exclusive bundle of premium AI APIs and project templates.
+               </p>
+               
+               {/* Progress bar */}
+               <div className="flex gap-2 w-full mb-2">
+                 {[1, 2, 3].map(step => (
+                   <div key={step} className={`h-2 flex-1 pixel-corners transition-colors ${crewData && crewData.crewMembers.length >= step ? 'bg-yellow-500' : 'bg-slate-800'}`} />
+                 ))}
+               </div>
+               
+               <div className="flex justify-between text-[10px] font-pixel text-slate-500">
+                 <span>{crewData ? Math.min(crewData.crewMembers.length, 3) : 0}/3 REFERRED</span>
+                 {crewData && crewData.crewMembers.length >= 3 ? (
+                   <span className="text-yellow-400 animate-pulse">UNLOCKED!</span>
+                 ) : (
+                   <span>LOCKED</span>
+                 )}
+               </div>
+               
+               {crewData && crewData.crewMembers.length >= 3 && (
+                 <PixelButton variant="primary" className="w-full mt-4 text-xs !bg-yellow-600 !text-white hover:!bg-yellow-500">
+                   CLAIM REWARD
+                 </PixelButton>
+               )}
+             </div>
+          </PixelPanel>
+
           <PixelPanel title="GROW YOUR CREW" className="bg-slate-900 border-slate-800">
             <div className="bg-white p-2 w-fit mx-auto pixel-corners mb-4">
               <QRCode value={shareUrl} size={120} />
