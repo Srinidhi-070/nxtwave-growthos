@@ -51,6 +51,9 @@ export default function AdminCommandCenter() {
             <p className="text-slate-400 mt-1">Real-time simulation metrics</p>
           </div>
           <div>
+            <Link href="/admin/experiments" className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded text-sm transition-colors border border-slate-700 mr-3">
+              Experiments
+            </Link>
             <Link href="/admin/graph" className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded text-sm transition-colors border border-slate-700">
               View Referral Graph
             </Link>
