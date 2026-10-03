@@ -45,17 +45,41 @@ export default function AdminCommandCenter() {
   return (
     <main className="min-h-screen bg-slate-950 p-6 md:p-12 text-slate-200 font-sans">
       <div className="max-w-6xl mx-auto">
-        <header className="mb-10 flex justify-between items-end">
+        <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
           <div>
             <h1 className="text-3xl font-bold text-white tracking-tight">GrowthOS Command Center</h1>
-            <p className="text-slate-400 mt-1">Real-time simulation metrics</p>
+            <p className="text-slate-400 mt-1 flex items-center gap-2">
+              <span className="bg-orange-900/50 text-orange-400 px-2 py-0.5 rounded text-xs font-bold tracking-wider">SYNTHETIC DEMO DATA</span>
+              Real-time simulation metrics
+            </p>
           </div>
-          <div>
-            <Link href="/admin/experiments" className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded text-sm transition-colors border border-slate-700 mr-3">
+          <div className="flex gap-2 items-center">
+            <select 
+              id="demo-scenario"
+              className="bg-slate-900 border border-slate-700 text-white text-sm rounded px-3 py-2"
+              onChange={(e) => {
+                const val = e.target.value;
+                if(val) {
+                  fetch('/api/demo/scenario', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ scenario: val })
+                  }).then(() => window.location.reload());
+                }
+              }}
+            >
+              <option value="">Load Scenario...</option>
+              <option value="Baseline">Baseline</option>
+              <option value="Referral Lift">Referral Lift</option>
+              <option value="Channel Shift">Channel Shift</option>
+              <option value="Fraud Spike">Fraud Spike</option>
+              <option value="Deadline Surge">Deadline Surge</option>
+            </select>
+            <Link href="/admin/experiments" className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded text-sm transition-colors border border-slate-700">
               Experiments
             </Link>
             <Link href="/admin/graph" className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded text-sm transition-colors border border-slate-700">
-              View Referral Graph
+              Graph
             </Link>
           </div>
         </header>
