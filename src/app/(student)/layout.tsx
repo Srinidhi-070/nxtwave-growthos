@@ -73,6 +73,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
     { label: 'WORKSHOP', path: '/workshop' },
     { label: 'MY CREW', path: '/crew' },
     { label: 'PROJECT', path: '/project' },
+    { label: 'LEADERBOARD', path: '/leaderboard' },
   ];
 
   if (loading) return null;

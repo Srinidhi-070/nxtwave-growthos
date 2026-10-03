@@ -5,8 +5,21 @@ import PixelPanel from '@/components/ui/PixelPanel';
 
 export default function WorkshopPage() {
   const [timeLeft, setTimeLeft] = useState('');
+  const [stats, setStats] = useState({ capacity: 500, registered: 0, remaining: 500, isWaitlist: false });
   
   useEffect(() => {
+    // Stats fetch
+    const fetchStats = async () => {
+      try {
+        const res = await fetch('/api/stats/workshop');
+        const { data } = await res.json();
+        if (data) setStats(data);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchStats();
+
     // Hardcoded target for demo: 3 days from now
     const targetDate = new Date();
     targetDate.setDate(targetDate.getDate() + 3);
@@ -90,8 +103,35 @@ export default function WorkshopPage() {
           </PixelPanel>
         </div>
 
-        {/* Right Col: Prep Checklist */}
-        <div className="col-span-1">
+        {/* Right Col: Prep Checklist & Capacity */}
+        <div className="col-span-1 space-y-6">
+          <PixelPanel title="CAPACITY" className="bg-slate-900 border-slate-800">
+             <div className="text-center">
+               <div className="text-xs text-slate-500 font-pixel tracking-widest mb-2">SEATS REMAINING</div>
+               <div className={`text-4xl font-pixel mb-4 ${stats.remaining <= 10 ? 'text-red-500 animate-pulse' : 'text-blue-400'}`}>
+                 {stats.remaining}
+               </div>
+               
+               <div className="w-full bg-slate-950 h-4 border border-slate-800 pixel-corners mb-2 relative">
+                 <div 
+                   className={`h-full transition-all duration-1000 ${stats.isWaitlist ? 'bg-red-500' : 'bg-blue-500'}`} 
+                   style={{ width: `${Math.min((stats.registered / stats.capacity) * 100, 100)}%` }} 
+                 />
+               </div>
+               <div className="text-[10px] text-slate-500 font-sans flex justify-between">
+                 <span>{stats.registered} REGISTERED</span>
+                 <span>{stats.capacity} MAX</span>
+               </div>
+             </div>
+             
+             {stats.isWaitlist && (
+               <div className="mt-6 border border-red-900 bg-red-950 p-3 pixel-corners text-center">
+                 <div className="text-xs text-red-400 font-pixel uppercase tracking-widest mb-1">WAITLIST ACTIVE</div>
+                 <div className="text-[10px] text-red-300/70 font-sans">Standard registration is closed. Only priority crew invites bypass the waitlist.</div>
+               </div>
+             )}
+          </PixelPanel>
+
           <PixelPanel title="PREP CHECKLIST" className="bg-slate-900 border-slate-800 h-full">
              <div className="space-y-4">
                {[
@@ -110,13 +150,6 @@ export default function WorkshopPage() {
                    </div>
                  </div>
                ))}
-             </div>
-             
-             <div className="mt-8 p-4 bg-yellow-900/20 border border-yellow-700 pixel-corners">
-               <h4 className="font-pixel text-yellow-500 text-[10px] mb-2 tracking-widest uppercase">PREREQUISITES</h4>
-               <p className="text-xs text-yellow-200/70 font-sans">
-                 Ensure you have Node.js v18+ and a code editor installed before the session begins.
-               </p>
              </div>
           </PixelPanel>
         </div>
