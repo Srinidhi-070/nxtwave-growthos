@@ -2,6 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import PixelButton from '@/components/ui/PixelButton';
+import PixelPanel from '@/components/ui/PixelPanel';
+import XPBar from '@/components/ui/XPBar';
+import QuestCard from '@/components/ui/QuestCard';
 
 export default function WelcomePage() {
   const router = useRouter();
@@ -16,7 +21,6 @@ export default function WelcomePage() {
       router.push('/register');
       return;
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setReferralCode(code);
     setUserId(uid);
   }, [router]);
@@ -24,7 +28,6 @@ export default function WelcomePage() {
   const shareLink = typeof window !== 'undefined' ? `${window.location.origin}/register?ref=${referralCode}&utm_source=referral&utm_medium=community` : '';
 
   const handleShareClick = async (platform: string) => {
-    // Fire tracking event for share intent without awaiting it first so we don't lose user gesture trust
     fetch('/api/events', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -45,53 +48,132 @@ export default function WelcomePage() {
     }
   };
 
-  if (!referralCode) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">Loading...</div>;
+  if (!referralCode) return <div className="min-h-screen bg-slate-950 flex items-center justify-center font-pixel text-slate-500 uppercase tracking-widest">Loading...</div>;
 
   return (
-    <main className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-lg bg-slate-900 rounded-xl p-8 border border-slate-800 shadow-2xl text-center">
-        <div className="w-16 h-16 bg-green-900/50 text-green-400 rounded-full flex items-center justify-center mx-auto mb-6">
-          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-        </div>
+    <main className="relative min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 overflow-hidden">
+      {/* Background Pixel Grid */}
+      <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+
+      <div className="relative z-10 w-full max-w-4xl text-center flex flex-col md:flex-row gap-8 items-start">
         
-        <h2 className="text-3xl font-bold text-white mb-2">You&apos;re in.</h2>
-        <p className="text-slate-300 mb-8">
-          Invite 3 classmates and unlock the <strong className="text-blue-400">AI Project Starter Pack</strong>.
-        </p>
+        {/* Left Column: Player Profile & Quest */}
+        <div className="flex-1 w-full text-left space-y-6">
+          <PixelPanel title="PLAYER_PROFILE">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-16 h-16 bg-slate-950 border-2 border-slate-700 pixel-corners flex items-center justify-center">
+                <div className="grid grid-cols-5 gap-1 p-1">
+                  <div className="w-1.5 h-1.5 bg-transparent"></div><div className="w-1.5 h-1.5 bg-blue-400"></div><div className="w-1.5 h-1.5 bg-blue-400"></div><div className="w-1.5 h-1.5 bg-blue-400"></div><div className="w-1.5 h-1.5 bg-transparent"></div>
+                  <div className="w-1.5 h-1.5 bg-blue-400"></div><div className="w-1.5 h-1.5 bg-white"></div><div className="w-1.5 h-1.5 bg-blue-400"></div><div className="w-1.5 h-1.5 bg-white"></div><div className="w-1.5 h-1.5 bg-blue-400"></div>
+                  <div className="w-1.5 h-1.5 bg-blue-400"></div><div className="w-1.5 h-1.5 bg-blue-400"></div><div className="w-1.5 h-1.5 bg-blue-400"></div><div className="w-1.5 h-1.5 bg-blue-400"></div><div className="w-1.5 h-1.5 bg-blue-400"></div>
+                  <div className="w-1.5 h-1.5 bg-transparent"></div><div className="w-1.5 h-1.5 bg-amber-400"></div><div className="w-1.5 h-1.5 bg-amber-400"></div><div className="w-1.5 h-1.5 bg-amber-400"></div><div className="w-1.5 h-1.5 bg-transparent"></div>
+                </div>
+              </div>
+              <div>
+                <div className="font-pixel text-blue-400 text-xl tracking-wider">AI EXPLORER</div>
+                <div className="text-slate-500 font-sans text-sm">Welcome to GrowthOS</div>
+              </div>
+            </div>
+            
+            <XPBar currentXP={100} maxXP={1000} level={1} />
+          </PixelPanel>
 
-        <div className="bg-slate-950 rounded-lg p-6 border border-slate-800 mb-6">
-          <p className="text-sm text-slate-400 mb-3 text-left font-medium">Your Unique Invite Link</p>
-          <div className="flex items-center gap-2">
-            <input 
-              type="text" 
-              readOnly 
-              value={shareLink} 
-              className="flex-1 bg-slate-900 border border-slate-700 rounded p-2 text-slate-300 text-sm focus:outline-none"
-            />
-            <button 
-              onClick={() => handleShareClick('copy')}
-              className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded transition-colors text-sm font-medium"
-            >
-              {copied ? 'Copied!' : 'Copy'}
-            </button>
-          </div>
+          <PixelPanel title="QUEST_LOG">
+            <div className="space-y-4">
+              <QuestCard 
+                id="q1" 
+                title="Register for AI Workshop" 
+                description="Initialize your journey into AI." 
+                xpReward={100} 
+                isCompleted={true} 
+              />
+              <QuestCard 
+                id="q2" 
+                title="Invite 3 Friends" 
+                description="Build your crew to unlock the AI Project Starter Pack." 
+                xpReward={150} 
+                isCompleted={false} 
+                isActive={true}
+              />
+            </div>
+          </PixelPanel>
         </div>
 
-        <div className="flex gap-4">
-          <button 
-            onClick={() => handleShareClick('whatsapp')}
-            className="flex-1 bg-green-600 hover:bg-green-500 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+        {/* Right Column: Build Your Crew */}
+        <div className="flex-1 w-full text-center">
+          <motion.div 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", bounce: 0.5, delay: 0.2 }}
+            className="w-20 h-20 bg-slate-900 border-4 border-amber-500 mx-auto mb-6 pixel-corners flex items-center justify-center shadow-[0_0_30px_rgba(245,158,11,0.2)]"
           >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            Share on WhatsApp
-          </button>
+            <svg className="w-10 h-10 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+          </motion.div>
+
+          <motion.h1 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-4xl md:text-6xl font-pixel text-white mb-4 tracking-widest uppercase drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]"
+          >
+            Build Your Crew
+          </motion.h1>
           
-          <button 
-            onClick={() => router.push('/dashboard')}
-            className="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-lg text-slate-300 font-sans mb-8 max-w-sm mx-auto"
           >
-            Go to Dashboard
-          </button>
+            AI is more fun with your people.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <PixelPanel title="INVITE_UPLINK" className="mb-6 text-left">
+              <p className="text-xs font-pixel text-slate-400 mb-2 uppercase tracking-widest">Your Unique Invite Code</p>
+              <div className="flex flex-col sm:flex-row items-center gap-3">
+                <input 
+                  type="text" 
+                  readOnly 
+                  value={shareLink} 
+                  className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-slate-300 font-mono text-sm focus:outline-none"
+                />
+                <PixelButton 
+                  variant="secondary"
+                  onClick={() => handleShareClick('copy')}
+                  className="w-full sm:w-auto text-sm px-6 py-3 shrink-0"
+                >
+                  {copied ? 'COPIED!' : 'COPY'}
+                </PixelButton>
+              </div>
+            </PixelPanel>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="flex flex-col gap-4"
+          >
+            <PixelButton 
+              variant="primary"
+              onClick={() => handleShareClick('whatsapp')}
+              className="w-full bg-[#25D366] hover:bg-[#20b858] border-[#128C7E] text-white flex justify-center"
+            >
+              SHARE ON WHATSAPP
+            </PixelButton>
+            
+            <PixelButton 
+              variant="secondary"
+              onClick={() => router.push('/dashboard')}
+              className="w-full text-slate-400 hover:text-white"
+            >
+              ENTER DASHBOARD
+            </PixelButton>
+          </motion.div>
         </div>
       </div>
     </main>
