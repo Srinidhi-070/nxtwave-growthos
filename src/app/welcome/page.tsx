@@ -21,7 +21,9 @@ export default function WelcomePage() {
       router.push('/register');
       return;
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setReferralCode(code);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setUserId(uid);
   }, [router]);
 

@@ -22,7 +22,7 @@ type DashboardData = {
     milestoneState: string;
   };
   suggestedAction: string;
-  recentEvents: any[];
+  recentEvents: Array<{ id: string; event: string; time: string }>;
 };
 
 export default function Dashboard() {

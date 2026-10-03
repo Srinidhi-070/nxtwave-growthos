@@ -1,10 +1,24 @@
 'use client';
 
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import PixelButton from '@/components/ui/PixelButton';
 
 export default function Home() {
+  const [particles, setParticles] = useState<{x: number, y: number, duration: number, delay: number, drop: number}[]>([]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setParticles([...Array(20)].map(() => ({
+      x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+      y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
+      duration: Math.random() * 5 + 5,
+      delay: Math.random() * 5,
+      drop: Math.random() * -100 - 50
+    })));
+  }, []);
+
   return (
     <main className="relative min-h-screen bg-slate-950 overflow-hidden flex flex-col items-center justify-center p-4">
       
@@ -12,25 +26,22 @@ export default function Home() {
       <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_800px_at_50%_50%,#020617_20%,#000000_100%)] opacity-80"></div>
 
-      {/* Floating Particles (CSS only for performance) */}
+      {/* Floating Particles */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        {[...Array(20)].map((_, i) => (
+        {particles.map((p, i) => (
           <motion.div
             key={i}
             className="absolute w-2 h-2 bg-blue-500/30 pixel-corners"
-            initial={{ 
-              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000), 
-              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000) 
-            }}
+            initial={{ x: p.x, y: p.y }}
             animate={{ 
-              y: [null, Math.random() * -100 - 50],
+              y: [null, p.drop],
               opacity: [0, 0.8, 0]
             }}
             transition={{ 
-              duration: Math.random() * 5 + 5, 
+              duration: p.duration, 
               repeat: Infinity,
               ease: "linear",
-              delay: Math.random() * 5
+              delay: p.delay
             }}
           />
         ))}
