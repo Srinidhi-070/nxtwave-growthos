@@ -18,14 +18,21 @@ export const metadata: Metadata = {
   description: "Build Your First AI Project in 60 Minutes",
 };
 
+import { PlayerProvider } from '@/contexts/PlayerContext';
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
       className={`${inter.variable} ${vt323.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">{children}</body>
+      <body className="min-h-full flex flex-col font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">
+        <PlayerProvider>
+          {children}
+        </PlayerProvider>
+      </body>
     </html>
   );
 }
+
 

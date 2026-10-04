@@ -48,3 +48,4 @@ export default function QuestCard({ title, description, xpReward, isCompleted, i
   );
 }
 
+

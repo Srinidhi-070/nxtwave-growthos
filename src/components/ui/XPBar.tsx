@@ -33,3 +33,4 @@ export default function XPBar({ currentXP, maxXP, level }: XPBarProps) {
   );
 }
 
+

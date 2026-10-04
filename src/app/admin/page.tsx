@@ -171,3 +171,4 @@ function FunnelLayer({ label, count, max, color, text }: { label: string; count:
     </div>
   );
 }
+
