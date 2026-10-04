@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import PixelPanel from '@/components/ui/PixelPanel';
@@ -105,7 +105,7 @@ export default function WorkshopPage() {
                     <div className="w-full flex items-center justify-between">
                        <div className="flex gap-4">
                          <div className="w-3 h-3 bg-white" />
-                         <div className="w-24 h-1 bg-blue-500 my-auto" />
+                         <div className="w-24 h-1 bg-blue-500 my-autOK />
                        </div>
                        <div className="text-[10px] font-pixel text-white">1080P</div>
                     </div>
@@ -203,7 +203,7 @@ export default function WorkshopPage() {
                    ].map(task => (
                      <div key={task.id} className="flex items-start gap-3">
                        <div className={`w-5 h-5 mt-0.5 border-2 flex items-center justify-center shrink-0 pixel-corners transition-colors ${task.done ? 'bg-green-500 border-green-500' : 'bg-slate-950 border-slate-600'}`}>
-                         {task.done && <span className="text-slate-900 text-xs font-bold">✓</span>}
+                         {task.done && <span className="text-slate-900 text-xs font-bold">âœ“</span>}
                        </div>
                        <div className={`text-sm font-sans ${task.done ? 'text-slate-500 line-through' : 'text-slate-200'}`}>
                          {task.text}
