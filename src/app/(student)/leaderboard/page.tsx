@@ -1,177 +1,163 @@
 'use client';
-
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import CharacterRenderer, { CharacterConfig } from '@/components/character/CharacterRenderer';
+import { ChevronsUpIcon } from 'lucide-react';
+import { PixelCharacter } from '@/components/pixel/PixelCharacter';
+import { PixelParticles } from '@/components/pixel/PixelParticles';
+import { usePlayer } from '@/contexts/PlayerContext';
+import { LEADERS, MY_RANK, type LeaderEntry } from '@/data/leaderboard';
+import { cn } from '@/utils/cn';
 
-type LeaderboardEntry = {
-  id: string;
-  name: string;
-  character: CharacterConfig;
-  level: number;
-  impact: number;
-  referrals: number;
-};
+const PODIUM = [
+{ rank: 2, h: 120, color: '#3ef2ff' },
+{ rank: 1, h: 170, color: '#ffc94a' },
+{ rank: 3, h: 90, color: '#ff3fa4' }];
 
-export default function LeaderboardPage() {
-  const [leaders, setLeaders] = useState<LeaderboardEntry[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let isMounted = true;
-    const fetchLeaders = async () => {
-      try {
-        const res = await fetch('/api/leaderboard');
-        if (!res.ok) throw new Error('Fetch failed');
-        const { data } = await res.json();
-        if (isMounted && data) setLeaders(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-    fetchLeaders();
-    return () => { isMounted = false; };
-  }, []);
+const CROWN = ['X.X.X', 'XXXXX', 'XXXXX'];
 
-  // Guarantee at least 3 dummy leaders if the DB is empty for visual effect
-  const displayLeaders = leaders.length >= 3 ? leaders : [
-    ...leaders,
-    ...Array(Math.max(0, 3 - leaders.length)).fill(null).map((_, i) => ({
-      id: `dummy-${i}`,
-      name: 'ENCRYPTED NODE',
-      level: 0,
-      impact: 0,
-      referrals: 0,
-      character: { body: 'base', face: 'default', hair: 'none', hairColor: 'pink', outfit: 'explorer', accessory: 'none', effect: 'none' }
-    }))
-  ].sort((a, b) => b.impact - a.impact);
-
-  const top3 = displayLeaders.slice(0, 3);
-  const rest = displayLeaders.slice(3, 10);
+export default function Leaderboard() {
+  const { character, explorerName, college } = usePlayer();
+  const [scope, setScope] = useState<'all' | 'campus'>('all');
+  const rows = scope === 'all' ? LEADERS : LEADERS.filter((l) => l.campus === 'PES University');
+  const podium = LEADERS.slice(0, 3);
 
   return (
-    <div className="w-full h-full flex flex-col relative z-10 p-4 md:p-8 pb-20 md:pb-8 overflow-y-auto overflow-x-hidden scrollbar-hide">
-      
-      <div className="shrink-0 mb-6 z-20 text-center">
-        <h1 className="text-4xl font-pixel text-white tracking-widest mb-2 uppercase text-shadow-glow-cyan drop-shadow-md">HALL OF FAME</h1>
-        <p className="text-xs text-blue-300 font-pixel tracking-widest uppercase opacity-80">GLOBAL NETWORK IMPACT RANKINGS</p>
+    <div className="mx-auto max-w-[1200px] px-4 py-6 md:px-8">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="font-px text-[11px] tracking-widest text-amber">SEASON 01 · DAY 4 OF 7</p>
+          <h1 className="mt-2 font-pixel text-[18px] text-ink md:text-[24px]">CAMPUS CHAMPIONS</h1>
+        </div>
+        <div role="tablist" aria-label="Leaderboard scope" className="flex">
+          {[
+          { id: 'all', label: 'ALL CAMPUSES' },
+          { id: 'campus', label: 'PES UNIVERSITY' }].
+          map((t) =>
+          <button
+            key={t.id}
+            role="tab"
+            aria-selected={scope === t.id}
+            onClick={() => setScope(t.id as 'all' | 'campus')}
+            className={cn('px-4 py-2.5 font-px text-[10px] tracking-widest transition-colors duration-150', scope === t.id ? 'bg-amber text-void' : 'bg-deep text-mute hover:text-ink')}>
+            
+              {t.label}
+            </button>
+          )}
+        </div>
       </div>
 
-      <div className="flex-1 w-full max-w-5xl mx-auto flex flex-col gap-12 mt-8">
-        
-        {/* TOP 3 PEDESTALS */}
-        <div className="relative flex justify-center items-end h-80 gap-4 md:gap-12 px-4 mt-12">
-           
-           {/* SECOND PLACE */}
-           {top3[1] && (
-             <motion.div 
-               initial={{ opacity: 0, y: 50 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ delay: 0.2 }}
-               className="flex flex-col items-center relative z-10 w-28 md:w-40"
-             >
-                <div className="absolute -top-12 font-pixel text-white text-xs tracking-widest">{top3[1].name.substring(0,10)}</div>
-                <div className="absolute -top-6 font-pixel text-[8px] text-cyan-400">LVL {top3[1].level}</div>
-                <div className="relative z-10 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]">
-                  <CharacterRenderer config={top3[1].character} size="md" animating={true} />
-                </div>
-                {/* Silver Pedestal */}
-                <div className="w-full h-32 bg-slate-400 border-x-4 border-t-4 border-slate-300 relative shadow-[inset_0_-20px_20px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center">
-                  <div className="font-pixel text-4xl text-slate-200 opacity-50">2</div>
-                  <div className="absolute bottom-4 font-pixel text-[10px] text-slate-800">{top3[1].impact} IMPACT</div>
-                </div>
-             </motion.div>
-           )}
+      <section className="relative mt-8 overflow-hidden bg-night pt-10" aria-label="Top 3">
+        <div className="dot-grid absolute inset-0" aria-hidden />
+        <PixelParticles count={20} colors={['#ffc94a', '#3ef2ff', '#ff3fa4']} />
+        <div className="relative mx-auto flex max-w-[720px] items-end justify-center gap-2 px-4 md:gap-4">
+          {PODIUM.map((p, i) => {
+            const e = podium[p.rank - 1];
+            return (
+              <div key={p.rank} className="flex flex-1 flex-col items-center">
+                {p.rank === 1 &&
+                <svg viewBox="0 0 5 3" width={30} height={18} shapeRendering="crispEdges" className="mb-1" aria-hidden>
+                    {CROWN.flatMap((r, y) => r.split('').map((c, x) => c === 'X' ? <rect key={`${x}${y}`} x={x} y={y} width={1} height={1} fill="#ffc94a" /> : null))}
+                  </svg>
+                }
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 + i * 0.06, duration: 0.25, ease: 'easeOut' }}>
+                  <PixelCharacter config={e.config} size={p.rank === 1 ? 96 : 72} label={e.name} />
+                </motion.div>
+                <p className="mt-2 font-px text-[11px] tracking-widest text-ink">{e.name}</p>
+                <p className="font-term text-lg text-mute">{e.campus}</p>
+                <motion.div
+                  className="relative mt-3 flex w-full flex-col items-center justify-start pt-4"
+                  style={{ background: '#151040', boxShadow: `inset 0 4px 0 0 ${p.color}` }}
+                  initial={{ height: 0 }}
+                  animate={{ height: p.h }}
+                  transition={{ delay: 0.05 + i * 0.06, duration: 0.3, ease: [0.23, 1, 0.32, 1] }}>
+                  
+                  <span className="font-pixel text-[26px] md:text-[34px]" style={{ color: p.color }}>
+                    {p.rank}
+                  </span>
+                  <span className="mt-2 font-px text-[10px] text-ink">{e.xp.toLocaleString()} XP</span>
+                  <span className="mt-1 hidden font-term text-lg text-mute sm:block">
+                    crew {e.crew} · impact {e.impact}
+                  </span>
+                </motion.div>
+              </div>);
 
-           {/* FIRST PLACE */}
-           {top3[0] && (
-             <motion.div 
-               initial={{ opacity: 0, y: 50 }}
-               animate={{ opacity: 1, y: 0 }}
-               className="flex flex-col items-center relative z-20 w-32 md:w-48 -mb-4"
-             >
-                {/* Crown/Halo */}
-                <div className="absolute -top-24 w-16 h-4 border-t-2 border-yellow-400 rounded-full animate-bounce shadow-[0_-5px_10px_#facc15]" />
-                
-                <div className="absolute -top-16 font-pixel text-white text-sm tracking-widest text-shadow-glow-cyan">{top3[0].name.substring(0,12)}</div>
-                <div className="absolute -top-10 font-pixel text-[10px] text-yellow-400">LVL {top3[0].level}</div>
-                <div className="relative z-10 drop-shadow-[0_10px_15px_rgba(0,0,0,0.8)]">
-                  <CharacterRenderer config={top3[0].character} size="lg" animating={true} />
-                </div>
-                {/* Gold Pedestal */}
-                <div className="w-full h-40 bg-yellow-500 border-x-4 border-t-4 border-yellow-400 relative shadow-[inset_0_-30px_30px_rgba(0,0,0,0.5),0_0_50px_rgba(234,179,8,0.2)] flex flex-col items-center justify-center">
-                  <div className="font-pixel text-6xl text-yellow-200 opacity-50">1</div>
-                  <div className="absolute bottom-6 font-pixel text-xs text-yellow-900">{top3[0].impact} IMPACT</div>
-                </div>
-             </motion.div>
-           )}
-
-           {/* THIRD PLACE */}
-           {top3[2] && (
-             <motion.div 
-               initial={{ opacity: 0, y: 50 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ delay: 0.4 }}
-               className="flex flex-col items-center relative z-10 w-28 md:w-40"
-             >
-                <div className="absolute -top-12 font-pixel text-white text-xs tracking-widest">{top3[2].name.substring(0,10)}</div>
-                <div className="absolute -top-6 font-pixel text-[8px] text-amber-600">LVL {top3[2].level}</div>
-                <div className="relative z-10 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]">
-                  <CharacterRenderer config={top3[2].character} size="md" animating={true} />
-                </div>
-                {/* Bronze Pedestal */}
-                <div className="w-full h-24 bg-amber-700 border-x-4 border-t-4 border-amber-600 relative shadow-[inset_0_-20px_20px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center">
-                  <div className="font-pixel text-4xl text-amber-500 opacity-50">3</div>
-                  <div className="absolute bottom-2 font-pixel text-[10px] text-amber-950">{top3[2].impact} IMPACT</div>
-                </div>
-             </motion.div>
-           )}
-           
-           {/* Floor Line */}
-           <div className="absolute bottom-0 inset-x-0 h-1 bg-slate-700 z-0" />
+          })}
         </div>
+      </section>
 
-        {/* REST OF LEADERBOARD TABLE */}
-        <div className="w-full bg-slate-900/80 border border-slate-700 backdrop-blur-md overflow-hidden shadow-2xl">
-          <div className="grid grid-cols-12 gap-4 p-4 border-b border-slate-700 bg-slate-950 font-pixel text-[10px] text-slate-500 tracking-widest uppercase">
-             <div className="col-span-2 text-center">RANK</div>
-             <div className="col-span-6">EXPLORER</div>
-             <div className="col-span-2 text-right">LVL</div>
-             <div className="col-span-2 text-right">IMPACT</div>
-          </div>
-          
-          <div className="flex flex-col max-h-96 overflow-y-auto">
-            {rest.map((leader, i) => (
-               <div key={leader.id} className="grid grid-cols-12 gap-4 p-4 border-b border-slate-800 items-center hover:bg-slate-800/50 transition-colors">
-                  <div className="col-span-2 text-center font-pixel text-sm text-slate-400">
-                    #{i + 4}
-                  </div>
-                  <div className="col-span-6 flex items-center gap-4">
-                     <div className="w-10 h-10 bg-slate-950 border border-slate-700 overflow-hidden shrink-0 flex items-center justify-center">
-                       <CharacterRenderer config={leader.character} size="sm" />
-                     </div>
-                     <span className="font-pixel text-xs text-white tracking-widest truncate">{leader.name}</span>
-                  </div>
-                  <div className="col-span-2 text-right font-pixel text-[10px] text-cyan-400">
-                    {leader.level}
-                  </div>
-                  <div className="col-span-2 text-right font-pixel text-[10px] text-emerald-400">
-                    {leader.impact}
-                  </div>
-               </div>
-            ))}
-            {rest.length === 0 && (
-               <div className="p-12 text-center font-pixel text-[10px] text-slate-500 tracking-widest">
-                  AWAITING FURTHER NETWORK EXPANSION...
-               </div>
-            )}
-          </div>
+      <section className="mt-8" aria-label="Rankings">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[640px] border-collapse">
+            <thead>
+              <tr className="border-b-2 border-line text-left font-px text-[10px] tracking-widest text-mute">
+                <th className="py-3 pl-3 font-normal">RANK</th>
+                <th className="py-3 font-normal">EXPLORER</th>
+                <th className="py-3 font-normal">CAMPUS</th>
+                <th className="py-3 text-right font-normal">XP</th>
+                <th className="py-3 text-right font-normal">CREW</th>
+                <th className="py-3 pr-3 text-right font-normal">NETWORK IMPACT</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) =>
+              <Row key={r.rank} entry={r} />
+              )}
+              <tr aria-hidden>
+                <td colSpan={6} className="py-2 text-center font-term text-xl text-mute">
+                  · · ·
+                </td>
+              </tr>
+              <tr className="bg-lime/10 outline outline-2 -outline-offset-2 outline-lime">
+                <td className="py-3 pl-3 font-pixel text-[13px] text-lime">#{MY_RANK.rank}</td>
+                <td className="py-3">
+                  <span className="flex items-center gap-3">
+                    <span className="h-9 w-9 overflow-hidden bg-deep">
+                      <PixelCharacter config={character} size={36} idle={false} shadow={false} showEffect={false} />
+                    </span>
+                    <span className="font-px text-[11px] tracking-widest text-ink">
+                      {explorerName} <span className="ml-1 bg-lime px-1.5 py-0.5 text-[9px] text-void">YOUR POSITION</span>
+                    </span>
+                  </span>
+                </td>
+                <td className="py-3 font-term text-xl text-ink/80">{college}</td>
+                <td className="py-3 text-right font-term text-xl text-ink">{MY_RANK.xp}</td>
+                <td className="py-3 text-right font-term text-xl text-ink">{MY_RANK.crew}</td>
+                <td className="py-3 pr-3 text-right font-term text-xl text-ink">{MY_RANK.impact}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+        <p className="mt-4 flex items-center gap-2 font-term text-xl text-mute">
+          <ChevronsUpIcon className="h-4 w-4 text-lime" /> {MY_RANK.nextRankXp} XP to pass #26 — two more crew members gets you there.
+        </p>
+      </section>
+    </div>);
 
-      </div>
-    </div>
-  );
+}
+
+function Row({ entry }: {entry: LeaderEntry;}) {
+  return (
+    <tr className="border-b-2 border-line/60">
+      <td className="py-3 pl-3 font-pixel text-[12px] text-mute">#{entry.rank}</td>
+      <td className="py-3">
+        <span className="flex items-center gap-3">
+          <span className="h-9 w-9 overflow-hidden bg-deep">
+            <PixelCharacter config={entry.config} size={36} idle={false} shadow={false} showEffect={false} />
+          </span>
+          <span className="font-px text-[11px] tracking-widest text-ink">{entry.name}</span>
+        </span>
+      </td>
+      <td className="py-3 font-term text-xl text-ink/80">{entry.campus}</td>
+      <td className="py-3 text-right font-term text-xl text-ink">{entry.xp.toLocaleString()}</td>
+      <td className="py-3 text-right font-term text-xl text-ink">{entry.crew}</td>
+      <td className="py-3 pr-3 text-right">
+        <span className="inline-flex items-center gap-2">
+          <span className="h-2 bg-magenta" style={{ width: entry.impact * 2 }} aria-hidden />
+          <span className="font-term text-xl text-ink">{entry.impact}</span>
+        </span>
+      </td>
+    </tr>);
+
 }
 

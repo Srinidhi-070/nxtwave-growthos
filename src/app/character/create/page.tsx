@@ -1,275 +1,298 @@
 'use client';
-
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import CharacterRenderer, { CharacterConfig } from '@/components/character/CharacterRenderer';
-import PixelButton from '@/components/ui/PixelButton';
-import PixelEnvironment from '@/components/ui/PixelEnvironment';
+import { motion } from 'framer-motion';
+import { ArrowRightIcon, ShuffleIcon, UserIcon, SmileIcon, EyeIcon, ScissorsIcon, ShirtIcon, HeadphonesIcon, SparklesIcon } from 'lucide-react';
+import { Logo } from '@/components/brand/Logo';
+import { SoundToggle } from '@/components/pixel/SoundToggle';
+import { PixelWindow } from '@/components/pixel/PixelWindow';
+import { PixelButton } from '@/components/pixel/PixelButton';
+import { PixelCharacter } from '@/components/pixel/PixelCharacter';
+import { PixelParticles } from '@/components/pixel/PixelParticles';
+import { CrtOverlay } from '@/components/pixel/CrtOverlay';
+import { OptionTile } from '@/components/creator/OptionTile';
+import { usePlayer } from '@/contexts/PlayerContext';
+import { IMAGES } from '@/data/images';
+import {
+  ACCESSORY_LABELS,
+  EFFECT_LABELS,
+  EYE_LABELS,
+  FACE_LABELS,
+  HAIR_COLORS,
+  HAIR_LABELS,
+  OUTFIT_COLORS,
+  OUTFIT_LABELS,
+  SKIN_TONES } from
+'@/data/spriteParts';
+import type { Accessory, CharacterConfig, Effect, EyeStyle, FaceStyle, HairStyle, OutfitStyle } from '@/types/character';
+import { cn } from '@/utils/cn';
+import { accentOf } from '@/utils/sprite';
 
-const CATEGORIES = ['FACE', 'HAIR', 'COLOR', 'OUTFIT', 'ACCESSORY', 'EFFECT'];
+type Category = 'BODY' | 'FACE' | 'EYES' | 'HAIR' | 'OUTFIT' | 'ACCESSORY' | 'EFFECT';
 
-const OPTIONS: Record<string, string[]> = {
-  FACE: ['default', 'happy', 'surprised'],
-  HAIR: ['none', 'cat', 'rabbit', 'antenna'], // We mapped hair to ears
-  COLOR: ['pink', 'blue', 'green', 'purple', 'blonde'], // Face screen color
-  OUTFIT: ['explorer', 'builder', 'hacker', 'analyst', 'creator', 'researcher'],
-  ACCESSORY: ['none', 'tail'],
-  EFFECT: ['none', 'glow', 'scanline'],
-};
+const CATEGORIES: {key: Category;Icon: React.ComponentType<{className?: string;}>;}[] = [
+{ key: 'BODY', Icon: UserIcon },
+{ key: 'FACE', Icon: SmileIcon },
+{ key: 'EYES', Icon: EyeIcon },
+{ key: 'HAIR', Icon: ScissorsIcon },
+{ key: 'OUTFIT', Icon: ShirtIcon },
+{ key: 'ACCESSORY', Icon: HeadphonesIcon },
+{ key: 'EFFECT', Icon: SparklesIcon }];
 
-export default function CharacterCreatePage() {
+
+const pick = <T,>(arr: readonly T[]): T => arr[Math.floor(Math.random() * arr.length)];
+
+export default function CharacterCreator() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [cinematic, setCinematic] = useState(false);
-  const [activeCategory, setActiveCategory] = useState('OUTFIT');
-  
-  const [config, setConfig] = useState<CharacterConfig>({
-    body: 'base',
-    face: 'default',
-    hair: 'none',
-    hairColor: 'pink',
-    outfit: 'explorer',
-    accessory: 'none',
-    effect: 'none'
-  });
-  
-  const [explorerName, setExplorerName] = useState('');
+  const { character, setCharacter, explorerName, setProfile } = usePlayer();
+  const [cfg, setCfg] = useState<CharacterConfig>(character);
+  const [cat, setCat] = useState<Category>('HAIR');
+  const [name, setName] = useState(explorerName);
+  const [nameError, setNameError] = useState<string | undefined>();
+  const [rollKey, setRollKey] = useState(0);
 
-  // Handle randomization
+  const update = (patch: Partial<CharacterConfig>) => setCfg((c) => ({ ...c, ...patch }));
+
   const randomize = () => {
-    setConfig({
-      body: 'base',
-      face: OPTIONS.FACE[Math.floor(Math.random() * OPTIONS.FACE.length)],
-      hair: OPTIONS.HAIR[Math.floor(Math.random() * OPTIONS.HAIR.length)],
-      hairColor: OPTIONS.COLOR[Math.floor(Math.random() * OPTIONS.COLOR.length)],
-      outfit: OPTIONS.OUTFIT[Math.floor(Math.random() * OPTIONS.OUTFIT.length)],
-      accessory: OPTIONS.ACCESSORY[Math.floor(Math.random() * OPTIONS.ACCESSORY.length)],
-      effect: OPTIONS.EFFECT[Math.floor(Math.random() * OPTIONS.EFFECT.length)],
+    setCfg({
+      skin: Math.floor(Math.random() * SKIN_TONES.length),
+      hair: pick(Object.keys(HAIR_LABELS) as HairStyle[]),
+      hairColor: Math.floor(Math.random() * HAIR_COLORS.length),
+      face: pick(Object.keys(FACE_LABELS) as FaceStyle[]),
+      eyes: pick(Object.keys(EYE_LABELS) as EyeStyle[]),
+      outfit: pick(Object.keys(OUTFIT_LABELS) as OutfitStyle[]),
+      outfitColor: Math.floor(Math.random() * OUTFIT_COLORS.length),
+      accessory: pick(Object.keys(ACCESSORY_LABELS) as Accessory[]),
+      effect: pick(Object.keys(EFFECT_LABELS) as Effect[])
     });
+    setRollKey((k) => k + 1);
   };
 
-  const handleSave = async () => {
-    try {
-      setLoading(true);
-      const userId = localStorage.getItem('growthos_user_id');
-      if (!userId) {
-        throw new Error('User ID not found. Please register first.');
-      }
-
-      const res = await fetch('/api/character', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId,
-          displayName: explorerName || 'Explorer',
-          config
-        })
-      });
-
-      if (!res.ok) {
-        throw new Error('Failed to save character');
-      }
-
-      localStorage.setItem('growthos_character', JSON.stringify(config));
-      localStorage.setItem('growthos_explorer_name', explorerName || 'Explorer');
-      
-      setCinematic(true);
-      
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 4000);
-
-    } catch (error) {
-      console.error(error);
-      alert(error instanceof Error ? error.message : 'Something went wrong');
-      setLoading(false);
+  const enter = () => {
+    const clean = name.trim().toUpperCase();
+    if (clean.length < 2 || clean.length > 14) {
+      setNameError('Explorer name must be 2–14 characters.');
+      return;
     }
+    setCharacter(cfg);
+    setProfile({ explorerName: clean });
+    router.push('/init');
   };
 
-  if (cinematic) {
-    return (
-      <div className="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center p-8 text-center overflow-hidden">
-        {/* Cinematic Initialization Sequence */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(59,130,246,0.1)_50%)] bg-[size:100%_4px] pointer-events-none z-10" />
-        
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1.2, opacity: 1 }}
-          transition={{ duration: 2, ease: "easeOut" }}
-          className="relative z-20 mb-8"
-        >
-          <CharacterRenderer config={config} size="xl" animating={true} />
-        </motion.div>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.5 }}
-          className="relative z-20 flex flex-col gap-4 items-center"
-        >
-          <h2 className="font-pixel text-4xl text-white tracking-widest text-shadow-glow-blue uppercase">AI EXPLORER INITIALIZED</h2>
-          <div className="text-2xl font-pixel text-blue-400 tracking-wider">[{explorerName || 'EXPLORER'}]</div>
-          
-          <div className="mt-8 flex gap-4">
-            <span className="px-4 py-2 bg-slate-800 border border-slate-600 text-slate-300 font-pixel text-xs tracking-widest">LEVEL 01</span>
-            <span className="px-4 py-2 bg-blue-900 border border-blue-500 text-blue-300 font-pixel text-xs tracking-widest">+100 XP</span>
-          </div>
-          
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 2 }}
-            className="mt-8 text-green-400 font-pixel text-sm tracking-widest border border-green-500/50 bg-green-900/20 px-6 py-3"
-          >
-            FIRST QUEST UNLOCKED: BUILD YOUR CREW
-          </motion.div>
-        </motion.div>
-      </div>
-    );
-  }
+  const accent = accentOf(cfg);
 
   return (
-    <main className="relative min-h-screen bg-[#0a0710] flex flex-col items-center justify-center overflow-hidden">
-      
-      {/* --- PIXEL ENVIRONMENT BACKGROUND --- */}
-      {/* Use AWAKE state: the lab lights are on but the action hasn't started yet */}
-      <PixelEnvironment worldState="AWAKE" />
-      
-      {/* Overlay to dim the background for UI contrast */}
-      <div className="absolute inset-0 z-0 bg-slate-950/70 mix-blend-multiply pointer-events-none" />
-
-      {/* Main UI Container */}
-      <div className="relative z-10 w-full max-w-6xl h-full min-h-[80vh] grid grid-cols-1 md:grid-cols-12 gap-6 p-6">
-        
-        {/* HEADER */}
-        <div className="col-span-full mb-2">
-          <h1 className="font-pixel text-3xl text-white tracking-widest uppercase">CREATE EXPLORER</h1>
-          <p className="font-pixel text-xs text-slate-400 tracking-widest mt-2 uppercase">INITIALIZE YOUR CAMPUS IDENTITY</p>
-        </div>
-
-        {/* LEFT COLUMN: CATEGORIES */}
-        <div className="col-span-1 md:col-span-3 flex flex-row md:flex-col gap-2 overflow-x-auto pb-2 md:pb-0">
-          {CATEGORIES.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`font-pixel text-xs tracking-widest px-4 py-4 border text-left whitespace-nowrap transition-none ${
-                activeCategory === cat 
-                  ? 'bg-blue-600 border-blue-400 text-white shadow-[inset_0_0_10px_rgba(255,255,255,0.2)]' 
-                  : 'bg-slate-900/80 border-slate-700 text-slate-400 hover:bg-slate-800'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* CENTER COLUMN: CHARACTER PREVIEW */}
-        <div className="col-span-1 md:col-span-6 flex flex-col items-center justify-center relative">
-          
-          {/* Environment pedestal/backdrop for the character */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-             <div className="w-64 h-64 border border-cyan-500/30 rounded-full animate-[spin_10s_linear_infinite] border-t-cyan-400" />
-             <div className="absolute w-48 h-48 border border-magenta-500/30 rounded-full animate-[spin_8s_linear_infinite_reverse] border-b-magenta-400" />
-             {/* Floor grid */}
-             <div className="absolute bottom-10 w-64 h-24 bg-[radial-gradient(ellipse_at_center,rgba(52,211,153,0.2)_0%,transparent_70%)]" style={{ transform: 'rotateX(70deg)' }} />
-          </div>
-
-          <div className="relative z-10 bg-slate-900/40 backdrop-blur-sm border-2 border-slate-700 p-8 pt-12 shadow-[0_0_30px_rgba(0,0,0,0.5)] flex flex-col items-center w-full max-w-sm">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={JSON.stringify(config)}
-                initial={{ opacity: 0.5, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0.5, scale: 0.95 }}
-                transition={{ duration: 0.2 }}
-                className="mb-8"
-              >
-                <CharacterRenderer config={config} size="xl" />
-              </motion.div>
-            </AnimatePresence>
-            
-            <div className="w-full mt-4">
-              <label className="block font-pixel text-[10px] text-cyan-400 mb-2 tracking-widest uppercase">EXPLORER ALIAS</label>
-              <input
-                type="text"
-                maxLength={15}
-                value={explorerName}
-                onChange={(e) => setExplorerName(e.target.value.toUpperCase())}
-                placeholder="ENTER NAME_"
-                className="w-full bg-slate-950 border border-slate-700 px-4 py-3 font-pixel text-white text-lg tracking-widest focus:outline-none focus:border-cyan-400 transition-none placeholder:text-slate-600"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN: OPTIONS & ACTIONS */}
-        <div className="col-span-1 md:col-span-3 flex flex-col h-full">
-          
-          {/* Options Grid */}
-          <div className="bg-slate-900/80 border border-slate-700 p-4 mb-4 flex-grow overflow-y-auto">
-            <div className="font-pixel text-[10px] text-slate-500 mb-4 tracking-widest uppercase">SELECT {activeCategory}</div>
-            <div className="grid grid-cols-2 gap-2">
-              {OPTIONS[activeCategory]?.map(opt => {
-                // Map config keys based on active category
-                let currentVal = '';
-                if (activeCategory === 'FACE') currentVal = config.face;
-                if (activeCategory === 'HAIR') currentVal = config.hair;
-                if (activeCategory === 'COLOR') currentVal = config.hairColor;
-                if (activeCategory === 'OUTFIT') currentVal = config.outfit;
-                if (activeCategory === 'ACCESSORY') currentVal = config.accessory;
-                if (activeCategory === 'EFFECT') currentVal = config.effect;
-
-                const isSelected = currentVal === opt;
-                
-                return (
-                  <button
-                    key={opt}
-                    onClick={() => {
-                      if (activeCategory === 'FACE') setConfig({...config, face: opt});
-                      if (activeCategory === 'HAIR') setConfig({...config, hair: opt});
-                      if (activeCategory === 'COLOR') setConfig({...config, hairColor: opt});
-                      if (activeCategory === 'OUTFIT') setConfig({...config, outfit: opt});
-                      if (activeCategory === 'ACCESSORY') setConfig({...config, accessory: opt});
-                      if (activeCategory === 'EFFECT') setConfig({...config, effect: opt});
-                    }}
-                    className={`font-pixel text-[10px] tracking-widest px-2 py-3 border uppercase transition-none ${
-                      isSelected 
-                        ? 'bg-cyan-900 border-cyan-400 text-cyan-100' 
-                        : 'bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700'
-                    }`}
-                  >
-                    {opt}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex flex-col gap-2">
-            <PixelButton 
-              variant="secondary" 
-              onClick={randomize}
-              className="w-full text-xs py-3"
-            >
-              RANDOMIZE
-            </PixelButton>
-            
-            <PixelButton 
-              variant="primary" 
-              onClick={handleSave}
-              disabled={loading || !explorerName.trim()}
-              className="w-full text-sm py-4"
-            >
-              {loading ? 'SAVING...' : 'SAVE EXPLORER'}
-            </PixelButton>
-          </div>
-        </div>
-
+    <div className="relative min-h-screen w-full overflow-hidden bg-void">
+      <div className="absolute inset-0" aria-hidden>
+        <img src={IMAGES.chamber} alt="" className="pixelated h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-void/75" />
       </div>
-    </main>
-  );
+      <PixelParticles count={20} colors={['#3ef2ff', '#b6ff3b']} />
+      <CrtOverlay />
+
+      <header className="relative z-20 mx-auto flex h-16 max-w-[1440px] items-center justify-between px-5 md:px-8">
+        <div className="flex items-center gap-6">
+          <Logo />
+          <span className="hidden font-px text-[10px] tracking-widest text-mute md:inline">// CHARACTER CHAMBER · 05 CREATE EXPLORER</span>
+        </div>
+        <SoundToggle />
+      </header>
+
+      <main className="relative z-10 mx-auto grid max-w-[1440px] gap-6 px-5 pb-40 md:px-8 lg:grid-cols-[200px_1fr_380px] lg:pb-32">
+        <nav aria-label="Customization categories" className="order-2 lg:order-1">
+          <ul className="flex gap-2 overflow-x-auto pb-2 no-scrollbar lg:flex-col lg:gap-1.5 lg:overflow-visible">
+            {CATEGORIES.map(({ key, Icon }) =>
+            <li key={key}>
+                <button
+                onClick={() => setCat(key)}
+                aria-current={cat === key}
+                className={cn(
+                  'flex w-full items-center gap-3 whitespace-nowrap px-3 py-3 font-px text-[11px] tracking-widest transition-colors duration-150',
+                  cat === key ? 'bg-lime text-void' : 'bg-void/70 text-ink/80 hover:bg-deep hover:text-ink'
+                )}>
+                
+                  <Icon className="h-4 w-4" />
+                  {key}
+                  {cat === key && <span className="ml-auto hidden lg:inline">▶</span>}
+                </button>
+              </li>
+            )}
+          </ul>
+        </nav>
+
+        <section className="order-1 flex flex-col items-center justify-center lg:order-2" aria-label="Explorer preview">
+          <div className="relative flex h-[340px] w-full max-w-[460px] items-end justify-center md:h-[480px]">
+            <div className="spin-slow absolute bottom-[40px] left-1/2 h-[300px] w-[300px] -translate-x-1/2 md:h-[400px] md:w-[400px]" aria-hidden>
+              <div className="absolute inset-0 border-2 border-dashed" style={{ borderColor: `${accent}40` }} />
+            </div>
+            <div className="scan-sweep absolute inset-x-[15%] top-0 h-[6%] bg-cyan/10" aria-hidden />
+            <motion.div
+              key={rollKey}
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
+              className="relative z-10 mb-[38px]">
+              
+              <PixelCharacter config={cfg} size={176} className="md:hidden" label="Your explorer" />
+              <PixelCharacter config={cfg} size={256} className="hidden md:inline-block" label="Your explorer" />
+            </motion.div>
+            <div className="absolute bottom-0 left-1/2 flex -translate-x-1/2 flex-col items-center" aria-hidden>
+              <div className="h-3 w-[220px] md:w-[300px]" style={{ background: accent, opacity: 0.85 }} />
+              <div className="h-4 w-[250px] bg-deep md:w-[340px]" />
+              <div className="h-3 w-[280px] bg-night md:w-[380px]" />
+            </div>
+          </div>
+          <dl className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-1 font-term text-lg">
+            {[
+            ['HAIR', HAIR_LABELS[cfg.hair]],
+            ['OUTFIT', OUTFIT_LABELS[cfg.outfit]],
+            ['GEAR', ACCESSORY_LABELS[cfg.accessory]],
+            ['FX', EFFECT_LABELS[cfg.effect]]].
+            map(([k, v]) =>
+            <div key={k} className="flex gap-2">
+                <dt className="text-mute">{k}</dt>
+                <dd className="text-ink">{v}</dd>
+              </div>
+            )}
+          </dl>
+        </section>
+
+        <div className="order-3">
+          <PixelWindow title={`${cat} // SELECT`} tone="cyan" className="bg-void/85">
+            <CategoryOptions cat={cat} cfg={cfg} update={update} />
+          </PixelWindow>
+        </div>
+      </main>
+
+      <footer className="fixed inset-x-0 bottom-0 z-30 border-t-2 border-line bg-void/95">
+        <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-5 py-4 md:flex-row md:items-end md:px-8">
+          <div className="flex-1 md:max-w-[420px]">
+            <label htmlFor="explorer-name" className="mb-1.5 block font-px text-[10px] tracking-widest text-cyan">
+              EXPLORER NAME
+            </label>
+            <div className={cn('px-frame-sm flex h-11 items-center gap-2 bg-void px-3', nameError ? '[--b:#ff4d5e]' : '[--b:#3b2f8f] focus-within:[--b:#3ef2ff]')}>
+              <span className="font-term text-xl text-lime">&gt;</span>
+              <input
+                id="explorer-name"
+                value={name}
+                maxLength={14}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setNameError(undefined);
+                }}
+                className="flex-1 bg-transparent font-pixel text-[12px] uppercase tracking-wider text-ink outline-none"
+                aria-invalid={!!nameError} />
+              
+              <span className="font-px text-[9px] text-mute">{name.length}/14</span>
+            </div>
+            {nameError && <p className="mt-1 font-term text-lg text-danger">ERR // {nameError}</p>}
+          </div>
+          <div className="flex gap-4 md:ml-auto">
+            <PixelButton variant="ghost" onClick={randomize} icon={<ShuffleIcon className="h-4 w-4 text-magenta" />} className="flex-1 md:flex-none">
+              Randomize
+            </PixelButton>
+            <PixelButton onClick={enter} size="md" icon={<ArrowRightIcon className="h-4 w-4" />} className="flex-1 md:flex-none">
+              Enter the world
+            </PixelButton>
+          </div>
+        </div>
+      </footer>
+    </div>);
+
+}
+
+function CategoryOptions({ cat, cfg, update }: {cat: Category;cfg: CharacterConfig;update: (p: Partial<CharacterConfig>) => void;}) {
+  const grid = 'grid grid-cols-3 gap-3';
+  if (cat === 'BODY') {
+    return (
+      <div className={grid} role="radiogroup" aria-label="Skin tone">
+        {SKIN_TONES.map((s, i) =>
+        <OptionTile key={s.name} label={s.name} preview={{ ...cfg, skin: i }} selected={cfg.skin === i} onSelect={() => update({ skin: i })} />
+        )}
+      </div>);
+
+  }
+  if (cat === 'FACE') {
+    return (
+      <div className={grid} role="radiogroup" aria-label="Face">
+        {(Object.keys(FACE_LABELS) as FaceStyle[]).map((f) =>
+        <OptionTile key={f} label={FACE_LABELS[f]} preview={{ ...cfg, face: f }} selected={cfg.face === f} onSelect={() => update({ face: f })} />
+        )}
+      </div>);
+
+  }
+  if (cat === 'EYES') {
+    return (
+      <div className={grid} role="radiogroup" aria-label="Eyes">
+        {(Object.keys(EYE_LABELS) as EyeStyle[]).map((e) =>
+        <OptionTile key={e} label={EYE_LABELS[e]} preview={{ ...cfg, eyes: e, accessory: cfg.accessory === 'visor' ? 'none' : cfg.accessory }} selected={cfg.eyes === e} onSelect={() => update({ eyes: e })} />
+        )}
+      </div>);
+
+  }
+  if (cat === 'HAIR') {
+    return (
+      <div className="space-y-5">
+        <div className={grid} role="radiogroup" aria-label="Hairstyle">
+          {(Object.keys(HAIR_LABELS) as HairStyle[]).map((h) =>
+          <OptionTile key={h} label={HAIR_LABELS[h]} preview={{ ...cfg, hair: h }} selected={cfg.hair === h} onSelect={() => update({ hair: h })} />
+          )}
+        </div>
+        <Swatches label="HAIR COLOR" colors={HAIR_COLORS.map((c) => ({ name: c.name, hex: c.H }))} value={cfg.hairColor} onChange={(i) => update({ hairColor: i })} />
+      </div>);
+
+  }
+  if (cat === 'OUTFIT') {
+    return (
+      <div className="space-y-5">
+        <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Outfit">
+          {(Object.keys(OUTFIT_LABELS) as OutfitStyle[]).map((o) =>
+          <OptionTile key={o} label={OUTFIT_LABELS[o]} preview={{ ...cfg, outfit: o }} selected={cfg.outfit === o} onSelect={() => update({ outfit: o })} />
+          )}
+        </div>
+        <Swatches label="PALETTE" colors={OUTFIT_COLORS.map((c) => ({ name: c.name, hex: c.A }))} value={cfg.outfitColor} onChange={(i) => update({ outfitColor: i })} />
+      </div>);
+
+  }
+  if (cat === 'ACCESSORY') {
+    return (
+      <div className={grid} role="radiogroup" aria-label="Accessory">
+        {(Object.keys(ACCESSORY_LABELS) as Accessory[]).map((a) =>
+        <OptionTile key={a} label={ACCESSORY_LABELS[a]} preview={{ ...cfg, accessory: a }} selected={cfg.accessory === a} onSelect={() => update({ accessory: a })} />
+        )}
+      </div>);
+
+  }
+  return (
+    <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Effect">
+      {(Object.keys(EFFECT_LABELS) as Effect[]).map((ef) =>
+      <OptionTile key={ef} label={EFFECT_LABELS[ef]} preview={{ ...cfg, effect: ef }} selected={cfg.effect === ef} onSelect={() => update({ effect: ef })} showEffect />
+      )}
+    </div>);
+
+}
+
+function Swatches({ label, colors, value, onChange }: {label: string;colors: {name: string;hex: string;}[];value: number;onChange: (i: number) => void;}) {
+  return (
+    <div>
+      <p className="mb-3 font-px text-[10px] tracking-widest text-mute">
+        {label} <span className="text-ink">// {colors[value]?.name}</span>
+      </p>
+      <div className="flex flex-wrap gap-3" role="radiogroup" aria-label={label}>
+        {colors.map((c, i) =>
+        <button
+          key={c.name}
+          role="radio"
+          aria-checked={value === i}
+          aria-label={c.name}
+          onClick={() => onChange(i)}
+          className={cn('px-frame-sm h-9 w-9 p-1.5', value === i ? '[--b:#ffffff]' : '[--b:#2f2670] hover:[--b:#5546c9]')}>
+          
+            <span className="block h-full w-full" style={{ background: c.hex }} />
+          </button>
+        )}
+      </div>
+    </div>);
+
 }
 

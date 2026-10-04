@@ -1,166 +1,136 @@
 'use client';
+import React, { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { CheckIcon, CircleIcon, LockIcon, MapIcon } from 'lucide-react';
+import { PixelWindow } from '@/components/pixel/PixelWindow';
+import { PixelButton } from '@/components/pixel/PixelButton';
+import { PixelBadge } from '@/components/pixel/PixelBadge';
+import { PixelCharacter } from '@/components/pixel/PixelCharacter';
+import { PixelQuestNode } from '@/components/pixel/PixelQuestNode';
+import { PixelParticles } from '@/components/pixel/PixelParticles';
+import { CrtOverlay } from '@/components/pixel/CrtOverlay';
+import { usePlayer } from '@/contexts/PlayerContext';
+import { IMAGES } from '@/data/images';
+import { QUESTS } from '@/data/quests';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import PixelButton from '@/components/ui/PixelButton';
-
-const QUESTS = [
-  { id: 1, title: 'ENTER WORLD', status: 'completed', xp: 50, desc: 'Initialize connection to the digital campus.' },
-  { id: 2, title: 'BUILD PROFILE', status: 'completed', xp: 100, desc: 'Create your AI Explorer identity.' },
-  { id: 3, title: 'BUILD YOUR CREW', status: 'active', xp: 300, desc: 'Invite 3 peers to join your network.' },
-  { id: 4, title: 'PREPARE FOR WORKSHOP', status: 'locked', xp: 150, desc: 'Complete the pre-workshop setup.' },
-  { id: 5, title: 'WORKSHOP READY', status: 'locked', xp: 100, desc: 'System check passed.' },
-  { id: 6, title: 'ATTEND WORKSHOP', status: 'locked', xp: 500, desc: 'Join the live 60-minute session.' },
-  { id: 7, title: 'START PROJECT', status: 'locked', xp: 200, desc: 'Initialize project lab repository.' },
-  { id: 8, title: 'BUILD PROJECT', status: 'locked', xp: 400, desc: 'Deploy first AI agent.' },
-  { id: 9, title: 'SHIP', status: 'locked', xp: 1000, desc: 'Global deployment complete.' }
-];
-
-export default function QuestsPage() {
-  const [selectedQuest, setSelectedQuest] = useState<number | null>(3); // Default to active
+export default function QuestWorld() {
+  const { character } = usePlayer();
+  const activeIndex = QUESTS.findIndex((q) => q.state === 'active');
+  const [selectedId, setSelectedId] = useState(QUESTS[activeIndex].id);
+  const selected = QUESTS.find((q) => q.id === selectedId) ?? QUESTS[0];
+  const done = QUESTS.filter((q) => q.state === 'done').length;
+  const active = QUESTS[activeIndex];
 
   return (
-    <div className="w-full h-full flex flex-col relative z-10 p-4 md:p-8 pb-20 md:pb-8 overflow-y-auto overflow-x-hidden scrollbar-hide">
-      
-      <div className="shrink-0 mb-6 z-20">
-        <h1 className="text-3xl font-pixel text-white tracking-widest mb-2 uppercase drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]">QUEST MAP</h1>
-        <p className="text-xs text-blue-300 font-pixel tracking-widest uppercase opacity-80">CAMPUS PROGRESSION // TRACKING</p>
+    <div className="mx-auto max-w-[1440px] px-4 py-6 md:px-8">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="font-px text-[11px] tracking-widest text-cyan">WORLD MAP</p>
+          <h1 className="mt-2 font-pixel text-[18px] text-ink md:text-[24px]">QUEST WORLD</h1>
+        </div>
+        <div className="flex items-center gap-4">
+          <span className="font-term text-xl text-mute">
+            <span className="text-lime">{done}</span> / {QUESTS.length} cleared
+          </span>
+          <div className="flex gap-1" aria-hidden>
+            {QUESTS.map((q) =>
+            <span key={q.id} className="h-3 w-3" style={{ background: q.state === 'done' ? '#b6ff3b' : q.state === 'active' ? '#3ef2ff' : '#2f2670' }} />
+            )}
+          </div>
+        </div>
       </div>
 
-      <div className="flex-1 w-full flex flex-col xl:flex-row gap-6 h-full relative">
-        
-        {/* LEFT: THE MAP WORLD */}
-        <div className="flex-1 min-h-[600px] bg-slate-950/60 backdrop-blur-sm border border-slate-700 relative overflow-hidden flex items-center justify-center p-8 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)]">
-          {/* Map Grid Background */}
-          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(to right, #3b82f6 1px, transparent 1px), linear-gradient(to bottom, #3b82f6 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,#020617_100%)] pointer-events-none" />
+      <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_340px]">
+        <div className="px-frame overflow-x-auto bg-void [--b:#3b2f8f]">
+          <div className="relative aspect-[16/9] min-w-[960px]">
+            <img src={IMAGES.quest} alt="Quest world map" className="pixelated absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-void/35" />
+            <PixelParticles count={18} rise={30} />
+            <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
+              {QUESTS.slice(0, -1).map((q, i) => {
+                const n = QUESTS[i + 1];
+                const doneSeg = n.state === 'done';
+                const activeSeg = n.state === 'active';
+                return (
+                  <g key={q.id}>
+                    <line x1={q.x} y1={q.y} x2={n.x} y2={n.y} stroke="#07051a" strokeWidth={1.4} vectorEffect="non-scaling-stroke" style={{ strokeWidth: 8 }} />
+                    <line
+                      x1={q.x}
+                      y1={q.y}
+                      x2={n.x}
+                      y2={n.y}
+                      stroke={doneSeg ? '#b6ff3b' : activeSeg ? '#3ef2ff' : '#4a4185'}
+                      vectorEffect="non-scaling-stroke"
+                      style={{ strokeWidth: 4 }}
+                      className={activeSeg ? 'signal-flow' : undefined}
+                      strokeDasharray={!doneSeg && !activeSeg ? '3 6' : undefined} />
+                    
+                  </g>);
 
-          {/* Node Container (Scrollable/Pannable conceptually, just flex here) */}
-          <div className="relative w-full max-w-2xl h-full flex flex-col justify-between py-10 z-10">
-            
-            {/* The underlying path line */}
-            <div className="absolute left-1/2 top-10 bottom-10 w-2 bg-slate-800 -translate-x-1/2 rounded-none z-0">
-               {/* Activated path line (fills up to active node) */}
-               <div className="w-full bg-blue-500 shadow-[0_0_15px_#3b82f6]" style={{ height: '25%' }} />
+              })}
+            </svg>
+            {QUESTS.map((q, i) =>
+            <div key={q.id} className="absolute -translate-x-1/2 -translate-y-6" style={{ left: `${q.x}%`, top: `${q.y}%` }}>
+                <PixelQuestNode index={i} title={q.title} state={q.state} selected={q.id === selectedId} onSelect={() => setSelectedId(q.id)} labelSide={q.y > 75 ? 'top' : 'bottom'} />
+              </div>
+            )}
+            <div className="pointer-events-none absolute -translate-x-1/2" style={{ left: `${active.x + 3.2}%`, top: `${active.y - 13}%` }}>
+              <PixelCharacter config={character} size={44} />
             </div>
-
-            {QUESTS.map((quest, index) => {
-              const isEven = index % 2 === 0;
-              const isCompleted = quest.status === 'completed';
-              const isActive = quest.status === 'active';
-              const isLocked = quest.status === 'locked';
-
-              return (
-                <div key={quest.id} className="relative z-10 flex items-center justify-center w-full group">
-                  
-                  {/* Left Label (if even) */}
-                  <div className={`w-1/2 flex justify-end pr-8 ${isEven ? '' : 'invisible'}`}>
-                    <div className={`text-right ${isActive ? 'animate-pulse' : ''}`}>
-                      <div className={`font-pixel text-xs tracking-widest uppercase ${isCompleted ? 'text-blue-400' : isActive ? 'text-emerald-400' : 'text-slate-600'}`}>{quest.title}</div>
-                      <div className={`font-pixel text-[8px] tracking-widest uppercase mt-1 ${isCompleted ? 'text-blue-600' : isActive ? 'text-emerald-600' : 'text-slate-700'}`}>{quest.status}</div>
-                    </div>
-                  </div>
-
-                  {/* Node */}
-                  <button 
-                    onClick={() => setSelectedQuest(quest.id)}
-                    className={`relative w-8 h-8 flex items-center justify-center transition-transform hover:scale-125 focus:outline-none 
-                      ${isCompleted ? 'bg-blue-600 border-2 border-blue-300 shadow-[0_0_20px_#3b82f6]' : 
-                        isActive ? 'bg-emerald-500 border-2 border-emerald-200 shadow-[0_0_30px_#10b981] animate-pulse' : 
-                        'bg-slate-800 border-2 border-slate-600'}`}
-                    style={{ transform: 'rotate(45deg)' }}
-                  >
-                     <div className={`w-3 h-3 bg-white/50`} />
-                  </button>
-
-                  {/* Right Label (if odd) */}
-                  <div className={`w-1/2 flex justify-start pl-8 ${!isEven ? '' : 'invisible'}`}>
-                    <div className={`text-left ${isActive ? 'animate-pulse' : ''}`}>
-                      <div className={`font-pixel text-xs tracking-widest uppercase ${isCompleted ? 'text-blue-400' : isActive ? 'text-emerald-400' : 'text-slate-600'}`}>{quest.title}</div>
-                      <div className={`font-pixel text-[8px] tracking-widest uppercase mt-1 ${isCompleted ? 'text-blue-600' : isActive ? 'text-emerald-600' : 'text-slate-700'}`}>{quest.status}</div>
-                    </div>
-                  </div>
-
-                </div>
-              );
-            })}
+            <CrtOverlay />
+            <div className="absolute bottom-3 left-3 flex gap-3 bg-void/85 px-3 py-2 font-px text-[9px] tracking-widest">
+              <span className="flex items-center gap-1.5 text-lime"><span className="h-2 w-2 bg-lime" />CLEARED</span>
+              <span className="flex items-center gap-1.5 text-cyan"><span className="h-2 w-2 bg-cyan" />ACTIVE</span>
+              <span className="flex items-center gap-1.5 text-mute"><span className="h-2 w-2 bg-line-hi" />LOCKED</span>
+            </div>
           </div>
         </div>
 
-        {/* RIGHT: DETAILS PANEL */}
-        <div className="w-full xl:w-96 shrink-0 flex flex-col h-full">
-          <AnimatePresence mode="wait">
-            {selectedQuest !== null && (
-              <motion.div 
-                key={selectedQuest}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="w-full h-full bg-slate-900/90 border border-slate-700 backdrop-blur-md p-6 shadow-xl flex flex-col"
-              >
-                {(() => {
-                  const q = QUESTS.find(x => x.id === selectedQuest);
-                  if (!q) return null;
-                  
-                  const isCompleted = q.status === 'completed';
-                  const isActive = q.status === 'active';
-                  
-                  return (
-                    <>
-                      <div className="flex items-center justify-between border-b border-slate-700 pb-4 mb-6">
-                        <span className={`font-pixel text-[10px] tracking-widest px-2 py-1 uppercase ${
-                          isCompleted ? 'bg-blue-900/50 text-blue-400 border border-blue-700' : 
-                          isActive ? 'bg-emerald-900/50 text-emerald-400 border border-emerald-700' : 
-                          'bg-slate-800 text-slate-500 border border-slate-700'
-                        }`}>
-                          {q.status}
-                        </span>
-                        <span className="font-pixel text-amber-400 text-xs">+{q.xp} XP</span>
-                      </div>
-                      
-                      <h2 className="font-pixel text-2xl text-white tracking-widest uppercase mb-4 leading-tight drop-shadow-md">{q.title}</h2>
-                      
-                      <div className="flex-1">
-                        <p className="font-pixel text-slate-400 text-[10px] sm:text-xs leading-loose tracking-widest uppercase mb-8">
-                          {q.desc}
-                        </p>
+        <AnimatePresence mode="wait">
+          <motion.div key={selected.id} initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -8 }} transition={{ duration: 0.18, ease: 'easeOut' }}>
+            <PixelWindow
+              title={`QUEST ${String(QUESTS.indexOf(selected) + 1).padStart(2, '0')}`}
+              tone={selected.state === 'done' ? 'lime' : selected.state === 'active' ? 'cyan' : 'default'}
+              className="h-full bg-void">
+              
+              <PixelBadge tone={selected.state === 'done' ? 'lime' : selected.state === 'active' ? 'cyan' : 'muted'} dot={selected.state === 'active'}>
+                {selected.state === 'done' ? 'Cleared' : selected.state === 'active' ? 'In progress' : 'Locked'}
+              </PixelBadge>
+              <h2 className="mt-4 font-pixel text-[15px] leading-snug text-ink">{selected.title}</h2>
+              <p className="mt-2 flex items-center gap-2 font-px text-[10px] tracking-widest text-mute">
+                <MapIcon className="h-3.5 w-3.5" /> {selected.region.toUpperCase()}
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-ink/85">{selected.desc}</p>
+              <h3 className="mt-6 font-px text-[10px] tracking-widest text-mute">OBJECTIVES</h3>
+              <ul className="mt-3 space-y-2.5">
+                {selected.objectives.map((o) =>
+                <li key={o.label} className="flex items-center gap-3 font-term text-xl">
+                    {o.done ?
+                  <CheckIcon className="h-4 w-4 text-lime" /> :
+                  selected.state === 'locked' ?
+                  <LockIcon className="h-4 w-4 text-mute" /> :
 
-                        {isActive && (
-                           <div className="p-4 border border-emerald-500/30 bg-emerald-900/10">
-                             <div className="font-pixel text-[10px] text-emerald-500 mb-2 tracking-widest uppercase">CURRENT OBJECTIVE</div>
-                             <div className="w-full h-2 bg-slate-800 mb-2">
-                               <div className="h-full bg-emerald-500" style={{ width: '33%' }} />
-                             </div>
-                             <div className="font-pixel text-[8px] text-slate-400 text-right">1 / 3 CONNECTED</div>
-                           </div>
-                        )}
-                        {isCompleted && (
-                           <div className="p-4 border border-blue-500/30 bg-blue-900/10 flex items-center justify-center">
-                             <div className="font-pixel text-xs text-blue-400 tracking-widest uppercase animate-pulse">VERIFIED</div>
-                           </div>
-                        )}
-                        {q.status === 'locked' && (
-                           <div className="p-4 border border-slate-700/50 bg-slate-800/30 flex items-center justify-center">
-                             <div className="font-pixel text-xs text-slate-500 tracking-widest uppercase">ENCRYPTED</div>
-                           </div>
-                        )}
-                      </div>
-
-                      {isActive && (
-                        <div className="mt-auto">
-                          <PixelButton variant="primary" className="w-full text-xs py-4">PROCEED</PixelButton>
-                        </div>
-                      )}
-                    </>
-                  );
-                })()}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
+                  <CircleIcon className="h-4 w-4 text-cyan" />
+                  }
+                    <span className={o.done ? 'text-ink/60 line-through' : 'text-ink'}>{o.label}</span>
+                  </li>
+                )}
+              </ul>
+              <div className="mt-6 flex items-center justify-between border-t-2 border-line pt-4">
+                <span className="font-px text-[10px] tracking-widest text-mute">REWARD</span>
+                <span className="font-pixel text-[13px] text-lime">+{selected.xp} XP</span>
+              </div>
+              {selected.state === 'active' &&
+              <PixelButton href="/crew" className="mt-5 w-full">
+                  Continue quest
+                </PixelButton>
+              }
+              {selected.state === 'locked' && <p className="mt-5 font-term text-lg text-mute">Clear the previous quest to unlock this path.</p>}
+            </PixelWindow>
+          </motion.div>
+        </AnimatePresence>
       </div>
-    </div>
-  );
+    </div>);
+
 }
 

@@ -1,114 +1,132 @@
 'use client';
-
+import React from 'react';
 import { motion } from 'framer-motion';
-import { Beaker, Settings, HardHat, TrendingUp } from 'lucide-react';
+import { OpsPageHeader, OpsPanel } from '@/components/ops/OpsPanel';
+import { PixelCharacter } from '@/components/pixel/PixelCharacter';
+import { EXPERIMENT } from '@/data/ops';
+import { NPC_CONFIGS } from '@/data/characters';
 
-export default function ExperimentsPage() {
-  const experiments = [
-    { key: 'HOOK_COPY_V2', hypothesis: 'OUTCOME-DRIVEN HOOK BEATS GENERIC WORKSHOP HOOK', metric: 'REGISTRATION CVR', status: 'RUNNING', results: { control: 12.4, variant: 18.2, significance: 94 } },
-    { key: 'REF_REWARD_SCALE', hypothesis: 'STARTER PACK INCENTIVE IMPROVES REFERRAL VELOCITY', metric: 'QUALIFIED REF RATE', status: 'RUNNING', results: { control: 5.1, variant: 12.3, significance: 99 } },
-    { key: 'CONN_ONBOARDING', hypothesis: 'PRE-WRITTEN MESSAGE KITS INCREASE ACTIVATION', metric: 'ACTIVATION RATE', status: 'ENDED', winner: 'VARIANT', results: { control: 22.0, variant: 41.5, significance: 99 } },
-    { key: 'DEADLINE_URGENCY', hypothesis: 'URGENCY COUNTDOWN IMPROVES REGISTRATION VELOCITY', metric: 'REGS PER HOUR', status: 'DRAFT', results: null }
-  ];
+const AXIS_MIN = -10;
+const AXIS_MAX = 30;
+const toPct = (v: number) => (v - AXIS_MIN) / (AXIS_MAX - AXIS_MIN) * 100;
 
+export default function ExperimentCenter() {
   return (
-    <div className="w-full flex flex-col gap-6 relative z-10 font-pixel">
+    <div className="mx-auto max-w-[1400px]">
+      <OpsPageHeader
+        eyebrow={`EXPERIMENT #${EXPERIMENT.id} · ${EXPERIMENT.status} · DAY ${EXPERIMENT.day}`}
+        title={EXPERIMENT.name.toUpperCase()}
+        right={<span className="font-mono text-[12px] text-mute">split {EXPERIMENT.split} · {(EXPERIMENT.control.visitors + EXPERIMENT.variant.visitors).toLocaleString()} visitors</span>} />
       
-      {/* HEADER COMMAND BAR */}
-      <div className="bg-[#1a1005] border border-amber-900 p-4 flex justify-between items-center shadow-[0_0_20px_rgba(245,158,11,0.2)] shrink-0">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-amber-950 flex items-center justify-center border border-amber-800">
-             <HardHat className="text-amber-500 w-6 h-6" />
-          </div>
-          <div>
-            <h1 className="text-xl text-amber-500 tracking-widest drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]">A/B EXPERIMENT ENGINE</h1>
-            <p className="text-[10px] text-amber-700 tracking-widest mt-1 opacity-80">ACTIVE CONSTRUCTION & VARIANT TESTING</p>
-          </div>
-        </div>
-        <button className="flex items-center gap-2 bg-amber-950 border border-amber-800 px-4 py-2 hover:bg-amber-900 hover:border-amber-500 transition-colors shadow-[4px_4px_0_rgba(245,158,11,0.3)]">
-          <Beaker className="w-3 h-3 text-amber-500" />
-          <span className="text-[10px] text-amber-400">DEPLOY NEW TEST</span>
-        </button>
-      </div>
+      <p className="-mt-2 mb-6 max-w-3xl text-[14px] leading-relaxed text-ink/80">{EXPERIMENT.hypothesis}</p>
 
-      <div className="grid grid-cols-1 gap-6">
-        
-        {experiments.map((exp, idx) => (
-          <div key={idx} className={`border ${exp.status === 'RUNNING' ? 'border-amber-500 bg-[#1a1005]' : exp.status === 'ENDED' ? 'border-emerald-700 bg-[#021008]' : 'border-slate-800 bg-slate-950'} p-6 relative overflow-hidden shadow-lg`}>
-            
-            {/* Background Hazard Stripes if running */}
-            {exp.status === 'RUNNING' && (
-              <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #f59e0b, #f59e0b 10px, transparent 10px, transparent 20px)' }} />
-            )}
-
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 relative z-10">
-              <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <h2 className={`text-lg tracking-widest ${exp.status === 'RUNNING' ? 'text-amber-400' : exp.status === 'ENDED' ? 'text-emerald-400' : 'text-slate-400'}`}>
-                    {exp.key}
-                  </h2>
-                  <span className={`px-2 py-1 text-[8px] tracking-widest border ${
-                    exp.status === 'RUNNING' ? 'bg-amber-900/50 text-amber-300 border-amber-600 animate-pulse' :
-                    exp.status === 'ENDED' ? 'bg-emerald-900/50 text-emerald-300 border-emerald-600' : 'bg-slate-900 text-slate-500 border-slate-700'
-                  }`}>
-                    {exp.status}
-                  </span>
-                </div>
-                <p className="text-xs text-slate-400 tracking-widest uppercase">{exp.hypothesis}</p>
+      <div className="grid gap-5 md:grid-cols-2">
+        {[
+        { arm: EXPERIMENT.control, color: '#8f88c9', cfg: NPC_CONFIGS.dev, order: ['FORM', 'CHARACTER', 'WORLD'] },
+        { arm: EXPERIMENT.variant, color: '#3ef2ff', cfg: NPC_CONFIGS.meera, order: ['CHARACTER', 'FORM', 'WORLD'] }].
+        map(({ arm, color, cfg, order }) =>
+        <OpsPanel key={arm.label}>
+            <div className="flex items-center gap-5">
+              <div className="flex h-20 w-16 items-end justify-center bg-deep">
+                <PixelCharacter config={cfg} size={52} shadow={false} showEffect={false} />
               </div>
-              
-              <div className="text-right">
-                <div className="text-[8px] text-slate-500 tracking-widest mb-1">OPTIMIZING FOR</div>
-                <div className={`text-sm tracking-widest ${exp.status === 'RUNNING' ? 'text-amber-300' : exp.status === 'ENDED' ? 'text-emerald-300' : 'text-slate-400'}`}>
-                  {exp.metric}
+              <div className="min-w-0 flex-1">
+                <p className="font-px text-[11px] tracking-[0.2em]" style={{ color }}>
+                  {arm.label}
+                </p>
+                <p className="mt-1 text-[13px] text-ink/85">{arm.desc}</p>
+                <div className="mt-3 flex items-center gap-1.5">
+                  {order.map((o, i) =>
+                <React.Fragment key={o}>
+                      <span className="bg-deep px-2 py-1 font-px text-[9px] tracking-widest text-ink/80">{o}</span>
+                      {i < order.length - 1 && <span className="text-mute">→</span>}
+                    </React.Fragment>
+                )}
                 </div>
+              </div>
+              <div className="text-right">
+                <p className="font-mono text-[20px] text-ink">{arm.visitors.toLocaleString()}</p>
+                <p className="text-[11px] text-mute">visitors</p>
               </div>
             </div>
-
-            {exp.results ? (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10">
-                <div className="border border-slate-700 bg-slate-900/50 p-4">
-                  <div className="text-[10px] text-slate-500 tracking-widest mb-2">CONTROL</div>
-                  <div className="text-2xl text-slate-300">{exp.results.control}%</div>
-                </div>
-                
-                <div className={`border ${exp.results.variant > exp.results.control ? (exp.status === 'ENDED' ? 'border-emerald-500 bg-emerald-950/30 shadow-[inset_0_0_15px_rgba(16,185,129,0.2)]' : 'border-amber-500 bg-amber-950/30 shadow-[inset_0_0_15px_rgba(245,158,11,0.2)]') : 'border-red-900 bg-red-950/30'} p-4`}>
-                  <div className="flex justify-between items-start mb-2">
-                    <div className={`text-[10px] tracking-widest ${exp.results.variant > exp.results.control ? (exp.status === 'ENDED' ? 'text-emerald-500' : 'text-amber-500') : 'text-red-500'}`}>
-                      VARIANT {exp.status === 'ENDED' && exp.winner === 'VARIANT' && '(WINNER)'}
-                    </div>
-                    {exp.results.variant > exp.results.control && <TrendingUp className={`w-4 h-4 ${exp.status === 'ENDED' ? 'text-emerald-500' : 'text-amber-500'}`} />}
-                  </div>
-                  <div className={`text-2xl ${exp.results.variant > exp.results.control ? (exp.status === 'ENDED' ? 'text-emerald-400' : 'text-amber-400') : 'text-red-400'}`}>
-                    {exp.results.variant}%
-                  </div>
-                  <div className={`text-[10px] mt-2 ${exp.results.variant > exp.results.control ? (exp.status === 'ENDED' ? 'text-emerald-600' : 'text-amber-600') : 'text-red-600'}`}>
-                    +{((exp.results.variant - exp.results.control) / exp.results.control * 100).toFixed(1)}% LIFT
-                  </div>
-                </div>
-
-                <div className="border border-slate-700 bg-slate-900/50 p-4 flex flex-col justify-center items-center text-center">
-                  <div className="text-[10px] text-slate-500 tracking-widest mb-2">STATISTICAL SIGNIFICANCE</div>
-                  <div className={`text-xl ${exp.results.significance >= 95 ? 'text-emerald-400' : 'text-slate-300'}`}>
-                    {exp.results.significance}%
-                  </div>
-                  {exp.results.significance >= 95 ? (
-                    <div className="text-[8px] text-emerald-500 mt-1">TEST CONCLUDED</div>
-                  ) : (
-                    <div className="text-[8px] text-amber-500 mt-1 animate-pulse">GATHERING DATA...</div>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <div className="border border-slate-800 bg-slate-900/30 p-8 text-center text-[10px] text-slate-500 tracking-widest uppercase">
-                Experiment blueprint verified. Awaiting deployment.
-              </div>
-            )}
-
-          </div>
-        ))}
+          </OpsPanel>
+        )}
       </div>
-    </div>
-  );
+
+      <OpsPanel title="METRICS · RELATIVE LIFT, 95% INTERVAL" className="mt-5" bodyClassName="p-0">
+        <div className="hidden grid-cols-[200px_110px_110px_1fr_120px] gap-4 border-b border-line/60 px-4 py-2 font-px text-[9px] tracking-[0.15em] text-mute lg:grid">
+          <span>METRIC</span>
+          <span className="text-right">CONTROL</span>
+          <span className="text-right">VARIANT</span>
+          <span className="flex justify-between">
+            <span>−10%</span>
+            <span>0</span>
+            <span>+10%</span>
+            <span>+20%</span>
+            <span>+30%</span>
+          </span>
+          <span className="text-right">P(BETTER)</span>
+        </div>
+        {EXPERIMENT.metrics.map((m, i) => {
+          const lift = (m.variant - m.control) / m.control * 100;
+          return (
+            <div key={m.key} className="grid gap-3 border-b border-line/40 px-4 py-4 lg:grid-cols-[200px_110px_110px_1fr_120px] lg:items-center lg:gap-4">
+              <div>
+                <p className="text-[14px] text-ink">{m.key}</p>
+                <p className="font-mono text-[11px] text-mute">
+                  n = {m.nControl} / {m.nVariant}
+                </p>
+              </div>
+              <p className="font-mono text-[15px] text-ink/70 lg:text-right">
+                <span className="mr-2 text-[11px] text-mute lg:hidden">C</span>
+                {m.control.toFixed(1)}%
+              </p>
+              <p className="font-mono text-[15px] text-cyan lg:text-right">
+                <span className="mr-2 text-[11px] text-mute lg:hidden">V</span>
+                {m.variant.toFixed(1)}%
+              </p>
+              <div className="relative h-8">
+                <span className="absolute inset-y-0 w-px bg-ink/30" style={{ left: `${toPct(0)}%` }} aria-hidden />
+                {m.ci ?
+                <>
+                    <motion.span
+                    className="absolute top-1/2 h-2 -translate-y-1/2"
+                    style={{ left: `${toPct(m.ci[0])}%`, background: m.ci[0] > 0 ? '#19c9b6' : '#19c9b666' }}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${toPct(m.ci[1]) - toPct(m.ci[0])}%` }}
+                    transition={{ duration: 0.3, delay: i * 0.06, ease: 'easeOut' }} />
+                  
+                    <span className="absolute top-1/2 h-4 w-1.5 -translate-x-1/2 -translate-y-1/2 bg-ink" style={{ left: `${toPct(lift)}%` }} />
+                    <span className="absolute -bottom-1 font-mono text-[10px] text-mute" style={{ left: `${toPct(lift)}%`, transform: 'translateX(-50%)' }}>
+                      +{lift.toFixed(1)}% [{m.ci[0] > 0 ? '+' : ''}
+                      {m.ci[0]}, +{m.ci[1]}]
+                    </span>
+                  </> :
+
+                <span className="absolute inset-0 flex items-center pl-2 text-[12px] text-amber">Observed +{lift.toFixed(1)}% · interval withheld — {m.note}</span>
+                }
+              </div>
+              <p className="font-mono text-[15px] lg:text-right">{m.probBetter !== undefined ? <span className={m.probBetter >= 95 ? 'text-lime' : 'text-ink/80'}>{m.probBetter}%</span> : <span className="text-mute">—</span>}</p>
+            </div>);
+
+        })}
+      </OpsPanel>
+
+      <div className="mt-5 grid gap-5 md:grid-cols-2">
+        <OpsPanel title="DECISION">
+          <p className="text-[14px] leading-relaxed text-ink/85">
+            <span className="text-lime">Registration CVR</span> and <span className="text-lime">Character Completion</span> clear the bar. First Quest is promising but its interval crosses zero. Keep running until First Referral attribution closes (~31h).
+          </p>
+        </OpsPanel>
+        <OpsPanel title="GUARDRAILS">
+          <ul className="space-y-2 text-[13px] text-ink/85">
+            <li className="flex justify-between"><span>Risk-flag rate</span><span className="font-mono">2.1% vs 2.3%</span></li>
+            <li className="flex justify-between"><span>Time to register</span><span className="font-mono">+18s</span></li>
+            <li className="flex justify-between"><span>Sample ratio check</span><span className="font-mono text-lime">pass</span></li>
+          </ul>
+        </OpsPanel>
+      </div>
+    </div>);
+
 }
 

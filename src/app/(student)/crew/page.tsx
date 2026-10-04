@@ -1,207 +1,225 @@
 'use client';
+import React, { useState } from 'react';
+import { CheckIcon, CopyIcon, UserPlusIcon } from 'lucide-react';
+import { PixelPanel } from '@/components/pixel/PixelPanel';
+import { PixelButton } from '@/components/pixel/PixelButton';
+import { PixelCharacter } from '@/components/pixel/PixelCharacter';
+import { PixelParticles } from '@/components/pixel/PixelParticles';
+import { CrewMemberPanel } from '@/components/crew/CrewMemberPanel';
+import { usePlayer } from '@/contexts/PlayerContext';
+import { CREW, CREW_MILESTONES, INVITER, type CrewMember } from '@/data/crew';
+import { cn } from '@/utils/cn';
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import CharacterRenderer from '@/components/character/CharacterRenderer';
-import PixelButton from '@/components/ui/PixelButton';
 
-type CrewMember = { id: string; name: string; joinedAt: string; state: string; projectStep: number };
-type CrewData = {
-  impact: number;
-  inviter: { name: string; level: number; character?: any } | null;
-  crewMembers: CrewMember[];
+const POS: Record<string, {x: number;y: number;}> = {
+  arjun: { x: 50, y: 12 },
+  me: { x: 50, y: 48 },
+  meera: { x: 24, y: 58 },
+  kabir: { x: 76, y: 58 },
+  zoya: { x: 50, y: 86 },
+  rohan: { x: 7, y: 34 },
+  ananya: { x: 9, y: 84 },
+  dev: { x: 93, y: 34 },
+  isha: { x: 91, y: 84 },
+  tanvi: { x: 72, y: 92 }
 };
 
-export default function MyCrewPage() {
+const GROWTH = [0, 1, 4, 8];
+
+export default function MyCrew() {
+  const { character, explorerName } = usePlayer();
+  const [selected, setSelected] = useState<CrewMember | null>(null);
   const [copied, setCopied] = useState(false);
-  const [crewData, setCrewData] = useState<CrewData | null>(null);
-  
-  const referralCode = typeof window !== 'undefined' ? localStorage.getItem('growthos_referral_code') || 'NXTWAVE100' : 'NXTWAVE100';
-  const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/join/${referralCode}` : '';
 
-  useEffect(() => {
-    let isMounted = true;
-    const fetchCrew = async () => {
-      const userId = localStorage.getItem('growthos_user_id');
-      if (!userId) return;
-      try {
-        const res = await fetch(`/api/crew?userId=${userId}`);
-        if (!res.ok) throw new Error('Fetch failed');
-        const { data } = await res.json();
-        if (isMounted && data) setCrewData(data);
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    fetchCrew();
-    return () => { isMounted = false; };
-  }, []);
+  const direct = CREW.filter((c) => c.degree === 1);
+  const second = CREW.filter((c) => c.degree === 2);
+  const active = CREW.filter((c) => c.active).length;
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(shareUrl);
+  const edges: {from: string;to: string;tone: string;active: boolean;}[] = [
+  { from: 'arjun', to: 'me', tone: '#3ef2ff', active: true },
+  ...direct.map((c) => ({ from: 'me', to: c.id, tone: '#b6ff3b', active: c.active })),
+  ...second.map((c) => ({ from: c.parentId ?? 'me', to: c.id, tone: '#ff3fa4', active: c.active }))];
+
+
+  const copy = () => {
+    navigator.clipboard?.writeText('growthos.gg/join/SRINIDHI-7Q4').catch(() => undefined);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 1800);
   };
 
-  // Mock data for the network visualization to look rich
-  const centerNode = { name: typeof window !== 'undefined' ? localStorage.getItem('growthos_explorer_name') || 'YOU' : 'YOU' };
-  
-  // Fake positions for crew members around the center (radius ~150px)
-  const angleStep = crewData?.crewMembers.length ? (2 * Math.PI) / Math.max(1, crewData.crewMembers.length) : 0;
-
   return (
-    <div className="w-full h-full flex flex-col relative z-10 p-4 md:p-8 pb-20 md:pb-8 overflow-y-auto overflow-x-hidden scrollbar-hide">
-      
-      <div className="shrink-0 mb-6 z-20 flex justify-between items-end">
+    <div className="mx-auto max-w-[1440px] px-4 py-6 md:px-8">
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-pixel text-white tracking-widest mb-2 uppercase drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]">MY CREW</h1>
-          <p className="text-xs text-blue-300 font-pixel tracking-widest uppercase opacity-80">SOCIAL NETWORK TOPOLOGY</p>
+          <p className="font-px text-[11px] tracking-widest text-magenta">SOCIAL GRAPH</p>
+          <h1 className="mt-2 font-pixel text-[18px] text-ink md:text-[24px]">MY CREW</h1>
         </div>
-        <div className="hidden md:flex gap-4 items-center bg-slate-900/80 border border-slate-700 p-2 pl-4">
-           <div className="font-pixel text-[10px] text-slate-400">NETWORK SIGNAL:</div>
-           <div className="font-pixel text-xs text-cyan-400 select-all">{shareUrl}</div>
-           <PixelButton variant="primary" onClick={handleCopy} className="text-[10px] px-4 py-2">
-             {copied ? 'COPIED' : 'COPY'}
-           </PixelButton>
-        </div>
+        <p className="font-term text-xl text-mute">Tap any explorer to open their file.</p>
       </div>
 
-      <div className="flex-1 w-full flex flex-col xl:flex-row gap-6 h-full relative">
-        
-        {/* LEFT: NETWORK IMPACT & ORIGIN */}
-        <div className="w-full xl:w-80 shrink-0 flex flex-col gap-6 h-full">
-          
-          {/* WHO BROUGHT ME */}
-          <div className="bg-slate-900/90 border border-slate-700 p-6 shadow-xl relative overflow-hidden group hover:border-emerald-500/50 transition-colors">
-             <div className="absolute top-0 inset-x-0 h-1 bg-emerald-500" />
-             <h3 className="font-pixel text-xs text-emerald-400 tracking-widest uppercase mb-4">ORIGIN SIGNAL</h3>
-             {crewData?.inviter ? (
-               <div className="flex items-center gap-4">
-                 <div className="w-16 h-16 bg-slate-800 border-2 border-emerald-500/50 flex items-center justify-center relative overflow-hidden">
-                   {/* Simplified avatar representation */}
-                   <CharacterRenderer config={crewData.inviter.character} size="sm" animating={false} className="scale-75" />
-                 </div>
-                 <div>
-                   <div className="font-pixel text-white text-sm tracking-widest">{crewData.inviter.name}</div>
-                   <div className="font-pixel text-[10px] text-slate-400 mt-1">LEVEL {crewData.inviter.level}</div>
-                 </div>
-               </div>
-             ) : (
-               <div className="font-pixel text-[10px] text-slate-500 leading-relaxed uppercase">
-                 You are a primary node. Your journey began with a direct connection to GrowthOS.
-               </div>
-             )}
-          </div>
+      <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_360px]">
+        <PixelPanel className="overflow-x-auto bg-void p-0">
+          <div className="relative h-[620px] min-w-[760px] overflow-hidden">
+            <div className="dot-grid absolute inset-0" aria-hidden />
+            <PixelParticles count={16} colors={['#ff3fa4', '#3ef2ff']} rise={30} />
+            <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
+              {edges.map((e) => {
+                const a = POS[e.from];
+                const b = POS[e.to];
+                return (
+                  <g key={`${e.from}-${e.to}`}>
+                    <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={e.tone} strokeOpacity={0.18} vectorEffect="non-scaling-stroke" style={{ strokeWidth: 6 }} />
+                    <line
+                      x1={a.x}
+                      y1={a.y}
+                      x2={b.x}
+                      y2={b.y}
+                      stroke={e.tone}
+                      strokeOpacity={e.active ? 0.95 : 0.35}
+                      vectorEffect="non-scaling-stroke"
+                      style={{ strokeWidth: 2 }}
+                      className={e.active ? 'signal-flow' : undefined} />
+                    
+                  </g>);
 
-          {/* NETWORK IMPACT */}
-          <div className="bg-slate-900/90 border border-slate-700 p-6 shadow-xl flex-1 flex flex-col">
-             <h3 className="font-pixel text-xs text-blue-400 tracking-widest uppercase mb-6">NETWORK IMPACT</h3>
-             
-             <div className="grid grid-cols-2 gap-4 mb-8">
-               <div className="border border-slate-700 bg-slate-800/50 p-4 text-center">
-                 <div className="font-pixel text-3xl text-white mb-2">{crewData?.crewMembers.length || 0}</div>
-                 <div className="font-pixel text-[8px] text-slate-400 tracking-widest">DIRECT NODES</div>
-               </div>
-               <div className="border border-slate-700 bg-slate-800/50 p-4 text-center">
-                 <div className="font-pixel text-3xl text-cyan-400 mb-2">{(crewData?.crewMembers.length || 0) * 2}</div>
-                 <div className="font-pixel text-[8px] text-slate-400 tracking-widest">2ND DEGREE</div>
-               </div>
-             </div>
+              })}
+            </svg>
 
-             <div className="flex-1">
-               <h4 className="font-pixel text-[10px] text-slate-500 mb-4 tracking-widest">CREW ROSTER</h4>
-               <div className="flex flex-col gap-2 overflow-y-auto pr-2 max-h-[300px]">
-                 {crewData?.crewMembers.length ? crewData.crewMembers.map((member) => (
-                   <div key={member.id} className="border border-slate-700 bg-slate-800/30 p-3 flex justify-between items-center group hover:bg-slate-800 transition-colors">
-                     <div>
-                       <div className="font-pixel text-xs text-white tracking-widest">{member.name}</div>
-                       <div className="font-pixel text-[8px] text-slate-400 mt-1">{member.state}</div>
-                     </div>
-                     <div className="w-2 h-2 bg-emerald-500 shadow-[0_0_10px_#10b981] animate-pulse" />
-                   </div>
-                 )) : (
-                   <div className="text-center p-8 border border-slate-800 border-dashed">
-                     <div className="font-pixel text-[10px] text-slate-500">NO ACTIVE SIGNALS</div>
-                   </div>
-                 )}
-               </div>
-             </div>
-          </div>
-        </div>
+            <span className="absolute left-4 top-4 font-px text-[10px] tracking-widest text-cyan">WHO BROUGHT ME</span>
+            <NodeAt pos={POS.arjun}>
+              <CrewNode member={INVITER} size={56} onClick={() => setSelected(INVITER)} ring="#3ef2ff" />
+            </NodeAt>
 
-        {/* RIGHT: THE NETWORK GRAPH */}
-        <div className="flex-1 min-h-[500px] bg-slate-950/60 backdrop-blur-sm border border-slate-700 relative overflow-hidden flex items-center justify-center p-8 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)]">
-          {/* Grid Background */}
-          <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(to right, #0f172a 1px, transparent 1px), linear-gradient(to bottom, #0f172a 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#020617_100%)] pointer-events-none z-10" />
-
-          <div className="relative w-full h-full max-w-2xl max-h-2xl flex items-center justify-center z-20">
-            
-            {/* CENTRAL NODE (YOU) */}
-            <motion.div 
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", bounce: 0.5 }}
-              className="absolute z-30 w-24 h-24 bg-blue-900 border-2 border-blue-400 shadow-[0_0_30px_#3b82f6] flex flex-col items-center justify-center"
-              style={{ transform: 'rotate(45deg)' }}
-            >
-              <div style={{ transform: 'rotate(-45deg)' }} className="flex flex-col items-center">
-                 <div className="font-pixel text-white text-sm tracking-widest">{centerNode.name}</div>
-                 <div className="font-pixel text-[8px] text-blue-300 mt-1">NODE 0</div>
+            <NodeAt pos={POS.me}>
+              <div className="flex flex-col items-center">
+                <span className="relative">
+                  <span className="glow-pulse absolute -inset-4 border-2 border-lime/60" aria-hidden />
+                  <PixelCharacter config={character} size={96} label={explorerName} />
+                </span>
+                <span className="mt-2 bg-lime px-2 py-1 font-px text-[10px] tracking-widest text-void">YOU · {explorerName}</span>
               </div>
-            </motion.div>
+            </NodeAt>
 
-            {/* CREW NODES */}
-            {crewData?.crewMembers.map((member, idx) => {
-              const angle = idx * angleStep;
-              const radius = 180;
-              const x = Math.cos(angle) * radius;
-              const y = Math.sin(angle) * radius;
-              
-              return (
-                <div key={member.id} className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  {/* Connecting Line (drawn using SVG) */}
-                  <svg className="absolute inset-0 w-full h-full overflow-visible z-10">
-                    <line x1="50%" y1="50%" x2={`calc(50% + ${x}px)`} y2={`calc(50% + ${y}px)`} stroke="#0ea5e9" strokeWidth="2" strokeOpacity="0.4" strokeDasharray="4 4" />
-                    {/* Animated signal pulse along the line */}
-                    <circle r="3" fill="#38bdf8" className="animate-[signalTravel_2s_linear_infinite]">
-                      <animateMotion path={`M 0,0 L ${x},${y}`} dur="3s" repeatCount="indefinite" />
-                    </circle>
-                  </svg>
-
-                  {/* The Crew Node */}
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.2 + (idx * 0.1), type: "spring" }}
-                    className="absolute z-20 w-16 h-16 bg-slate-900 border border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.3)] flex flex-col items-center justify-center pointer-events-auto hover:border-cyan-400 hover:shadow-[0_0_25px_rgba(6,182,212,0.6)] cursor-pointer"
-                    style={{ transform: `translate(${x}px, ${y}px) rotate(45deg)` }}
-                  >
-                    <div style={{ transform: 'rotate(-45deg)' }} className="flex flex-col items-center">
-                       <div className="w-6 h-6 bg-slate-800 border border-slate-600 mb-1" />
-                       <div className="font-pixel text-white text-[8px] tracking-widest">{member.name.substring(0, 8)}</div>
-                    </div>
-                  </motion.div>
-                </div>
-              );
-            })}
-
-            {/* Empty state decorative rings if no crew */}
-            {(!crewData?.crewMembers || crewData.crewMembers.length === 0) && (
-              <>
-                <div className="absolute w-64 h-64 border border-blue-500/20 rounded-full animate-[spin_20s_linear_infinite]" />
-                <div className="absolute w-96 h-96 border border-blue-500/10 rounded-full border-dashed animate-[spin_30s_linear_infinite_reverse]" />
-                <div className="absolute z-40 mt-40 bg-slate-900 border border-slate-700 px-4 py-2">
-                   <div className="font-pixel text-[10px] text-slate-400 tracking-widest text-center">NO SIGNALS DETECTED. SHARE YOUR LINK.</div>
-                </div>
-              </>
+            {CREW.map((m) =>
+            <NodeAt key={m.id} pos={POS[m.id]}>
+                <CrewNode member={m} size={m.degree === 1 ? 60 : 40} onClick={() => setSelected(m)} ring={m.degree === 1 ? '#b6ff3b' : '#ff3fa4'} />
+              </NodeAt>
             )}
 
+            <div className="absolute bottom-4 left-4 flex flex-wrap gap-4 bg-void/85 px-3 py-2 font-px text-[9px] tracking-widest">
+              <span className="flex items-center gap-1.5 text-cyan"><span className="h-2 w-2 bg-cyan" />INVITER</span>
+              <span className="flex items-center gap-1.5 text-lime"><span className="h-2 w-2 bg-lime" />DIRECT</span>
+              <span className="flex items-center gap-1.5 text-magenta"><span className="h-2 w-2 bg-magenta" />2ND DEGREE</span>
+              <span className="flex items-center gap-1.5 text-mute"><span className="h-2 w-2 bg-line-hi" />IDLE</span>
+            </div>
           </div>
-        </div>
+        </PixelPanel>
 
+        <aside className="flex flex-col gap-6" aria-label="Network impact">
+          <PixelPanel tone="magenta" className="bg-void p-5">
+            <h2 className="font-px text-[11px] tracking-widest text-magenta">NETWORK IMPACT</h2>
+            <div className="mt-4 flex items-end gap-6">
+              <div>
+                <p className="font-pixel text-[36px] leading-none text-ink">{CREW.length}</p>
+                <p className="mt-2 font-term text-lg text-mute">explorers in your network</p>
+              </div>
+              <div className="ml-auto flex h-14 items-end gap-1.5" aria-label="Network growth by day: 0, 1, 4, 8">
+                {GROWTH.map((g, i) =>
+                <div key={i} className="flex flex-col items-center gap-1">
+                    <span className={cn('w-4', i === GROWTH.length - 1 ? 'bg-magenta' : 'bg-magenta/40')} style={{ height: Math.max(3, g * 5) }} />
+                    <span className="font-px text-[8px] text-mute">D{i + 1}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+            <dl className="mt-5 grid grid-cols-3 gap-px bg-line">
+              {[
+              ['DIRECT', direct.length, '#b6ff3b'],
+              ['2ND DEG', second.length, '#ff3fa4'],
+              ['ACTIVE', `${active}/${CREW.length}`, '#3ef2ff']].
+              map(([k, v, c]) =>
+              <div key={k as string} className="bg-void p-3">
+                  <dt className="font-px text-[9px] tracking-widest text-mute">{k}</dt>
+                  <dd className="mt-1 font-pixel text-[14px]" style={{ color: c as string }}>
+                    {v}
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </PixelPanel>
+
+          <div>
+            <h2 className="font-px text-[11px] tracking-widest text-ink">MILESTONES</h2>
+            <ol className="mt-4 space-y-3">
+              {CREW_MILESTONES.map((m) => {
+                const count = m.label === 'Chain Reaction' ? CREW.length : direct.length + (m.target > 3 ? second.filter((s) => s.active).length - 2 : 0);
+                const reached = count >= m.target;
+                return (
+                  <li key={m.label} className="flex items-center gap-3">
+                    <span className={cn('flex h-7 w-7 shrink-0 items-center justify-center', reached ? 'bg-lime text-void' : 'bg-deep text-mute')}>
+                      {reached ? <CheckIcon className="h-4 w-4" /> : <span className="font-px text-[9px]">{m.target}</span>}
+                    </span>
+                    <div className="flex-1">
+                      <p className={cn('font-px text-[11px] tracking-wider', reached ? 'text-ink' : 'text-ink/70')}>{m.label.toUpperCase()}</p>
+                      <p className="font-term text-lg leading-none text-mute">{m.reward}</p>
+                    </div>
+                    <span className="font-term text-lg text-mute">
+                      {Math.min(count, m.target)}/{m.target}
+                    </span>
+                  </li>);
+
+              })}
+            </ol>
+          </div>
+
+          <PixelPanel tone="lime" className="bg-void p-5">
+            <p className="font-px text-[10px] tracking-widest text-lime">YOUR INVITE LINK</p>
+            <div className="mt-3 flex items-center gap-2 bg-deep px-3 py-2.5">
+              <span className="flex-1 truncate font-term text-xl text-ink">growthos.gg/join/SRINIDHI-7Q4</span>
+              <button onClick={copy} className="text-mute transition-colors duration-150 hover:text-lime" aria-label="Copy invite link">
+                {copied ? <CheckIcon className="h-4 w-4 text-lime" /> : <CopyIcon className="h-4 w-4" />}
+              </button>
+            </div>
+            <p className="mt-2 font-term text-lg text-mute" aria-live="polite">
+              {copied ? 'Copied. Send it to your batchmates.' : '+50 XP for each explorer who joins.'}
+            </p>
+            <PixelButton href="/card" className="mt-4 w-full" icon={<UserPlusIcon className="h-4 w-4" />}>
+              Share crew card
+            </PixelButton>
+          </PixelPanel>
+        </aside>
       </div>
-    </div>
-  );
+
+      <CrewMemberPanel member={selected} onClose={() => setSelected(null)} />
+    </div>);
+
 }
+
+function NodeAt({ pos, children }: {pos: {x: number;y: number;};children: React.ReactNode;}) {
+  return (
+    <div className="absolute -translate-x-1/2 -translate-y-1/2" style={{ left: `${pos.x}%`, top: `${pos.y}%` }}>
+      {children}
+    </div>);
+
+}
+
+function CrewNode({ member, size, onClick, ring }: {member: CrewMember;size: number;onClick: () => void;ring: string;}) {
+  return (
+    <button onClick={onClick} className="group flex flex-col items-center focus-visible:outline-none" aria-label={`Open ${member.name}`}>
+      <span className="relative transition-transform duration-150 ease-out group-hover:-translate-y-1 group-focus-visible:-translate-y-1">
+        <PixelCharacter config={member.config} size={size} dim={!member.active && member.stage === 0} showEffect={false} />
+      </span>
+      <span
+        className="px-frame-sm mt-1 flex items-center gap-1.5 bg-void px-2 py-1 font-px text-[9px] tracking-widest text-ink group-hover:[--b:#ffffff] group-focus-visible:[--b:#ffffff]"
+        style={{ '--b': member.active ? ring : '#3b2f8f' } as React.CSSProperties}>
+        
+        <span className="h-1.5 w-1.5" style={{ background: member.active ? ring : '#4a4185' }} />
+        {member.name}
+        <span className="text-mute">L{member.level}</span>
+      </span>
+    </button>);
+
+}
+
+
 
