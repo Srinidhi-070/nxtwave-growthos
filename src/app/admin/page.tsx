@@ -31,7 +31,10 @@ export default function AdminCommandCenter() {
       if (cohortJson.success) setCohortData(cohortJson.data);
       setLoading(false);
     })
-    .catch(console.error);
+    .catch(err => {
+      console.error(err);
+      setLoading(false);
+    });
   }, []);
 
   if (loading) {
@@ -196,7 +199,7 @@ export default function AdminCommandCenter() {
               </h3>
               <p className="text-xs text-zinc-500 mt-1">Global overrides and communication triggers.</p>
             </div>
-            <div className="text-[10px] font-mono text-red-500 border border-red-900/50 bg-red-950/30 px-2 py-1 rounded">
+            <div className="text-xs font-mono text-red-500 border border-red-900/50 bg-red-950/30 px-2 py-1 rounded">
               RESTRICTED ACCESS
             </div>
           </div>

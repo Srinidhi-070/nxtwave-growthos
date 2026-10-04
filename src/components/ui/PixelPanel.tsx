@@ -19,7 +19,7 @@ export default function PixelPanel({
 }: PixelPanelProps) {
   return (
     <motion.div 
-      className={`relative bg-slate-900 border-4 border-slate-700 p-1 pixel-corners shadow-[8px_8px_0px_rgba(0,0,0,0.5)] ${className}`}
+      className={`relative bg-slate-900 border-4 border-slate-700 p-1 pixel-corners shadow-[8px_8px_0px_rgba(0,0,0,0.5)] ${title ? 'mt-3' : ''} ${className}`}
       {...props}
     >
       {/* Decorative corner dots */}

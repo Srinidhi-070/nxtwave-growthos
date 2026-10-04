@@ -21,6 +21,7 @@ export default function LeaderboardPage() {
     const fetchLeaders = async () => {
       try {
         const res = await fetch('/api/leaderboard');
+        if (!res.ok) throw new Error('Fetch failed');
         const { data } = await res.json();
         if (data) setLeaders(data);
       } catch (err) {

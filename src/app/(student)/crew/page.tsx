@@ -25,6 +25,7 @@ export default function MyCrewPage() {
       if (!userId) return;
       try {
         const res = await fetch(`/api/crew?userId=${userId}`);
+        if (!res.ok) throw new Error('Fetch failed');
         const { data } = await res.json();
         if (data) setCrewData(data);
       } catch (e) {

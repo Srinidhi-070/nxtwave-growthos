@@ -19,6 +19,7 @@ export default function ProjectPassportPage() {
       if (!userId) return;
       try {
         const res = await fetch(`/api/user/profile?userId=${userId}`);
+        if (!res.ok) throw new Error('Fetch failed');
         const { data } = await res.json();
         
         if (data?.character) {

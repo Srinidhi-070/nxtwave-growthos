@@ -74,7 +74,10 @@ export default function CharacterCreatePage() {
         })
       });
 
-      if (!res.ok) throw new Error('Failed to save character');
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to save character');
+      }
 
       // Still keep in localStorage for immediate client reads if needed, 
       // but truth is now in DB
@@ -83,16 +86,25 @@ export default function CharacterCreatePage() {
       
       setCinematic(true);
       
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         router.push('/dashboard');
       }, 4000);
+      
+      // Cleanup attached to window for this simple case to avoid refactoring whole component to use effect
+      (window as any)._charTimer = timer;
 
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert('Failed to initialize Explorer. Please check connection.');
+      alert(err.message || 'Failed to initialize Explorer. Please check connection.');
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      if ((window as any)._charTimer) clearTimeout((window as any)._charTimer);
+    };
+  }, []);
 
   if (cinematic) {
     return (
@@ -173,7 +185,7 @@ export default function CharacterCreatePage() {
       </div>
 
       {/* RIGHT: Options */}
-      <div className="w-full lg:w-80 bg-slate-900/80 border-l border-slate-800 z-10 flex flex-col p-6 shrink-0 h-64 lg:h-auto overflow-y-auto">
+      <div className="w-full lg:w-80 bg-slate-900/80 border-l border-slate-800 z-10 flex flex-col p-6 shrink-0 h-[40vh] lg:h-auto overflow-y-auto">
         <h3 className="font-pixel tracking-widest text-blue-400 mb-6">{activeCategory} OPTIONS</h3>
         
         <div className="grid grid-cols-2 gap-3 mb-8">
@@ -183,6 +195,7 @@ export default function CharacterCreatePage() {
               <button
                 key={opt}
                 onClick={() => setConfig({ ...config, [categoryKey]: opt })}
+                aria-pressed={isActive}
                 className={`px-3 py-3 text-center text-xs font-pixel tracking-widest uppercase transition-all ${isActive ? 'bg-white text-slate-900 pixel-corners shadow-[0_0_10px_rgba(255,255,255,0.3)]' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
               >
                 {opt}

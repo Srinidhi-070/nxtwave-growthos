@@ -31,12 +31,20 @@ export default function RiskQueuePage() {
   }, []);
 
   const handleReview = async (id: string, resolution: string) => {
-    await fetch(`/api/risk/${id}/review`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ resolution })
-    });
-    fetchFlags();
+    try {
+      const res = await fetch(`/api/risk/${id}/review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resolution })
+      });
+      if (res.ok) {
+        fetchFlags();
+      } else {
+        console.error("Failed to submit review");
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   if (loading) return <div className="flex-1 flex items-center justify-center p-8 text-zinc-500 font-mono text-sm">Loading risk telemetry...</div>;
@@ -67,7 +75,7 @@ export default function RiskQueuePage() {
                   <div className="flex items-center gap-3 mb-2">
                     <AlertTriangle className={`w-5 h-5 ${riskColor}`} />
                     <h3 className="font-semibold text-white text-lg">Risk Score: {flag.score}</h3>
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase border ${
+                    <span className={`px-2 py-0.5 rounded text-xs font-bold tracking-widest uppercase border ${
                       riskLevel === 'CRITICAL' ? 'bg-rose-900/30 text-rose-500 border-rose-800/50' :
                       'bg-orange-900/30 text-orange-500 border-orange-800/50'
                     }`}>

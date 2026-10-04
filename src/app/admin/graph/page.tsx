@@ -86,6 +86,10 @@ export default function ReferralGraphPage() {
           setEdges(layoutedEdges);
         }
         setLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
       });
   }, []);
 
@@ -98,7 +102,7 @@ export default function ReferralGraphPage() {
         <p className="text-sm text-zinc-500 font-medium">Visualizing the propagation of the campaign</p>
       </div>
 
-      <div className="w-full bg-[#111] border border-white/10 rounded-xl overflow-hidden h-[600px] shadow-inner relative">
+      <div className="w-full bg-[#111] border border-white/10 rounded-xl overflow-hidden min-h-[50vh] md:h-[600px] shadow-inner relative">
         <ReactFlow nodes={nodes} edges={edges} fitView colorMode="dark">
           <Background color="#333" gap={16} />
           <Controls />

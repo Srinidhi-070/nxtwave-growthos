@@ -22,7 +22,7 @@ export default function ExperimentsPage() {
               <div>
                 <div className="flex items-center gap-3 mb-1">
                   <h2 className="text-sm font-semibold text-white uppercase tracking-wider">{exp.key}</h2>
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase ${
+                  <span className={`px-2 py-0.5 rounded text-xs font-bold tracking-widest uppercase ${
                     exp.status === 'RUNNING' ? 'bg-blue-900/30 text-blue-400 border border-blue-800/50' :
                     exp.status === 'ENDED' ? 'bg-emerald-900/30 text-emerald-400 border border-emerald-800/50' : 'bg-[#222] text-zinc-500 border border-white/5'
                   }`}>
@@ -34,16 +34,16 @@ export default function ExperimentsPage() {
             </div>
 
             <div className="mt-6 pt-6 border-t border-white/5">
-              <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-3">Primary Metric: <span className="text-white font-semibold">{exp.metric}</span></p>
+              <p className="text-xs text-zinc-500 uppercase tracking-widest mb-3">Primary Metric: <span className="text-white font-semibold">{exp.metric}</span></p>
               
               {exp.results ? (
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-[#0a0a0a] p-3 rounded-md border border-white/5">
-                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Control</p>
+                    <p className="text-xs text-zinc-500 uppercase tracking-widest mb-1">Control</p>
                     <p className="text-xl font-medium text-white">{exp.results.control}%</p>
                   </div>
                   <div className="bg-[#0a0a0a] p-3 rounded-md border border-white/5">
-                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Variant</p>
+                    <p className="text-xs text-zinc-500 uppercase tracking-widest mb-1">Variant</p>
                     <p className="text-xl font-medium text-emerald-400">{exp.results.variant}%</p>
                   </div>
                 </div>

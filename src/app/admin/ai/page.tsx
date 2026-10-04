@@ -59,12 +59,12 @@ export default function AIInsightsPage() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
               </span>
-              <span className="text-[10px] text-blue-400 font-mono uppercase tracking-widest">Signal Detected • {insight.window}</span>
+              <span className="text-xs text-blue-400 font-mono uppercase tracking-widest">Signal Detected • {insight.window}</span>
             </div>
             <h2 className="text-2xl font-medium text-white leading-tight">{insight.claim}</h2>
           </div>
           <div className="text-right shrink-0">
-            <span className="text-[10px] text-zinc-500 uppercase tracking-widest block mb-1">Confidence</span>
+            <span className="text-xs text-zinc-500 uppercase tracking-widest block mb-1">Confidence</span>
             <span className="text-lg font-mono text-emerald-400">{insight.confidence}</span>
           </div>
         </div>

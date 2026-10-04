@@ -85,7 +85,7 @@ export default function CharacterRenderer({
         animate={animating ? { y: [0, -4, 0] } : {}}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       >
-        <svg viewBox="0 0 100 100" className="w-full h-full" shapeRendering="crispEdges">
+        <svg viewBox="0 0 100 100" className="w-full h-full" shapeRendering="crispEdges" role="img" aria-label="AI Explorer Avatar">
           
           {/* BODY */}
           <rect x="35" y="40" width="30" height="40" fill={outfitData.main} />

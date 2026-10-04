@@ -15,8 +15,11 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { email, phone, collegeId, graduationYear, referralCode, campaignId, source, medium } = body;
 
-    if (!email) {
-      return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+    if (!email || typeof email !== 'string') {
+      return NextResponse.json({ error: 'Valid email is required' }, { status: 400 });
+    }
+    if (phone && typeof phone !== 'string') {
+      return NextResponse.json({ error: 'Invalid phone format' }, { status: 400 });
     }
 
     const emailHash = hashIdentity(email);

@@ -43,8 +43,17 @@ export default function RegistrationForm() {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  useEffect(() => {
+    return () => {
+      if ((window as any)._regTimers) {
+        (window as any)._regTimers.forEach((t: NodeJS.Timeout) => clearTimeout(t));
+      }
+    };
+  }, []);
+
   const runCinematicSequence = () => {
     setCinematic(true);
+    (window as any)._regTimers = [];
     
     const sequence = [
       { text: 'CREATING IDENTITY...', delay: 0 },
@@ -55,12 +64,14 @@ export default function RegistrationForm() {
     ];
 
     sequence.forEach(({ text, delay }) => {
-      setTimeout(() => setCinematicText(text), delay);
+      const t = setTimeout(() => setCinematicText(text), delay);
+      (window as any)._regTimers.push(t);
     });
 
-    setTimeout(() => {
+    const t2 = setTimeout(() => {
       router.push('/character/create');
     }, 4000);
+    (window as any)._regTimers.push(t2);
   };
 
   const handleNext = () => {
@@ -185,23 +196,23 @@ export default function RegistrationForm() {
       <div className="flex justify-between items-center mb-8 px-2">
         {STEPS.map((s, i) => (
           <div key={s} className="flex flex-col items-center flex-1">
-            <div className={`text-[10px] font-pixel tracking-widest mb-2 ${i <= step ---------------------- 'text-blue-400' : 'text-slate-600'}`}>
+            <div className={`text-xs font-pixel tracking-widest mb-2 ${i <= step ? 'text-blue-400' : 'text-slate-600'}`}>
               0{i + 1}
             </div>
-            <div className={`w-3 h-3 rounded-full mb-1 ${i <= step ---------------------- 'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]' : 'bg-slate-800'}`} />
+            <div className={`w-3 h-3 rounded-full mb-1 ${i <= step ? 'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]' : 'bg-slate-800'}`} />
             {i < STEPS.length - 1 && (
                <div className="absolute h-[2px] bg-slate-800 top-[1.35rem] left-[10%] right-[10%] -z-10" />
             )}
-            <div className={`hidden sm:block text-[9px] font-pixel uppercase ${i <= step ---------------------- 'text-slate-300' : 'text-slate-600'}`}>
+            <div className={`hidden sm:block text-[10px] font-pixel uppercase ${i <= step ? 'text-slate-300' : 'text-slate-600'}`}>
               {s}
             </div>
           </div>
         ))}
         {/* Step 5 - Character */}
         <div className="flex flex-col items-center flex-1">
-            <div className={`text-[10px] font-pixel tracking-widest mb-2 text-slate-600`}>05</div>
+            <div className={`text-xs font-pixel tracking-widest mb-2 text-slate-600`}>05</div>
             <div className={`w-3 h-3 rounded-full mb-1 bg-slate-800`} />
-            <div className={`hidden sm:block text-[9px] font-pixel uppercase text-slate-600`}>EXPLORER</div>
+            <div className={`hidden sm:block text-[10px] font-pixel uppercase text-slate-600`}>EXPLORER</div>
         </div>
       </div>
 
@@ -225,14 +236,14 @@ export default function RegistrationForm() {
               <div className="space-y-5">
                 <h2 className="text-lg font-bold text-white uppercase tracking-tight mb-2">Step 01: Identity</h2>
                 <div>
-                  <label className="block text-xs font-pixel text-slate-400 mb-2 uppercase tracking-widest">Full Name</label>
-                  <input type="text" name="name" value={formData.name} onChange={handleChange} required
+                  <label htmlFor="name" className="block text-xs font-pixel text-slate-400 mb-2 uppercase tracking-widest">Full Name</label>
+                    <input id="name" type="text" name="name" value={formData.name} onChange={handleChange} required
                     className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-sans"
                     placeholder="Enter full name" />
                 </div>
                 <div>
-                  <label className="block text-xs font-pixel text-slate-400 mb-2 uppercase tracking-widest">Email Address</label>
-                  <input type="email" name="email" value={formData.email} onChange={handleChange} required
+                  <label htmlFor="email" className="block text-xs font-pixel text-slate-400 mb-2 uppercase tracking-widest">Email Address</label>
+                    <input id="email" type="email" name="email" value={formData.email} onChange={handleChange} required
                     className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-sans"
                     placeholder="student@college.edu" />
                 </div>
@@ -295,17 +306,17 @@ export default function RegistrationForm() {
         </AnimatePresence>
 
         <div className="mt-8 flex justify-between">
-          {step > 0 ---------------------- (
+          {step > 0 ? (
             <button onClick={() => setStep(s => s - 1)} className="text-slate-400 font-pixel text-xs hover:text-white uppercase">
               [ BACK ]
             </button>
           ) : <div />}
           
-          {step < 3 ---------------------- (
+          {step < 3 ? (
             <PixelButton onClick={handleNext} variant="primary">NEXT STEP</PixelButton>
           ) : (
             <PixelButton onClick={handleSubmit} disabled={loading} variant="primary">
-              {loading ---------------------- 'PROCESSING...' : 'CREATE ACCOUNT'}
+              {loading ? 'PROCESSING...' : 'CREATE ACCOUNT'}
             </PixelButton>
           )}
         </div>
@@ -313,3 +324,4 @@ export default function RegistrationForm() {
     </div>
   );
 }
+
