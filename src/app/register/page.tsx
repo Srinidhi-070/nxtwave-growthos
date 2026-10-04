@@ -1,13 +1,13 @@
 import { Suspense } from 'react';
 import RegistrationForm from './RegistrationForm';
-import StarfieldBackground from '@/components/ui/StarfieldBackground';
+import PixelEnvironment from '@/components/ui/PixelEnvironment';
 
 export default function RegisterPage() {
   return (
     <main className="relative min-h-screen bg-[#020617] flex flex-col items-center justify-center p-4 overflow-hidden">
       
       {/* --- PARALLAX STARFIELD BACKGROUND --- */}
-      <StarfieldBackground />
+      <PixelEnvironment worldState="QUIET" />
       
       <div className="relative z-10 w-full max-w-lg mt-8">
         <div className="mb-6 text-center">
@@ -23,3 +23,4 @@ export default function RegisterPage() {
     </main>
   );
 }
+

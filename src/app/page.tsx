@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import PixelButton from '@/components/ui/PixelButton';
-import StarfieldBackground from '@/components/ui/StarfieldBackground';
+import PixelEnvironment from '@/components/ui/PixelEnvironment';
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -26,7 +26,7 @@ export default function Home() {
     <main className="relative min-h-screen bg-slate-950 overflow-hidden flex flex-col items-center justify-center p-4 lg:p-12">
       
       {/* --- PARALLAX STARFIELD BACKGROUND --- */}
-      <StarfieldBackground />
+      <PixelEnvironment worldState="ACTIVE" />
 
       {/* --- TOP NAV --- */}
       <nav className="absolute top-0 left-0 right-0 z-20 w-full flex justify-between items-center p-6 lg:p-8">
@@ -121,3 +121,4 @@ export default function Home() {
     </main>
   );
 }
+
