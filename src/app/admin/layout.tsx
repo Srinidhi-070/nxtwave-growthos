@@ -8,63 +8,84 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
 
   const links = [
-    { name: 'Telemetry', path: '/admin' },
-    { name: 'Referral Engine', path: '/admin/graph' },
-    { name: 'Experiments', path: '/admin/experiments' },
-    { name: 'Risk & Fraud', path: '/admin/risk' },
-    { name: 'Growth Copilot', path: '/admin/ai' },
+    { name: 'TELEMETRY', path: '/admin' },
+    { name: 'NETWORK GRAPH', path: '/admin/graph' },
+    { name: 'EXPERIMENTS', path: '/admin/experiments' },
+    { name: 'RISK & FRAUD', path: '/admin/risk' },
+    { name: 'AI COPILOT', path: '/admin/ai' },
   ];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-[#ededed] font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed selection:bg-blue-500/30 flex flex-col">
-      {/* Top Navigation Bar */}
-      <header className="h-14 border-b border-white/10 flex items-center justify-between px-6 bg-[#0a0a0a]/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="flex items-center gap-8">
-          <Link href="/admin" className="font-semibold tracking-tight text-white flex items-center gap-2">
-            <div className="w-2 h-2 rounded-none bg-blue-500" />
-            GrowthOS
+    <div className="min-h-screen bg-[#020617] text-[#94a3b8] font-pixel text-[10px] tracking-widest uppercase flex flex-col relative overflow-hidden">
+      
+      {/* CRT Scanline Overlay */}
+      <div className="fixed inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,0.3)_50%)] bg-[size:100%_4px] pointer-events-none z-50 mix-blend-multiply opacity-50" />
+      
+      {/* Deep Radar Grid Background */}
+      <div className="fixed inset-0 z-0">
+         <div className="absolute inset-0 bg-[linear-gradient(to_right,#0ea5e911_1px,transparent_1px),linear-gradient(to_bottom,#0ea5e911_1px,transparent_1px)] bg-[size:40px_40px]" />
+         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#020617_80%)]" />
+      </div>
+
+      {/* Operator Header */}
+      <header className="h-16 border-b-2 border-slate-800 flex items-center justify-between px-6 bg-[#020617]/90 backdrop-blur-md relative z-40">
+        
+        {/* Connection Status Line */}
+        <div className="absolute bottom-0 left-0 h-[2px] bg-cyan-500 shadow-[0_0_10px_#06b6d4] w-1/4 animate-pulse" />
+
+        <div className="flex items-center gap-12">
+          <Link href="/admin" className="text-white flex items-center gap-3 group">
+            <div className="w-3 h-3 bg-cyan-400 shadow-[0_0_15px_#22d3ee] group-hover:animate-ping" />
+            <div>
+              <div className="text-lg tracking-widest">GrowthOS</div>
+              <div className="text-[8px] text-cyan-500">OPERATOR TERMINAL v2.4</div>
+            </div>
           </Link>
           
-          <nav className="hidden md:flex gap-1 text-sm font-medium">
+          <nav className="hidden lg:flex gap-2">
             {links.map((link) => {
               const isActive = pathname === link.path;
               return (
                 <Link
                   key={link.name}
                   href={link.path}
-                  className={`relative px-3 py-1.5 rounded-md transition-colors ${isActive ? 'text-white' : 'text-zinc-400 hover:text-white hover:bg-white/5'}`}
+                  className={`px-4 py-2 transition-colors relative ${
+                    isActive 
+                      ? 'text-cyan-300 bg-cyan-950/50 border border-cyan-800' 
+                      : 'text-slate-500 border border-transparent hover:text-slate-300 hover:border-slate-800'
+                  }`}
                 >
                   {isActive && (
                     <motion.div
-                      layoutId="admin-nav-indicator"
-                      className="absolute inset-0 bg-white/10 rounded-md"
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      layoutId="adminNavIndicator"
+                      className="absolute -top-[1px] left-0 right-0 h-[2px] bg-cyan-400 shadow-[0_0_10px_#22d3ee]"
                     />
                   )}
-                  <span className="relative z-10">{link.name}</span>
+                  {link.name}
                 </Link>
               );
             })}
           </nav>
         </div>
 
-        <div className="flex items-center gap-4 text-xs font-medium text-zinc-500">
-          <div className="flex items-center gap-2">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-none h-2 w-2 bg-emerald-500"></span>
-            </span>
-            LIVE
-          </div>
-          <div className="hidden sm:block border-l border-white/10 h-4 pl-4">Campaign Day: 4 / 7</div>
+        <div className="flex items-center gap-6">
+           <div className="flex flex-col items-end">
+             <div className="text-emerald-400 text-[8px] flex items-center gap-2">
+               DATA STREAM <div className="w-1.5 h-1.5 bg-emerald-500 rounded-none animate-pulse" />
+             </div>
+             <div className="text-slate-600 text-[8px]">ENCRYPTED SECURE CHANNEL</div>
+           </div>
+           
+           <Link href="/dashboard" className="px-4 py-2 bg-slate-900 border border-slate-700 text-slate-400 hover:bg-slate-800 transition-colors">
+              EXIT TERMINAL
+           </Link>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col">
+      {/* Main Content Area */}
+      <main className="flex-1 relative z-10 p-4 md:p-6 overflow-y-auto">
         {children}
       </main>
     </div>
   );
 }
-

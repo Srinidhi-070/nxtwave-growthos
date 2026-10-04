@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { AlertTriangle, ShieldCheck, RefreshCw, XCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface RiskFlag {
   id: string;
@@ -17,110 +18,154 @@ export default function RiskQueuePage() {
   const [loading, setLoading] = useState(true);
 
   const fetchFlags = () => {
+    setLoading(true);
     fetch('/api/risk/queue')
       .then(res => res.json())
       .then(json => {
         if (json.success) setFlags(json.data);
-        setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(console.error)
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
     fetchFlags();
   }, []);
 
-  const handleReview = async (id: string, resolution: string) => {
+  const handleAction = async (id: string, decision: 'APPROVE' | 'REJECT') => {
     try {
-      const action = resolution === 'cleared' ? 'APPROVE' : 'REJECT';
-      const res = await fetch(`/api/risk/${id}/review`, {
+      await fetch(`/api/risk/${id}/review`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action })
+        body: JSON.stringify({ decision })
       });
-      if (res.ok) {
-        fetchFlags();
-      } else {
-        console.error("Failed to submit review");
-      }
+      fetchFlags();
     } catch (e) {
       console.error(e);
     }
   };
 
-  if (loading) return <div className="flex-1 flex items-center justify-center p-8 text-zinc-500 font-mono text-sm">Loading risk telemetry...</div>;
-
   return (
-    <div className="flex-1 p-6 lg:p-10 max-w-7xl mx-auto w-full text-slate-200">
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-white tracking-tight mb-1">Quality & Fraud Telemetry</h1>
-        <p className="text-sm text-zinc-500 font-medium">Reviewing high-velocity nodes and anomalous behavior</p>
+    <div className="w-full flex flex-col gap-6 relative z-10">
+      
+      {/* HEADER COMMAND BAR */}
+      <div className="bg-[#1a0505] border border-red-900 p-4 flex justify-between items-center shadow-[0_0_20px_rgba(220,38,38,0.2)] shrink-0">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 bg-red-950 flex items-center justify-center border border-red-800 animate-pulse">
+             <AlertTriangle className="text-red-500 w-6 h-6" />
+          </div>
+          <div>
+            <h1 className="text-xl font-pixel text-red-500 tracking-widest drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]">THREAT & RISK ANALYSIS</h1>
+            <p className="text-[10px] text-red-400 tracking-widest mt-1 opacity-80">MONITORING FRAUD SIGNALS & SYBIL ATTACKS</p>
+          </div>
+        </div>
+        <button 
+          onClick={fetchFlags}
+          className="flex items-center gap-2 bg-red-950 border border-red-800 px-4 py-2 hover:bg-red-900 hover:border-red-500 group transition-colors"
+        >
+          <RefreshCw className={`w-3 h-3 text-red-500 ${loading ? 'animate-spin' : 'group-hover:animate-spin'}`} />
+          <span className="font-pixel text-[10px] text-red-400">SCAN NETWORK</span>
+        </button>
       </div>
 
-      {!flags || flags.length === 0 ? (
-        <div className="bg-[#111] border border-white/10 rounded-xl p-12 text-center flex flex-col items-center">
-          <ShieldCheck className="w-12 h-12 text-emerald-400 mb-4 opacity-80" />
-          <h3 className="text-lg font-medium text-white mb-2">Network is secure</h3>
-          <p className="text-sm text-zinc-500">No pending risk flags or anomalous behaviors detected.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-4">
-          {flags.map(flag => {
-            let signals: string[] = [];
-            try {
-              const parsed = JSON.parse(flag.signalsJson || '[]');
-              signals = Array.isArray(parsed) ? parsed : [String(parsed)];
-            } catch (e) {
-              signals = ["Invalid signal data"];
-            }
-            
-            const riskLevel = flag.score >= 90 ? 'CRITICAL' : flag.score >= 70 ? 'HIGH' : 'MEDIUM';
-            const riskColor = riskLevel === 'CRITICAL' ? 'text-rose-500' : riskLevel === 'HIGH' ? 'text-orange-500' : 'text-amber-500';
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        {/* SUMMARY STATS */}
+        <div className="col-span-1 flex flex-col gap-4">
+           <div className="bg-[#1a0505] border border-red-900 p-6 flex flex-col items-center justify-center py-10 relative overflow-hidden">
+              <div className="absolute top-0 inset-x-0 h-1 bg-red-600 animate-pulse" />
+              <div className="font-pixel text-[10px] text-red-500 mb-4 tracking-widest">ACTIVE THREATS</div>
+              <div className="font-pixel text-6xl text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.8)]">{flags.length}</div>
+           </div>
 
-            return (
-              <div key={flag.id} className="bg-[#111] border border-white/10 rounded-xl p-6 flex flex-col md:flex-row gap-6 justify-between items-start md:items-center">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <AlertTriangle className={`w-5 h-5 ${riskColor}`} />
-                    <h3 className="font-semibold text-white text-lg">Risk Score: {flag.score}</h3>
-                    <span className={`px-2 py-0.5 rounded text-xs font-bold tracking-widest uppercase border ${
-                      riskLevel === 'CRITICAL' ? 'bg-rose-900/30 text-rose-500 border-rose-800/50' :
-                      'bg-orange-900/30 text-orange-500 border-orange-800/50'
-                    }`}>
-                      {riskLevel}
-                    </span>
-                  </div>
-                  <div className="text-xs font-mono text-zinc-500 mb-4">Entity: {flag.subjectType} | ID: {flag.subjectId}</div>
-                  
-                  <div className="space-y-1">
-                    {signals.map((sig: string, i: number) => (
-                      <div key={i} className="text-sm text-zinc-300 flex items-center gap-2">
-                        <div className="w-1 h-1 rounded-none bg-zinc-600" /> {sig}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex gap-3 w-full md:w-auto">
-                  <button 
-                    onClick={() => handleReview(flag.id, 'cleared')}
-                    className="flex-1 md:flex-none bg-[#222] hover:bg-[#333] border border-white/10 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                  >
-                    Mark False Positive
-                  </button>
-                  <button 
-                    onClick={() => handleReview(flag.id, 'banned')}
-                    className="flex-1 md:flex-none bg-rose-600 hover:bg-rose-500 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                  >
-                    Quarantine Node
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+           <div className="bg-slate-950 border border-slate-800 p-4 relative overflow-hidden">
+              <div className="font-pixel text-[10px] text-slate-500 mb-2 tracking-widest">THREAT VECTORS</div>
+              <ul className="font-pixel text-[8px] text-slate-400 space-y-2 uppercase">
+                 <li className="flex justify-between border-b border-slate-800 pb-1"><span>IP DUPLICATION</span> <span className="text-red-500">ACTIVE</span></li>
+                 <li className="flex justify-between border-b border-slate-800 pb-1"><span>VELOCITY SPIKES</span> <span className="text-amber-500">MONITORING</span></li>
+                 <li className="flex justify-between border-b border-slate-800 pb-1"><span>BOT NETWORKS</span> <span className="text-green-500">CLEAR</span></li>
+              </ul>
+           </div>
         </div>
-      )}
+
+        {/* THREAT QUEUE */}
+        <div className="col-span-1 lg:col-span-3 bg-[#0a0202] border border-red-900 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] flex flex-col">
+           <div className="bg-red-950/30 border-b border-red-900 p-3 flex px-6">
+              <div className="font-pixel text-[10px] text-red-500 tracking-widest w-1/4">SUBJECT</div>
+              <div className="font-pixel text-[10px] text-red-500 tracking-widest w-1/4 text-center">RISK SCORE</div>
+              <div className="font-pixel text-[10px] text-red-500 tracking-widest w-1/4">SIGNALS</div>
+              <div className="font-pixel text-[10px] text-red-500 tracking-widest w-1/4 text-right">ACTION</div>
+           </div>
+           
+           <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
+              {loading && flags.length === 0 ? (
+                 <div className="flex-1 flex items-center justify-center font-pixel text-[10px] text-red-500 animate-pulse">
+                    SCANNING NETWORK TRAFFIC...
+                 </div>
+              ) : flags.length === 0 ? (
+                 <div className="flex-1 flex flex-col items-center justify-center font-pixel text-emerald-500 opacity-50 py-12">
+                    <ShieldCheck className="w-12 h-12 mb-4 opacity-50" />
+                    <div className="text-xs tracking-widest">NO ACTIVE THREATS DETECTED</div>
+                 </div>
+              ) : (
+                 <AnimatePresence>
+                   {flags.map((flag) => {
+                     const sig = JSON.parse(flag.signalsJson || '{}');
+                     
+                     return (
+                       <motion.div 
+                         key={flag.id}
+                         initial={{ opacity: 0, x: -20 }}
+                         animate={{ opacity: 1, x: 0 }}
+                         exit={{ opacity: 0, scale: 0.95 }}
+                         className="border border-red-900 bg-red-950/10 hover:bg-red-950/30 transition-colors p-4 flex items-center"
+                       >
+                         {/* Subject */}
+                         <div className="w-1/4">
+                           <div className="font-pixel text-xs text-red-400">{flag.subjectType}</div>
+                           <div className="font-pixel text-[8px] text-slate-500 mt-1 truncate pr-4">{flag.subjectId}</div>
+                         </div>
+                         
+                         {/* Score */}
+                         <div className="w-1/4 flex justify-center">
+                           <div className={`font-pixel text-xl ${flag.score > 80 ? 'text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.8)] animate-pulse' : 'text-amber-500'}`}>
+                             {flag.score}
+                           </div>
+                         </div>
+
+                         {/* Signals */}
+                         <div className="w-1/4">
+                           <ul className="font-pixel text-[8px] text-slate-400 uppercase flex flex-col gap-1">
+                             {Object.entries(sig).slice(0,3).map(([k, v]) => (
+                               <li key={k} className="truncate"><span className="text-red-400">{k}:</span> {String(v)}</li>
+                             ))}
+                           </ul>
+                         </div>
+
+                         {/* Actions */}
+                         <div className="w-1/4 flex justify-end gap-2">
+                           <button 
+                             onClick={() => handleAction(flag.id, 'APPROVE')}
+                             className="border border-emerald-900 bg-emerald-950/30 hover:bg-emerald-900 text-emerald-500 font-pixel text-[8px] px-3 py-2 transition-colors flex items-center gap-1"
+                           >
+                             <ShieldCheck className="w-3 h-3" /> CLEAR
+                           </button>
+                           <button 
+                             onClick={() => handleAction(flag.id, 'REJECT')}
+                             className="border border-red-900 bg-red-950/50 hover:bg-red-800 text-red-400 font-pixel text-[8px] px-3 py-2 transition-colors flex items-center gap-1"
+                           >
+                             <XCircle className="w-3 h-3" /> BAN
+                           </button>
+                         </div>
+                       </motion.div>
+                     )
+                   })}
+                 </AnimatePresence>
+              )}
+           </div>
+        </div>
+
+      </div>
     </div>
   );
 }
-
