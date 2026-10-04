@@ -36,11 +36,15 @@ export default function Home() {
       <div className="absolute inset-0 z-0 bg-[#020617] overflow-hidden">
         {/* Animated Perspective Grid */}
         <div 
-          className="absolute inset-0 z-0 opacity-40"
+          className="absolute z-0 opacity-50"
           style={{
-            backgroundImage: 'linear-gradient(to right, #3b82f6 2px, transparent 2px), linear-gradient(to bottom, #3b82f6 2px, transparent 2px)',
-            backgroundSize: '60px 60px',
-            transform: 'perspective(500px) rotateX(60deg) scale(3) translateY(-50px)',
+            width: '200vw',
+            height: '200vh',
+            left: '-50vw',
+            top: '0',
+            backgroundImage: 'linear-gradient(to right, rgba(59,130,246,0.4) 1px, transparent 1px), linear-gradient(to bottom, rgba(59,130,246,0.4) 1px, transparent 1px)',
+            backgroundSize: '40px 40px',
+            transform: 'perspective(1000px) rotateX(70deg) translateY(-20%)',
             animation: 'gridMove 2s linear infinite',
             transformOrigin: 'top center'
           }}
@@ -48,7 +52,7 @@ export default function Home() {
         <style dangerouslySetInnerHTML={{__html: `
           @keyframes gridMove {
             0% { background-position: 0 0; }
-            100% { background-position: 0 60px; }
+            100% { background-position: 0 40px; }
           }
         `}} />
         {/* Radial Fade to mask the edges */}
