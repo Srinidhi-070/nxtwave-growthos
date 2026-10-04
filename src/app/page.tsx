@@ -8,10 +8,18 @@ import CharacterRenderer from '@/components/character/CharacterRenderer';
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
+  const [particles, setParticles] = useState<{x: number, y: number, duration: number, delay: number, drop: number}[]>([]);
   const [stats, setStats] = useState({ registered: 482, max: 500 });
 
   useEffect(() => {
     setMounted(true);
+    setParticles([...Array(20)].map(() => ({
+      x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+      y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
+      duration: Math.random() * 5 + 5,
+      delay: Math.random() * 5,
+      drop: Math.random() * -100 - 50
+    })));
     // Fetch real stats
     fetch('/api/stats/workshop')
       .then(res => res.json())
@@ -25,22 +33,22 @@ export default function Home() {
     <main className="relative min-h-screen bg-slate-950 overflow-hidden flex flex-col items-center p-4 lg:p-12 pb-24">
       
       {/* --- DEEP ANIMATED CYBER BACKGROUND --- */}
-      <div className="absolute inset-0 z-0 bg-[#020617]">
+      <div className="absolute inset-0 z-0 bg-[#020617] overflow-hidden">
         {/* Animated Perspective Grid */}
         <div 
-          className="absolute inset-0 z-0 opacity-20"
+          className="absolute inset-0 z-0 opacity-40"
           style={{
-            backgroundImage: 'linear-gradient(to right, #3b82f6 1px, transparent 1px), linear-gradient(to bottom, #3b82f6 1px, transparent 1px)',
-            backgroundSize: '40px 40px',
-            transform: 'perspective(500px) rotateX(60deg) scale(2.5) translateY(-100px)',
-            animation: 'gridMove 10s linear infinite',
+            backgroundImage: 'linear-gradient(to right, #3b82f6 2px, transparent 2px), linear-gradient(to bottom, #3b82f6 2px, transparent 2px)',
+            backgroundSize: '60px 60px',
+            transform: 'perspective(500px) rotateX(60deg) scale(3) translateY(-50px)',
+            animation: 'gridMove 2s linear infinite',
             transformOrigin: 'top center'
           }}
         />
         <style dangerouslySetInnerHTML={{__html: `
           @keyframes gridMove {
             0% { background-position: 0 0; }
-            100% { background-position: 0 40px; }
+            100% { background-position: 0 60px; }
           }
         `}} />
         {/* Radial Fade to mask the edges */}
@@ -170,4 +178,5 @@ export default function Home() {
     </main>
   );
 }
+
 
