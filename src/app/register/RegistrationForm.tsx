@@ -45,15 +45,15 @@ export default function RegistrationForm() {
 
   useEffect(() => {
     return () => {
-      if ((window as any)._regTimers) {
-        (window as any)._regTimers.forEach((t: NodeJS.Timeout) => clearTimeout(t));
+      if ((window as unknown)._regTimers) {
+        (window as unknown)._regTimers.forEach((t: NodeJS.Timeout) => clearTimeout(t));
       }
     };
   }, []);
 
   const runCinematicSequence = () => {
     setCinematic(true);
-    (window as any)._regTimers = [];
+    (window as unknown)._regTimers = [];
     
     const sequence = [
       { text: 'CREATING IDENTITY...', delay: 0 },
@@ -65,13 +65,13 @@ export default function RegistrationForm() {
 
     sequence.forEach(({ text, delay }) => {
       const t = setTimeout(() => setCinematicText(text), delay);
-      (window as any)._regTimers.push(t);
+      (window as unknown)._regTimers.push(t);
     });
 
     const t2 = setTimeout(() => {
       router.push('/character/create');
     }, 4000);
-    (window as any)._regTimers.push(t2);
+    (window as unknown)._regTimers.push(t2);
   };
 
   const handleNext = () => {
@@ -324,4 +324,6 @@ export default function RegistrationForm() {
     </div>
   );
 }
+
+
 

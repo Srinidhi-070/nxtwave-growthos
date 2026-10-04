@@ -91,9 +91,9 @@ export default function CharacterCreatePage() {
       }, 4000);
       
       // Cleanup attached to window for this simple case to avoid refactoring whole component to use effect
-      (window as any)._charTimer = timer;
+      (window as unknown)._charTimer = timer;
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
       alert(err.message || 'Failed to initialize Explorer. Please check connection.');
       setLoading(false);
@@ -102,7 +102,7 @@ export default function CharacterCreatePage() {
 
   useEffect(() => {
     return () => {
-      if ((window as any)._charTimer) clearTimeout((window as any)._charTimer);
+      if ((window as unknown)._charTimer) clearTimeout((window as unknown)._charTimer);
     };
   }, []);
 
@@ -229,3 +229,5 @@ export default function CharacterCreatePage() {
     </main>
   );
 }
+
+

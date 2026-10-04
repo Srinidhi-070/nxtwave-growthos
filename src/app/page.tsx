@@ -12,6 +12,7 @@ export default function Home() {
   const [stats, setStats] = useState({ registered: 482, capacity: 500 });
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     setParticles([...Array(20)].map(() => ({
       x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
@@ -58,6 +59,27 @@ export default function Home() {
         {/* Radial Fade to mask the edges */}
         <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_top,#020617_10%,transparent_50%,#020617_90%)]"></div>
         <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#020617] via-transparent to-[#020617]"></div>
+      </div>
+
+      {/* Floating Particles */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        {particles.map((p, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-blue-500/50 pixel-corners shadow-[0_0_10px_#3b82f6]"
+            initial={{ x: p.x, y: p.y }}
+            animate={{ 
+              y: [null, p.drop],
+              opacity: [0, 1, 0]
+            }}
+            transition={{ 
+              duration: p.duration, 
+              repeat: Infinity,
+              ease: "linear",
+              delay: p.delay
+            }}
+          />
+        ))}
       </div>
 
       {/* --- TOP NAV --- */}
@@ -182,6 +204,7 @@ export default function Home() {
     </main>
   );
 }
+
 
 
 
