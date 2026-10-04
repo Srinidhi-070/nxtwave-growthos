@@ -32,10 +32,11 @@ export default function RiskQueuePage() {
 
   const handleReview = async (id: string, resolution: string) => {
     try {
+      const action = resolution === 'cleared' ? 'APPROVE' : 'REJECT';
       const res = await fetch(`/api/risk/${id}/review`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ resolution })
+        body: JSON.stringify({ action })
       });
       if (res.ok) {
         fetchFlags();
@@ -56,7 +57,7 @@ export default function RiskQueuePage() {
         <p className="text-sm text-zinc-500 font-medium">Reviewing high-velocity nodes and anomalous behavior</p>
       </div>
 
-      {flags.length === 0 ? (
+      {!flags || flags.length === 0 ? (
         <div className="bg-[#111] border border-white/10 rounded-xl p-12 text-center flex flex-col items-center">
           <ShieldCheck className="w-12 h-12 text-emerald-400 mb-4 opacity-80" />
           <h3 className="text-lg font-medium text-white mb-2">Network is secure</h3>
@@ -65,7 +66,14 @@ export default function RiskQueuePage() {
       ) : (
         <div className="grid grid-cols-1 gap-4">
           {flags.map(flag => {
-            const signals = JSON.parse(flag.signalsJson || '[]');
+            let signals: string[] = [];
+            try {
+              const parsed = JSON.parse(flag.signalsJson || '[]');
+              signals = Array.isArray(parsed) ? parsed : [String(parsed)];
+            } catch (e) {
+              signals = ["Invalid signal data"];
+            }
+            
             const riskLevel = flag.score >= 90 ? 'CRITICAL' : flag.score >= 70 ? 'HIGH' : 'MEDIUM';
             const riskColor = riskLevel === 'CRITICAL' ? 'text-rose-500' : riskLevel === 'HIGH' ? 'text-orange-500' : 'text-amber-500';
 
