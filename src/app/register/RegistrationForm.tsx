@@ -161,7 +161,7 @@ export default function RegistrationForm() {
         animate={{ opacity: 1, scale: 1 }}
         className="w-full bg-slate-900/80 border-2 border-slate-700 p-8 text-center"
       >
-        <p className="text-slate-400 font-pixel text-sm tracking-widest mb-6">━━━━━━━━━━━━━━━━━━━━━━</p>
+        <p className="text-slate-400 font-pixel text-sm tracking-widest mb-6">----------------------</p>
         <h2 className="text-xl font-bold text-white tracking-tight uppercase mb-2">YOU WERE INVITED BY</h2>
         <div className="my-6 p-4 border border-blue-500/30 bg-blue-500/10 inline-block pixel-corners">
            <h3 className="text-blue-400 font-pixel text-xl uppercase mb-1">A NETWORK CONNECTOR</h3>
@@ -170,7 +170,7 @@ export default function RegistrationForm() {
         <p className="text-slate-400 font-sans text-sm mb-6 max-w-xs mx-auto">
           Your journey into the AI campus starts through their active signal.
         </p>
-        <p className="text-slate-400 font-pixel text-sm tracking-widest mb-8">━━━━━━━━━━━━━━━━━━━━━━</p>
+        <p className="text-slate-400 font-pixel text-sm tracking-widest mb-8">----------------------</p>
         
         <PixelButton onClick={() => setInvitedScreen(false)} className="w-full">
           ACCEPT INVITATION
@@ -185,14 +185,14 @@ export default function RegistrationForm() {
       <div className="flex justify-between items-center mb-8 px-2">
         {STEPS.map((s, i) => (
           <div key={s} className="flex flex-col items-center flex-1">
-            <div className={`text-[10px] font-pixel tracking-widest mb-2 ${i <= step ? 'text-blue-400' : 'text-slate-600'}`}>
+            <div className={`text-[10px] font-pixel tracking-widest mb-2 ${i <= step ---------------------- 'text-blue-400' : 'text-slate-600'}`}>
               0{i + 1}
             </div>
-            <div className={`w-3 h-3 rounded-full mb-1 ${i <= step ? 'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]' : 'bg-slate-800'}`} />
+            <div className={`w-3 h-3 rounded-full mb-1 ${i <= step ---------------------- 'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]' : 'bg-slate-800'}`} />
             {i < STEPS.length - 1 && (
                <div className="absolute h-[2px] bg-slate-800 top-[1.35rem] left-[10%] right-[10%] -z-10" />
             )}
-            <div className={`hidden sm:block text-[9px] font-pixel uppercase ${i <= step ? 'text-slate-300' : 'text-slate-600'}`}>
+            <div className={`hidden sm:block text-[9px] font-pixel uppercase ${i <= step ---------------------- 'text-slate-300' : 'text-slate-600'}`}>
               {s}
             </div>
           </div>
@@ -287,7 +287,7 @@ export default function RegistrationForm() {
                   <label className="block text-xs font-pixel text-slate-400 mb-2 uppercase tracking-widest">Security Key (Password)</label>
                   <input type="password" name="password" value={formData.password} onChange={handleChange} required
                     className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-sans"
-                    placeholder="••••••••" />
+                    placeholder="-" />
                 </div>
               </div>
             )}
@@ -295,17 +295,17 @@ export default function RegistrationForm() {
         </AnimatePresence>
 
         <div className="mt-8 flex justify-between">
-          {step > 0 ? (
+          {step > 0 ---------------------- (
             <button onClick={() => setStep(s => s - 1)} className="text-slate-400 font-pixel text-xs hover:text-white uppercase">
               [ BACK ]
             </button>
           ) : <div />}
           
-          {step < 3 ? (
+          {step < 3 ---------------------- (
             <PixelButton onClick={handleNext} variant="primary">NEXT STEP</PixelButton>
           ) : (
             <PixelButton onClick={handleSubmit} disabled={loading} variant="primary">
-              {loading ? 'PROCESSING...' : 'CREATE ACCOUNT'}
+              {loading ---------------------- 'PROCESSING...' : 'CREATE ACCOUNT'}
             </PixelButton>
           )}
         </div>
