@@ -57,7 +57,7 @@ export default function PixelEnvironment({
         transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
       >
         {/* Dynamic Window Lights based on state */}
-        <div className={`absolute inset-0 transition-opacity duration-1000 ${isAwake ? 'opacity-30' : 'opacity-0'}`} style={{ backgroundImage: 'radial-gradient(2px 2px at 25px 40px, #f472b6, rgba(0,0,0,0))', backgroundSize: '300px 100px' }} />
+        <div className={`absolute inset-0 transition-opacity duration-1000 ${isAwake ? 'opacity-30' : 'opacity-10'}`} style={{ backgroundImage: 'radial-gradient(2px 2px at 25px 40px, #f472b6, rgba(0,0,0,0))', backgroundSize: '300px 100px' }} />
       </motion.div>
 
       {/* LAYER 4: Midground Architecture */}
@@ -68,7 +68,7 @@ export default function PixelEnvironment({
         }}
       >
         {/* More intense lights activate as network grows */}
-        <div className={`absolute inset-0 transition-opacity duration-1000 ${isActive ? 'opacity-60' : 'opacity-0'}`} style={{ backgroundImage: 'radial-gradient(3px 3px at 40px 70px, #34d399, rgba(0,0,0,0)), radial-gradient(2px 2px at 80px 50px, #2dd4bf, rgba(0,0,0,0))', backgroundSize: '400px 100px' }} />
+        <div className={`absolute inset-0 transition-opacity duration-1000 ${isActive ? 'opacity-60' : 'opacity-5'}`} style={{ backgroundImage: 'radial-gradient(3px 3px at 40px 70px, #34d399, rgba(0,0,0,0)), radial-gradient(2px 2px at 80px 50px, #2dd4bf, rgba(0,0,0,0))', backgroundSize: '400px 100px' }} />
       </div>
 
       {/* LAYER 5: Foreground Transit / Highway Line */}
