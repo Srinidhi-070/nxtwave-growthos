@@ -7,7 +7,7 @@ export default function QuestsPage() {
     <div className="w-full flex flex-col gap-6 pb-12">
       <div className="shrink-0 mb-2">
         <h1 className="text-3xl font-pixel text-white tracking-widest mb-1 uppercase">Quest Map</h1>
-        <p className="text-sm text-slate-400 font-sans">Your progression graph through the GrowthOS ecosystem.</p>
+        <p className="text-sm text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">Your progression graph through the GrowthOS ecosystem.</p>
       </div>
 
       <div className="relative w-full min-h-[600px] bg-slate-900 border-2 border-slate-700 pixel-corners p-8 flex items-center justify-center overflow-x-auto">
@@ -22,14 +22,14 @@ export default function QuestsPage() {
            <div className="z-10 relative bg-green-950 border-2 border-green-500 pixel-corners p-4 w-56 md:w-64 text-center">
              <div className="absolute -left-3 -top-3 bg-green-500 text-slate-950 text-[10px] font-bold px-2 py-1 pixel-corners">COMPLETE</div>
              <h3 className="font-pixel text-green-400 uppercase tracking-widest mb-2 text-sm md:text-base">ENTER WORLD</h3>
-             <p className="text-xs text-slate-400 font-sans">+100 XP</p>
+             <p className="text-xs text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">+100 XP</p>
            </div>
 
            {/* Node 2 */}
            <div className="z-10 relative bg-green-950 border-2 border-green-500 pixel-corners p-4 w-56 md:w-64 text-center">
              <div className="absolute -left-3 -top-3 bg-green-500 text-slate-950 text-[10px] font-bold px-2 py-1 pixel-corners">COMPLETE</div>
              <h3 className="font-pixel text-green-400 uppercase tracking-widest mb-2 text-sm md:text-base">BUILD PROFILE</h3>
-             <p className="text-xs text-slate-400 font-sans">+50 XP</p>
+             <p className="text-xs text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">+50 XP</p>
            </div>
 
            {/* Branching Nodes */}
@@ -40,13 +40,13 @@ export default function QuestsPage() {
              <div className="relative bg-blue-950 border-2 border-blue-500 pixel-corners p-4 w-48 md:w-64 text-center animate-pulse shadow-[0_0_15px_rgba(59,130,246,0.3)]">
                <div className="absolute -left-3 -top-3 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 pixel-corners">ACTIVE</div>
                <h3 className="font-pixel text-blue-400 uppercase tracking-widest mb-2 text-sm md:text-base">BUILD YOUR CREW</h3>
-               <p className="text-xs text-slate-400 font-sans">Invite 3 peers to the network.</p>
+               <p className="text-xs text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">Invite 3 peers to the network.</p>
                <p className="text-[10px] text-blue-300 font-pixel mt-2 border-t border-blue-800 pt-2">0/3 COMPLETE</p>
              </div>
 
              <div className="relative bg-slate-950 border-2 border-slate-700 pixel-corners p-4 w-48 md:w-64 text-center opacity-80">
                <h3 className="font-pixel text-slate-400 uppercase tracking-widest mb-2 text-sm md:text-base">PREPARE FOR AI</h3>
-               <p className="text-xs text-slate-500 font-sans">Complete the workshop checklist.</p>
+               <p className="text-xs text-slate-500 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">Complete the workshop checklist.</p>
              </div>
            </div>
 
@@ -54,14 +54,14 @@ export default function QuestsPage() {
            <div className="z-10 relative bg-slate-950 border-2 border-slate-700 pixel-corners p-4 w-56 md:w-64 text-center mt-12 opacity-50">
              <div className="absolute -left-3 -top-3 bg-slate-700 text-slate-400 text-[10px] font-bold px-2 py-1 pixel-corners">LOCKED</div>
              <h3 className="font-pixel text-slate-500 uppercase tracking-widest mb-2 text-sm md:text-base">WORKSHOP READY</h3>
-             <p className="text-xs text-slate-600 font-sans">+250 XP</p>
+             <p className="text-xs text-slate-600 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">+250 XP</p>
            </div>
 
            {/* Final */}
            <div className="z-10 relative bg-slate-950 border-2 border-slate-700 pixel-corners p-4 w-56 md:w-64 text-center opacity-50">
              <div className="absolute -left-3 -top-3 bg-slate-700 text-slate-400 text-[10px] font-bold px-2 py-1 pixel-corners">LOCKED</div>
              <h3 className="font-pixel text-slate-500 uppercase tracking-widest mb-2 text-sm md:text-base">SHIP PROJECT</h3>
-             <p className="text-xs text-slate-600 font-sans">+500 XP</p>
+             <p className="text-xs text-slate-600 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">+500 XP</p>
            </div>
 
         </div>
@@ -70,3 +70,4 @@ export default function QuestsPage() {
     </div>
   );
 }
+

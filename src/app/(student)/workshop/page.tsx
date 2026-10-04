@@ -92,7 +92,7 @@ export default function WorkshopPage() {
           {isLive ? (
             <PixelPanel className="bg-slate-950 border-red-900 p-0 overflow-hidden relative shadow-[0_0_30px_rgba(239,68,68,0.2)]">
               <div className="absolute top-4 left-4 z-10 flex items-center gap-2 bg-red-950/80 px-3 py-1 border border-red-900 pixel-corners">
-                 <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                 <div className="w-2 h-2 rounded-none bg-red-500 animate-pulse" />
                  <span className="text-[10px] font-pixel text-red-400 uppercase tracking-widest">LIVE</span>
               </div>
               
@@ -124,7 +124,7 @@ export default function WorkshopPage() {
 
           {!isLive && (
             <PixelPanel title="MISSION BRIEFING" className="bg-slate-900 border-slate-800">
-              <div className="space-y-6 text-slate-300 font-sans text-sm leading-relaxed">
+              <div className="space-y-6 text-slate-300 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed text-sm leading-relaxed">
                 <p>
                   Welcome to the GrowthOS digital campus. In this intensive 60-minute session, you will go from zero to deploying your first AI-powered application. 
                 </p>
@@ -188,7 +188,7 @@ export default function WorkshopPage() {
                        style={{ width: `${Math.min((stats.registered / stats.capacity) * 100, 100)}%` }} 
                      />
                    </div>
-                   <div className="text-[10px] text-slate-500 font-sans flex justify-between">
+                   <div className="text-[10px] text-slate-500 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed flex justify-between">
                      <span>{stats.registered} REGISTERED</span>
                      <span>{stats.capacity} MAX</span>
                    </div>
@@ -207,7 +207,7 @@ export default function WorkshopPage() {
                        <div className={`w-5 h-5 mt-0.5 border-2 flex items-center justify-center shrink-0 pixel-corners transition-colors ${task.done ? 'bg-green-500 border-green-500' : 'bg-slate-950 border-slate-600'}`}>
                          {task.done && <span className="text-slate-900 text-xs font-bold">OK</span>}
                        </div>
-                       <div className={`text-sm font-sans ${task.done ? 'text-slate-500 line-through' : 'text-slate-200'}`}>
+                       <div className={`text-sm font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed ${task.done ? 'text-slate-500 line-through' : 'text-slate-200'}`}>
                          {task.text}
                        </div>
                      </div>
@@ -222,4 +222,5 @@ export default function WorkshopPage() {
     </div>
   );
 }
+
 

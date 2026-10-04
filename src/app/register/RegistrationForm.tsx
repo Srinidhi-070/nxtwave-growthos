@@ -152,7 +152,7 @@ export default function RegistrationForm() {
             {cinematicText}
           </motion.div>
           
-          <div className="h-1 w-full bg-slate-900 rounded-full overflow-hidden">
+          <div className="h-1 w-full bg-slate-900 rounded-none overflow-hidden">
              <motion.div 
                className="h-full bg-blue-500"
                initial={{ width: '0%' }}
@@ -176,9 +176,9 @@ export default function RegistrationForm() {
         <h2 className="text-xl font-bold text-white tracking-tight uppercase mb-2">YOU WERE INVITED BY</h2>
         <div className="my-6 p-4 border border-blue-500/30 bg-blue-500/10 inline-block pixel-corners">
            <h3 className="text-blue-400 font-pixel text-xl uppercase mb-1">A NETWORK CONNECTOR</h3>
-           <p className="text-blue-200 font-sans text-sm">SIGNAL: {referralCode}</p>
+           <p className="text-blue-200 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed text-sm">SIGNAL: {referralCode}</p>
         </div>
-        <p className="text-slate-400 font-sans text-sm mb-6 max-w-xs mx-auto">
+        <p className="text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed text-sm mb-6 max-w-xs mx-auto">
           Your journey into the AI campus starts through their active signal.
         </p>
         <p className="text-slate-400 font-pixel text-sm tracking-widest mb-8">----------------------</p>
@@ -199,7 +199,7 @@ export default function RegistrationForm() {
             <div className={`text-xs font-pixel tracking-widest mb-2 ${i <= step ? 'text-blue-400' : 'text-slate-600'}`}>
               0{i + 1}
             </div>
-            <div className={`w-3 h-3 rounded-full mb-1 ${i <= step ? 'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]' : 'bg-slate-800'}`} />
+            <div className={`w-3 h-3 rounded-none mb-1 ${i <= step ? 'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]' : 'bg-slate-800'}`} />
             {i < STEPS.length - 1 && (
                <div className="absolute h-[2px] bg-slate-800 top-[1.35rem] left-[10%] right-[10%] -z-10" />
             )}
@@ -211,7 +211,7 @@ export default function RegistrationForm() {
         {/* Step 5 - Character */}
         <div className="flex flex-col items-center flex-1">
             <div className={`text-xs font-pixel tracking-widest mb-2 text-slate-600`}>05</div>
-            <div className={`w-3 h-3 rounded-full mb-1 bg-slate-800`} />
+            <div className={`w-3 h-3 rounded-none mb-1 bg-slate-800`} />
             <div className={`hidden sm:block text-[10px] font-pixel uppercase text-slate-600`}>EXPLORER</div>
         </div>
       </div>
@@ -238,13 +238,13 @@ export default function RegistrationForm() {
                 <div>
                   <label htmlFor="name" className="block text-xs font-pixel text-slate-400 mb-2 uppercase tracking-widest">Full Name</label>
                     <input id="name" type="text" name="name" value={formData.name} onChange={handleChange} required
-                    className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-sans"
+                    className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed"
                     placeholder="Enter full name" />
                 </div>
                 <div>
                   <label htmlFor="email" className="block text-xs font-pixel text-slate-400 mb-2 uppercase tracking-widest">Email Address</label>
                     <input id="email" type="email" name="email" value={formData.email} onChange={handleChange} required
-                    className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-sans"
+                    className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed"
                     placeholder="student@college.edu" />
                 </div>
               </div>
@@ -256,13 +256,13 @@ export default function RegistrationForm() {
                 <div>
                   <label className="block text-xs font-pixel text-slate-400 mb-2 uppercase tracking-widest">College ID</label>
                   <input type="text" name="collegeId" value={formData.collegeId} onChange={handleChange} required
-                    className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-sans uppercase"
+                    className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed uppercase"
                     placeholder="e.g. IITM, NITW" />
                 </div>
                 <div>
                   <label className="block text-xs font-pixel text-slate-400 mb-2 uppercase tracking-widest">Phone Signal (Optional)</label>
                   <input type="tel" name="phone" value={formData.phone} onChange={handleChange}
-                    className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-sans"
+                    className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed"
                     placeholder="+91..." />
                 </div>
               </div>
@@ -274,7 +274,7 @@ export default function RegistrationForm() {
                 <div>
                   <label className="block text-xs font-pixel text-slate-400 mb-2 uppercase tracking-widest">Graduation Year</label>
                   <select name="graduationYear" value={formData.graduationYear} onChange={handleChange} required
-                    className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-sans">
+                    className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">
                     <option value="">Select Year</option>
                     <option value="2026">2026</option>
                     <option value="2027">2027</option>
@@ -285,7 +285,7 @@ export default function RegistrationForm() {
                 <div>
                   <label className="block text-xs font-pixel text-slate-400 mb-2 uppercase tracking-widest">Branch (Optional)</label>
                   <input type="text"
-                    className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-sans uppercase"
+                    className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed uppercase"
                     placeholder="e.g. CSE" />
                 </div>
               </div>
@@ -297,7 +297,7 @@ export default function RegistrationForm() {
                 <div>
                   <label className="block text-xs font-pixel text-slate-400 mb-2 uppercase tracking-widest">Security Key (Password)</label>
                   <input type="password" name="password" value={formData.password} onChange={handleChange} required
-                    className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-sans"
+                    className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed"
                     placeholder="-" />
                 </div>
               </div>
@@ -324,6 +324,7 @@ export default function RegistrationForm() {
     </div>
   );
 }
+
 
 
 

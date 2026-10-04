@@ -176,7 +176,7 @@ export default function CharacterCreatePage() {
       {/* CENTER: Preview */}
       <div className="flex-1 flex flex-col items-center justify-center p-8 z-10 relative">
         <div className="absolute top-8 text-center w-full max-w-md">
-          <h2 className="text-sm font-sans font-medium text-slate-400 uppercase tracking-widest">Choose how you enter the world</h2>
+          <h2 className="text-sm font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed font-medium text-slate-400 uppercase tracking-widest">Choose how you enter the world</h2>
         </div>
         
         <div className="relative">
@@ -212,7 +212,7 @@ export default function CharacterCreatePage() {
               value={explorerName}
               onChange={(e) => setExplorerName(e.target.value)}
               placeholder="e.g. NeuralFox"
-              className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-sans"
+              className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed"
             />
           </div>
           
@@ -229,6 +229,7 @@ export default function CharacterCreatePage() {
     </main>
   );
 }
+
 
 
 

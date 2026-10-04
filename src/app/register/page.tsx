@@ -16,7 +16,7 @@ export default function RegisterPage() {
           <h1 className="text-3xl font-pixel text-white tracking-widest mb-2 drop-shadow-[0_0_10px_rgba(59,130,246,0.5)] uppercase">
             Create Your GrowthOS ID
           </h1>
-          <p className="text-slate-400 font-sans text-sm">Your journey starts here.</p>
+          <p className="text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed text-sm">Your journey starts here.</p>
         </div>
         <Suspense fallback={<div className="text-white font-pixel animate-pulse text-center">LOADING TERMINAL...</div>}>
           <RegistrationForm />
@@ -25,3 +25,4 @@ export default function RegisterPage() {
     </main>
   );
 }
+

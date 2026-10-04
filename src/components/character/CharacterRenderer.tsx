@@ -68,10 +68,10 @@ export default function CharacterRenderer({
     <div className={`relative flex items-center justify-center ${sizeStyles[size]} ${className}`}>
       {/* Background Effect */}
       {config.effect === 'glow' && (
-        <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full" />
+        <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-none" />
       )}
       {config.effect === 'particles' && (
-        <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-full">
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-none">
            <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.2)_0%,transparent_70%)] animate-pulse" />
         </div>
       )}
@@ -165,3 +165,4 @@ export default function CharacterRenderer({
     </div>
   );
 }
+

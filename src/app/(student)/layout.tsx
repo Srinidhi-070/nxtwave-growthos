@@ -79,7 +79,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
   if (loading) return null;
 
   return (
-    <div className="relative min-h-screen w-full bg-slate-950 text-slate-200 font-sans flex flex-col md:flex-row md:h-screen md:overflow-hidden">
+    <div className="relative min-h-screen w-full bg-slate-950 text-slate-200 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed flex flex-col md:flex-row md:h-screen md:overflow-hidden">
       {/* Global Background */}
       <div className="fixed inset-0 z-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
 
@@ -134,3 +134,4 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
     </div>
   );
 }
+

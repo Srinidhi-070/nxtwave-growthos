@@ -16,7 +16,7 @@ export default function PixelButton({
   ...props 
 }: PixelButtonProps) {
   
-  const baseStyles = "relative inline-flex items-center justify-center font-pixel text-xl uppercase tracking-widest outline-none pixel-corners px-6 py-3 transition-colors";
+  const baseStyles = "relative inline-flex items-center justify-center font-pixel text-xl uppercase tracking-widest outline-none pixel-corners px-6 py-3 ";
   
   const variants = {
     primary: "bg-blue-600 text-white hover:bg-blue-500 border-b-4 border-blue-900 active:border-b-0 active:translate-y-1",
@@ -27,8 +27,8 @@ export default function PixelButton({
 
   return (
     <motion.button
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+      
+      
       className={`${baseStyles} ${variants[variant]} ${className}`}
       {...props}
     >
@@ -36,3 +36,4 @@ export default function PixelButton({
     </motion.button>
   );
 }
+

@@ -37,7 +37,7 @@ export default function LeaderboardPage() {
     <div className="w-full flex flex-col gap-6 pb-12">
       <div className="shrink-0 mb-2">
         <h1 className="text-3xl font-pixel text-white tracking-widest mb-1 uppercase">Global Leaderboard</h1>
-        <p className="text-sm text-slate-400 font-sans">Top explorers in the GrowthOS network ranked by Impact.</p>
+        <p className="text-sm text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">Top explorers in the GrowthOS network ranked by Impact.</p>
       </div>
 
       <PixelPanel className="bg-slate-900 border-slate-700 w-full lg:w-3/4 mx-auto">
@@ -93,4 +93,5 @@ export default function LeaderboardPage() {
     </div>
   );
 }
+
 

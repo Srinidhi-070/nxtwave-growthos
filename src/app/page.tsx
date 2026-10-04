@@ -46,7 +46,7 @@ export default function Home() {
             backgroundImage: 'linear-gradient(to right, rgba(59,130,246,0.4) 1px, transparent 1px), linear-gradient(to bottom, rgba(59,130,246,0.4) 1px, transparent 1px)',
             backgroundSize: '40px 40px',
             transform: 'perspective(1000px) rotateX(70deg) translateY(-20%)',
-            animation: 'gridMove 2s linear infinite',
+            animation: 'gridMove 2s steps(20) infinite',
             transformOrigin: 'top center'
           }}
         />
@@ -149,7 +149,7 @@ export default function Home() {
         >
           <div className="text-xs font-pixel text-slate-500 uppercase tracking-widest mb-2">LIVE NETWORK CAPACITY</div>
           <div className="flex items-center gap-4 justify-center">
-            <div className="w-48 h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div className="w-48 h-2 bg-slate-800 rounded-none overflow-hidden">
                <div 
                  className="h-full bg-blue-500" 
                  style={{ width: `${Math.min(100, (stats.registered / stats.capacity) * 100)}%` }} 
@@ -172,22 +172,22 @@ export default function Home() {
             {mounted && <CharacterRenderer config={{ body: 'body-1', face: 'face-1', hair: 'hair-2', hairColor: '#3b82f6', outfit: 'outfit-1', accessory: 'none', effect: 'none' }} size="lg" />}
           </div>
           <h3 className="font-pixel text-xl text-white tracking-widest mb-2">CREATE IDENTITY</h3>
-          <p className="text-sm text-slate-400 font-sans">Customize your unique AI Explorer avatar to represent you across the campus network.</p>
+          <p className="text-sm text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">Customize your unique AI Explorer avatar to represent you across the campus network.</p>
         </div>
 
         <div className="bg-slate-900/60 border-2 border-slate-700 pixel-corners p-6 backdrop-blur-md hover:bg-slate-800 transition-colors">
           <div className="h-32 w-full flex items-center justify-center mb-4 bg-slate-950 border border-slate-800 overflow-hidden relative">
              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.2),transparent)] animate-pulse" />
              <div className="flex gap-4 items-center">
-               <div className="w-3 h-3 bg-blue-500 rounded-full" />
+               <div className="w-3 h-3 bg-blue-500 rounded-none" />
                <div className="w-12 h-1 bg-slate-700" />
-               <div className="w-5 h-5 bg-white rounded-full shadow-[0_0_15px_#fff]" />
+               <div className="w-5 h-5 bg-white rounded-none shadow-[0_0_15px_#fff]" />
                <div className="w-12 h-1 bg-slate-700" />
-               <div className="w-3 h-3 bg-blue-500 rounded-full" />
+               <div className="w-3 h-3 bg-blue-500 rounded-none" />
              </div>
           </div>
           <h3 className="font-pixel text-xl text-white tracking-widest mb-2">GROW YOUR CREW</h3>
-          <p className="text-sm text-slate-400 font-sans">Invite peers via your unique network link to unlock exclusive AI resources and XP.</p>
+          <p className="text-sm text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">Invite peers via your unique network link to unlock exclusive AI resources and XP.</p>
         </div>
 
         <div className="bg-slate-900/60 border-2 border-slate-700 pixel-corners p-6 backdrop-blur-md hover:bg-slate-800 transition-colors">
@@ -195,7 +195,7 @@ export default function Home() {
              {`> npm run deploy\n> compiling...\n> building AI node\n> LIVE: vercel.app\n> SUCCESS`}
           </div>
           <h3 className="font-pixel text-xl text-white tracking-widest mb-2">DEPLOY PROJECT</h3>
-          <p className="text-sm text-slate-400 font-sans">Join the live 60-minute session to build and ship your first AI-powered application.</p>
+          <p className="text-sm text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">Join the live 60-minute session to build and ship your first AI-powered application.</p>
         </div>
       </motion.div>
 
@@ -204,6 +204,7 @@ export default function Home() {
     </main>
   );
 }
+
 
 
 

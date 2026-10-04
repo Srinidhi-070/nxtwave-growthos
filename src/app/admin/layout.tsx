@@ -16,12 +16,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-[#ededed] font-sans selection:bg-blue-500/30 flex flex-col">
+    <div className="min-h-screen bg-[#0a0a0a] text-[#ededed] font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed selection:bg-blue-500/30 flex flex-col">
       {/* Top Navigation Bar */}
       <header className="h-14 border-b border-white/10 flex items-center justify-between px-6 bg-[#0a0a0a]/80 backdrop-blur-md sticky top-0 z-50">
         <div className="flex items-center gap-8">
           <Link href="/admin" className="font-semibold tracking-tight text-white flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-blue-500" />
+            <div className="w-2 h-2 rounded-none bg-blue-500" />
             GrowthOS
           </Link>
           
@@ -51,8 +51,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="flex items-center gap-4 text-xs font-medium text-zinc-500">
           <div className="flex items-center gap-2">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-none h-2 w-2 bg-emerald-500"></span>
             </span>
             LIVE
           </div>
@@ -67,3 +67,4 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </div>
   );
 }
+

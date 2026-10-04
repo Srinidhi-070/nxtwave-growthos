@@ -119,12 +119,12 @@ export default function AdminCommandCenter() {
                   <span className="text-zinc-400">{step.label}</span>
                   <span className="text-white">{step.val}</span>
                 </div>
-                <div className="h-2 w-full bg-[#1a1a1a] rounded-full overflow-hidden">
+                <div className="h-2 w-full bg-[#1a1a1a] rounded-none overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${(step.val / step.max) * 100}%` }}
                     transition={{ duration: 1, delay: idx * 0.1, ease: "easeOut" }}
-                    className="h-full bg-blue-500 rounded-full"
+                    className="h-full bg-blue-500 rounded-none"
                   />
                 </div>
               </div>
@@ -140,7 +140,7 @@ export default function AdminCommandCenter() {
               Object.entries(data.channelStats).map(([channel, count], i) => (
                 <div key={channel} className="flex items-center justify-between group">
                   <span className="text-sm text-zinc-400 capitalize flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full ${i === 0 ? 'bg-blue-400' : i === 1 ? 'bg-emerald-400' : 'bg-zinc-600'}`} />
+                    <div className={`w-2 h-2 rounded-none ${i === 0 ? 'bg-blue-400' : i === 1 ? 'bg-emerald-400' : 'bg-zinc-600'}`} />
                     {channel || 'Unknown'}
                   </span>
                   <span className="text-sm font-medium text-white group-hover:text-blue-400 transition-colors">{count}</span>
@@ -160,24 +160,24 @@ export default function AdminCommandCenter() {
                <span className="text-zinc-400">Account Created</span>
                <span className="text-zinc-200">1,245</span>
              </div>
-             <div className="w-full bg-zinc-800 rounded-full h-1.5 mb-4">
-               <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: '100%' }}></div>
+             <div className="w-full bg-zinc-800 rounded-none h-1.5 mb-4">
+               <div className="bg-blue-500 h-1.5 rounded-none" style={{ width: '100%' }}></div>
              </div>
              
              <div className="flex justify-between text-xs mb-1">
                <span className="text-zinc-400">Character Started</span>
                <span className="text-zinc-200">1,210 (97%)</span>
              </div>
-             <div className="w-full bg-zinc-800 rounded-full h-1.5 mb-4">
-               <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: '97%' }}></div>
+             <div className="w-full bg-zinc-800 rounded-none h-1.5 mb-4">
+               <div className="bg-blue-500 h-1.5 rounded-none" style={{ width: '97%' }}></div>
              </div>
              
              <div className="flex justify-between text-xs mb-1">
                <span className="text-zinc-400">Character Completed</span>
                <span className="text-zinc-200">1,180 (94%)</span>
              </div>
-             <div className="w-full bg-zinc-800 rounded-full h-1.5 mb-4">
-               <div className="bg-emerald-500 h-1.5 rounded-full" style={{ width: '94%' }}></div>
+             <div className="w-full bg-zinc-800 rounded-none h-1.5 mb-4">
+               <div className="bg-emerald-500 h-1.5 rounded-none" style={{ width: '94%' }}></div>
              </div>
              
              <div className="flex justify-between text-xs mb-1">
@@ -189,12 +189,12 @@ export default function AdminCommandCenter() {
 
         {/* Campaign Controls */}
         <div className="col-span-1 lg:col-span-3 bg-[#111] border border-red-900/50 rounded-xl p-6 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-red-500/5 blur-[100px] rounded-full pointer-events-none" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-red-500/5 blur-[100px] rounded-none pointer-events-none" />
           
           <div className="flex justify-between items-start mb-6">
             <div>
               <h3 className="text-sm font-semibold text-zinc-200 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                <span className="w-2 h-2 rounded-none bg-red-500 animate-pulse" />
                 Live Campaign Operations
               </h3>
               <p className="text-xs text-zinc-500 mt-1">Global overrides and communication triggers.</p>
@@ -238,3 +238,4 @@ export default function AdminCommandCenter() {
     </div>
   );
 }
+

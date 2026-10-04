@@ -95,7 +95,7 @@ export default function RiskQueuePage() {
                   <div className="space-y-1">
                     {signals.map((sig: string, i: number) => (
                       <div key={i} className="text-sm text-zinc-300 flex items-center gap-2">
-                        <div className="w-1 h-1 rounded-full bg-zinc-600" /> {sig}
+                        <div className="w-1 h-1 rounded-none bg-zinc-600" /> {sig}
                       </div>
                     ))}
                   </div>
@@ -123,3 +123,4 @@ export default function RiskQueuePage() {
     </div>
   );
 }
+

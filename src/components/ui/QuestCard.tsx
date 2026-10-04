@@ -33,7 +33,7 @@ export default function QuestCard({ title, description, xpReward, isCompleted, i
           +{xpReward} XP
         </span>
       </div>
-      <p className={`text-sm font-sans ${isCompleted ? 'text-slate-600' : 'text-slate-400'}`}>
+      <p className={`text-sm font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed ${isCompleted ? 'text-slate-600' : 'text-slate-400'}`}>
         {description}
       </p>
 
@@ -47,3 +47,4 @@ export default function QuestCard({ title, description, xpReward, isCompleted, i
     </motion.div>
   );
 }
+

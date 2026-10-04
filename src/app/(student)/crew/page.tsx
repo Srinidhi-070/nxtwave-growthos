@@ -50,7 +50,7 @@ export default function MyCrewPage() {
     <div className="w-full flex flex-col gap-6 pb-12">
       <div className="shrink-0">
         <h1 className="text-3xl font-pixel text-white tracking-widest mb-1 uppercase">My Crew</h1>
-        <p className="text-sm text-slate-400 font-sans">People connected to your journey.</p>
+        <p className="text-sm text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">People connected to your journey.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -59,7 +59,7 @@ export default function MyCrewPage() {
           <PixelPanel className="bg-blue-900/20 border-blue-800">
             <h3 className="font-pixel text-sm text-blue-400 mb-4 tracking-widest uppercase">Network Impact</h3>
             <div className="text-4xl font-pixel text-white mb-2">{crewData ? crewData.impact : 0}</div>
-            <p className="text-xs text-slate-400 font-sans leading-relaxed">
+            <p className="text-xs text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed leading-relaxed">
               Your measurable contribution to the GrowthOS network, calculated via direct invites, second-degree growth, and crew activity.
             </p>
           </PixelPanel>
@@ -75,23 +75,23 @@ export default function MyCrewPage() {
                   <div className="text-xs text-blue-400 font-pixel">AI EXPLORER LVL {crewData.inviter.level.toString().padStart(2, '0')}</div>
                 </div>
               </div>
-              <div className="mt-4 text-xs text-slate-500 font-sans">Joined through their signal.</div>
+              <div className="mt-4 text-xs text-slate-500 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">Joined through their signal.</div>
             </PixelPanel>
           ) : (
              <PixelPanel title="WHO BROUGHT ME" className="bg-slate-900 border-slate-800">
-               <div className="text-xs text-slate-500 font-sans">You entered the network independently.</div>
+               <div className="text-xs text-slate-500 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">You entered the network independently.</div>
              </PixelPanel>
           )}
 
           <PixelPanel title="MILESTONE REWARD" className="bg-slate-900 border-yellow-700/50 relative overflow-hidden">
              {/* bg glow */}
-             <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 blur-3xl rounded-full" />
+             <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 blur-3xl rounded-none" />
              
              <div className="relative z-10">
                <div className="font-pixel text-yellow-500 mb-2 uppercase text-xs tracking-widest flex items-center gap-2">
                  <span>⭐</span> AI STARTER PACK
                </div>
-               <p className="text-xs text-slate-400 font-sans mb-4">
+               <p className="text-xs text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed mb-4">
                  Invite 3 friends to your crew to unlock an exclusive bundle of premium AI APIs and project templates.
                </p>
                
@@ -140,7 +140,7 @@ export default function MyCrewPage() {
             <div className="space-y-4">
               
               {crewData?.crewMembers.length === 0 && (
-                 <div className="text-slate-500 font-sans text-sm text-center py-8">
+                 <div className="text-slate-500 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed text-sm text-center py-8">
                    No one has joined your crew yet. Share your signal link!
                  </div>
               )}
@@ -152,7 +152,7 @@ export default function MyCrewPage() {
                       <div className="w-10 h-10 bg-slate-800 pixel-corners flex items-center justify-center shrink-0" />
                       <div>
                         <div className="font-pixel text-white uppercase text-sm tracking-widest">{member.name}</div>
-                        <div className="text-xs text-slate-500 font-sans">
+                        <div className="text-xs text-slate-500 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">
                           {new Date(member.joinedAt).toLocaleDateString()}
                         </div>
                       </div>
@@ -185,7 +185,7 @@ export default function MyCrewPage() {
                  <div className="text-blue-500 font-pixel text-2xl">⚡</div>
                  <div>
                    <div className="font-pixel text-sm text-white uppercase mb-1">CHAIN REACTION</div>
-                   <div className="text-xs text-slate-400 font-sans">Your crew will trigger second-degree network effects.</div>
+                   <div className="text-xs text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">Your crew will trigger second-degree network effects.</div>
                  </div>
                </div>
             </div>
@@ -196,4 +196,5 @@ export default function MyCrewPage() {
     </div>
   );
 }
+
 

@@ -44,7 +44,7 @@ export default function MyLabPage() {
     <div className="w-full h-full flex flex-col">
       <div className="mb-6 shrink-0">
         <h1 className="text-3xl font-pixel text-white tracking-widest mb-1 uppercase">My Lab</h1>
-        <p className="text-sm text-slate-400 font-sans">Your personal workspace in the GrowthOS network.</p>
+        <p className="text-sm text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">Your personal workspace in the GrowthOS network.</p>
       </div>
 
       <div className="flex-1 min-h-[500px] w-full bg-[#0a0f1c] border-2 border-slate-800 pixel-corners relative overflow-hidden flex items-end justify-center pb-12">
@@ -66,8 +66,8 @@ export default function MyLabPage() {
            <div className="w-full h-1 bg-blue-500/50 animate-pulse delay-150" />
         </div>
         <div className="absolute right-[25%] top-[10%] w-24 h-64 border border-slate-800 bg-slate-900/50 opacity-30 flex flex-col justify-end pb-4 px-2 gap-2">
-           <div className="w-4 h-4 rounded-full bg-green-500/30 animate-pulse" />
-           <div className="w-4 h-4 rounded-full bg-red-500/30" />
+           <div className="w-4 h-4 rounded-none bg-green-500/30 animate-pulse" />
+           <div className="w-4 h-4 rounded-none bg-red-500/30" />
         </div>
 
         {/* Level 1: Basic Workstation */}
@@ -94,7 +94,7 @@ export default function MyLabPage() {
         {/* Level 3: AI Model Display (Locked) */}
         {level < 3 && (
           <div className="absolute top-[10%] md:top-[20%] right-10 md:right-[30%] opacity-20">
-            <div className="w-20 h-20 md:w-40 md:h-40 border-2 border-dashed border-slate-600 rounded-full flex items-center justify-center">
+            <div className="w-20 h-20 md:w-40 md:h-40 border-2 border-dashed border-slate-600 rounded-none flex items-center justify-center">
               <span className="text-[10px] md:text-xs font-pixel text-slate-500">LVL 3 REQ</span>
             </div>
           </div>
@@ -106,9 +106,10 @@ export default function MyLabPage() {
              <CharacterRenderer config={characterConfig} size="lg" className="scale-75 md:scale-100" />
            )}
            {/* Shadow */}
-           <div className="w-24 md:w-32 h-4 bg-black/50 blur-sm rounded-full absolute -bottom-2 left-1/2 -translate-x-1/2 -z-10" />
+           <div className="w-24 md:w-32 h-4 bg-black/50 blur-sm rounded-none absolute -bottom-2 left-1/2 -translate-x-1/2 -z-10" />
         </div>
       </div>
     </div>
   );
 }
+

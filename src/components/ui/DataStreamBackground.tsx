@@ -29,7 +29,7 @@ export default function DataStreamBackground() {
       ctx.fillRect(0, 0, width, height);
 
       ctx.fillStyle = '#1e3a8a'; // dark blue text
-      ctx.font = fontSize + 'px monospace';
+      ctx.font = fontSize + 'px VT323, monospace';
 
       for (let i = 0; i < drops.length; i++) {
         const text = chars[Math.floor(Math.random() * chars.length)];
@@ -70,4 +70,5 @@ export default function DataStreamBackground() {
     />
   );
 }
+
 

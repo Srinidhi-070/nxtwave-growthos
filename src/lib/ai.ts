@@ -62,3 +62,4 @@ export function getAIProvider(): AIProvider {
   const useReal = process.env.USE_REAL_AI === 'true';
   return useReal ? new RealAIProvider() : new MockAIProvider();
 }
+

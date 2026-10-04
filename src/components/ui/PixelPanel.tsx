@@ -41,3 +41,4 @@ export default function PixelPanel({
     </motion.div>
   );
 }
+
