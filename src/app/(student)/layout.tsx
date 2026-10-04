@@ -6,6 +6,7 @@ import Link from 'next/link';
 import PixelPanel from '@/components/ui/PixelPanel';
 import CharacterRenderer, { CharacterConfig } from '@/components/character/CharacterRenderer';
 import XPBar from '@/components/ui/XPBar';
+import PixelEnvironment from '@/components/ui/PixelEnvironment';
 
 export default function StudentLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -81,7 +82,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
   return (
     <div className="relative min-h-screen w-full bg-slate-950 text-slate-200 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed flex flex-col md:flex-row md:h-screen md:overflow-hidden">
       {/* Global Background */}
-      <div className="fixed inset-0 z-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+      <div className="fixed inset-0 z-0"><PixelEnvironment worldState="ACTIVE" /><div className="absolute inset-0 bg-slate-950/80 mix-blend-multiply pointer-events-none" /></div>
 
       {/* LEFT: HUD Sidebar */}
       <aside className="relative z-10 w-full md:w-72 lg:w-80 p-4 md:p-6 shrink-0 md:h-screen md:overflow-y-auto flex flex-col gap-4 md:gap-6 border-b md:border-b-0 border-slate-800">
@@ -134,4 +135,5 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
     </div>
   );
 }
+
 

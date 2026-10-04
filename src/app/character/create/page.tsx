@@ -5,44 +5,38 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import CharacterRenderer, { CharacterConfig } from '@/components/character/CharacterRenderer';
 import PixelButton from '@/components/ui/PixelButton';
+import PixelEnvironment from '@/components/ui/PixelEnvironment';
 
-const CATEGORIES = ['BODY', 'FACE', 'HAIR', 'COLOR', 'OUTFIT', 'ACCESSORY', 'EFFECT'];
+const CATEGORIES = ['FACE', 'HAIR', 'COLOR', 'OUTFIT', 'ACCESSORY', 'EFFECT'];
 
 const OPTIONS: Record<string, string[]> = {
-  BODY: ['base'],
-  FACE: ['default', 'happy', 'cool'],
-  HAIR: ['none', 'short', 'spiky', 'long'],
-  COLOR: ['black', 'brown', 'blonde', 'blue', 'pink', 'purple', 'green', 'white'],
+  FACE: ['default', 'happy', 'surprised'],
+  HAIR: ['none', 'cat', 'rabbit', 'antenna'], // We mapped hair to ears
+  COLOR: ['pink', 'blue', 'green', 'purple', 'blonde'], // Face screen color
   OUTFIT: ['explorer', 'builder', 'hacker', 'analyst', 'creator', 'researcher'],
-  ACCESSORY: ['none', 'headphones', 'glasses', 'backpack'],
-  EFFECT: ['none', 'glow', 'particles', 'scanline'],
+  ACCESSORY: ['none', 'tail'],
+  EFFECT: ['none', 'glow', 'scanline'],
 };
 
 export default function CharacterCreatePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [cinematic, setCinematic] = useState(false);
-  const [activeCategory, setActiveCategory] = useState('HAIR');
+  const [activeCategory, setActiveCategory] = useState('OUTFIT');
   
   const [config, setConfig] = useState<CharacterConfig>({
     body: 'base',
     face: 'default',
-    hair: 'short',
-    hairColor: 'black',
+    hair: 'none',
+    hairColor: 'pink',
     outfit: 'explorer',
     accessory: 'none',
-    effect: 'none',
+    effect: 'none'
   });
   
   const [explorerName, setExplorerName] = useState('');
-  
-  // Try to load name from localStorage if they just registered
-  useEffect(() => {
-    const savedName = localStorage.getItem('growthos_temp_name');
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (savedName) setExplorerName(savedName.split(' ')[0]);
-  }, []);
 
+  // Handle randomization
   const randomize = () => {
     setConfig({
       body: 'base',
@@ -56,12 +50,11 @@ export default function CharacterCreatePage() {
   };
 
   const handleSave = async () => {
-    setLoading(true);
-    
     try {
+      setLoading(true);
       const userId = localStorage.getItem('growthos_user_id');
       if (!userId) {
-        throw new Error('User ID not found');
+        throw new Error('User ID not found. Please register first.');
       }
 
       const res = await fetch('/api/character', {
@@ -75,161 +68,207 @@ export default function CharacterCreatePage() {
       });
 
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Failed to save character');
+        throw new Error('Failed to save character');
       }
 
-      // Still keep in localStorage for immediate client reads if needed, 
-      // but truth is now in DB
       localStorage.setItem('growthos_character', JSON.stringify(config));
       localStorage.setItem('growthos_explorer_name', explorerName || 'Explorer');
       
       setCinematic(true);
       
-      const timer = setTimeout(() => {
+      setTimeout(() => {
         router.push('/dashboard');
       }, 4000);
-      
-      // Cleanup attached to window for this simple case to avoid refactoring whole component to use effect
-      (window as any)._charTimer = timer;
 
-    } catch (err: any) {
-      console.error(err);
-      alert(err.message || 'Failed to initialize Explorer. Please check connection.');
+    } catch (error) {
+      console.error(error);
+      alert(error instanceof Error ? error.message : 'Something went wrong');
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    return () => {
-      if ((window as any)._charTimer) clearTimeout((window as any)._charTimer);
-    };
-  }, []);
-
   if (cinematic) {
     return (
-      <main className="min-h-screen bg-black flex flex-col items-center justify-center p-4 overflow-hidden relative">
-        <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1 }}
-          className="z-10 flex flex-col items-center"
+      <div className="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center p-8 text-center overflow-hidden">
+        {/* Cinematic Initialization Sequence */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(59,130,246,0.1)_50%)] bg-[size:100%_4px] pointer-events-none z-10" />
+        
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1.2, opacity: 1 }}
+          transition={{ duration: 2, ease: "easeOut" }}
+          className="relative z-20 mb-8"
         >
           <CharacterRenderer config={config} size="xl" animating={true} />
+        </motion.div>
+        
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1, duration: 0.5 }}
+          className="relative z-20 flex flex-col gap-4 items-center"
+        >
+          <h2 className="font-pixel text-4xl text-white tracking-widest text-shadow-glow-blue uppercase">AI EXPLORER INITIALIZED</h2>
+          <div className="text-2xl font-pixel text-blue-400 tracking-wider">[{explorerName || 'EXPLORER'}]</div>
+          
+          <div className="mt-8 flex gap-4">
+            <span className="px-4 py-2 bg-slate-800 border border-slate-600 text-slate-300 font-pixel text-xs tracking-widest">LEVEL 01</span>
+            <span className="px-4 py-2 bg-blue-900 border border-blue-500 text-blue-300 font-pixel text-xs tracking-widest">+100 XP</span>
+          </div>
           
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1 }}
-            className="mt-8 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2 }}
+            className="mt-8 text-green-400 font-pixel text-sm tracking-widest border border-green-500/50 bg-green-900/20 px-6 py-3"
           >
-            <h1 className="text-3xl font-pixel text-blue-400 mb-4 tracking-widest uppercase">
-              AI EXPLORER INITIALIZED
-            </h1>
-            <p className="text-white font-mono text-xl mb-8 uppercase">WELCOME, {explorerName || 'EXPLORER'}</p>
-            
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2.5 }}
-              className="text-green-400 font-pixel text-xl tracking-widest bg-green-900/30 px-6 py-3 border border-green-500 pixel-corners inline-block"
-            >
-              +100 XP<br/><br/>
-              <span className="text-sm text-slate-300">QUEST UNLOCKED:</span><br/>
-              BUILD YOUR CREW
-            </motion.div>
+            FIRST QUEST UNLOCKED: BUILD YOUR CREW
           </motion.div>
         </motion.div>
-      </main>
+      </div>
     );
   }
 
-  const categoryKey = activeCategory === 'COLOR' ? 'hairColor' : activeCategory.toLowerCase();
-
   return (
-    <main className="min-h-screen bg-slate-950 flex flex-col lg:flex-row text-white overflow-hidden">
-      {/* Background Grid */}
-      <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] opacity-30 pointer-events-none"></div>
+    <main className="relative min-h-screen bg-[#0a0710] flex flex-col items-center justify-center overflow-hidden">
       
-      {/* LEFT: Category Nav */}
-      <div className="w-full lg:w-64 bg-slate-900/80 border-r border-slate-800 z-10 flex flex-row lg:flex-col p-4 overflow-x-auto lg:overflow-y-auto shrink-0">
-        <div className="mb-8 hidden lg:block">
-          <h2 className="text-xs font-pixel text-blue-400 tracking-widest mb-1">PHASE 02</h2>
-          <h1 className="text-xl font-bold uppercase tracking-tight">Create Explorer</h1>
-        </div>
+      {/* --- PIXEL ENVIRONMENT BACKGROUND --- */}
+      {/* Use AWAKE state: the lab lights are on but the action hasn't started yet */}
+      <PixelEnvironment worldState="AWAKE" />
+      
+      {/* Overlay to dim the background for UI contrast */}
+      <div className="absolute inset-0 z-0 bg-slate-950/70 mix-blend-multiply pointer-events-none" />
+
+      {/* Main UI Container */}
+      <div className="relative z-10 w-full max-w-6xl h-full min-h-[80vh] grid grid-cols-1 md:grid-cols-12 gap-6 p-6">
         
-        <div className="flex flex-row lg:flex-col gap-2">
+        {/* HEADER */}
+        <div className="col-span-full mb-2">
+          <h1 className="font-pixel text-3xl text-white tracking-widest uppercase">CREATE EXPLORER</h1>
+          <p className="font-pixel text-xs text-slate-400 tracking-widest mt-2 uppercase">INITIALIZE YOUR CAMPUS IDENTITY</p>
+        </div>
+
+        {/* LEFT COLUMN: CATEGORIES */}
+        <div className="col-span-1 md:col-span-3 flex flex-row md:flex-col gap-2 overflow-x-auto pb-2 md:pb-0">
           {CATEGORIES.map(cat => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-4 py-3 text-left font-pixel text-sm tracking-widest transition-colors whitespace-nowrap ${activeCategory === cat ? 'bg-blue-600 text-white pixel-corners' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
-              aria-pressed={activeCategory === cat}
+              className={`font-pixel text-xs tracking-widest px-4 py-4 border text-left whitespace-nowrap transition-none ${
+                activeCategory === cat 
+                  ? 'bg-blue-600 border-blue-400 text-white shadow-[inset_0_0_10px_rgba(255,255,255,0.2)]' 
+                  : 'bg-slate-900/80 border-slate-700 text-slate-400 hover:bg-slate-800'
+              }`}
             >
               {cat}
             </button>
           ))}
         </div>
-      </div>
 
-      {/* CENTER: Preview */}
-      <div className="flex-1 flex flex-col items-center justify-center p-8 z-10 relative">
-        <div className="absolute top-8 text-center w-full max-w-md">
-          <h2 className="text-sm font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed font-medium text-slate-400 uppercase tracking-widest">Choose how you enter the world</h2>
-        </div>
-        
-        <div className="relative">
-          <CharacterRenderer config={config} size="xl" />
-        </div>
-      </div>
-
-      {/* RIGHT: Options */}
-      <div className="w-full lg:w-80 bg-slate-900/80 border-l border-slate-800 z-10 flex flex-col p-6 shrink-0 h-[40vh] lg:h-auto overflow-y-auto">
-        <h3 className="font-pixel tracking-widest text-blue-400 mb-6">{activeCategory} OPTIONS</h3>
-        
-        <div className="grid grid-cols-2 gap-3 mb-8">
-          {OPTIONS[activeCategory].map(opt => {
-            const isActive = config[categoryKey as keyof CharacterConfig] === opt;
-            return (
-              <button
-                key={opt}
-                onClick={() => setConfig({ ...config, [categoryKey]: opt })}
-                aria-pressed={isActive}
-                className={`px-3 py-3 text-center text-xs font-pixel tracking-widest uppercase transition-all ${isActive ? 'bg-white text-slate-900 pixel-corners shadow-[0_0_10px_rgba(255,255,255,0.3)]' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
-              >
-                {opt}
-              </button>
-            );
-          })}
-        </div>
-        
-        <div className="mt-auto pt-6 border-t border-slate-800">
-          <div className="mb-6">
-            <label className="block text-xs font-pixel text-slate-400 mb-2 tracking-widest">EXPLORER NAME</label>
-            <input 
-              type="text" 
-              value={explorerName}
-              onChange={(e) => setExplorerName(e.target.value)}
-              placeholder="e.g. NeuralFox"
-              className="w-full bg-slate-950 border-2 border-slate-700 p-3 text-white focus:border-blue-500 outline-none font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed"
-            />
-          </div>
+        {/* CENTER COLUMN: CHARACTER PREVIEW */}
+        <div className="col-span-1 md:col-span-6 flex flex-col items-center justify-center relative">
           
-          <div className="flex flex-col gap-3">
-            <PixelButton variant="secondary" onClick={randomize} className="w-full text-xs">
-              [RANDOMIZE]
+          {/* Environment pedestal/backdrop for the character */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+             <div className="w-64 h-64 border border-cyan-500/30 rounded-full animate-[spin_10s_linear_infinite] border-t-cyan-400" />
+             <div className="absolute w-48 h-48 border border-magenta-500/30 rounded-full animate-[spin_8s_linear_infinite_reverse] border-b-magenta-400" />
+             {/* Floor grid */}
+             <div className="absolute bottom-10 w-64 h-24 bg-[radial-gradient(ellipse_at_center,rgba(52,211,153,0.2)_0%,transparent_70%)]" style={{ transform: 'rotateX(70deg)' }} />
+          </div>
+
+          <div className="relative z-10 bg-slate-900/40 backdrop-blur-sm border-2 border-slate-700 p-8 pt-12 shadow-[0_0_30px_rgba(0,0,0,0.5)] flex flex-col items-center w-full max-w-sm">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={JSON.stringify(config)}
+                initial={{ opacity: 0.5, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0.5, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                className="mb-8"
+              >
+                <CharacterRenderer config={config} size="xl" />
+              </motion.div>
+            </AnimatePresence>
+            
+            <div className="w-full mt-4">
+              <label className="block font-pixel text-[10px] text-cyan-400 mb-2 tracking-widest uppercase">EXPLORER ALIAS</label>
+              <input
+                type="text"
+                maxLength={15}
+                value={explorerName}
+                onChange={(e) => setExplorerName(e.target.value.toUpperCase())}
+                placeholder="ENTER NAME_"
+                className="w-full bg-slate-950 border border-slate-700 px-4 py-3 font-pixel text-white text-lg tracking-widest focus:outline-none focus:border-cyan-400 transition-none placeholder:text-slate-600"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN: OPTIONS & ACTIONS */}
+        <div className="col-span-1 md:col-span-3 flex flex-col h-full">
+          
+          {/* Options Grid */}
+          <div className="bg-slate-900/80 border border-slate-700 p-4 mb-4 flex-grow overflow-y-auto">
+            <div className="font-pixel text-[10px] text-slate-500 mb-4 tracking-widest uppercase">SELECT {activeCategory}</div>
+            <div className="grid grid-cols-2 gap-2">
+              {OPTIONS[activeCategory]?.map(opt => {
+                // Map config keys based on active category
+                let currentVal = '';
+                if (activeCategory === 'FACE') currentVal = config.face;
+                if (activeCategory === 'HAIR') currentVal = config.hair;
+                if (activeCategory === 'COLOR') currentVal = config.hairColor;
+                if (activeCategory === 'OUTFIT') currentVal = config.outfit;
+                if (activeCategory === 'ACCESSORY') currentVal = config.accessory;
+                if (activeCategory === 'EFFECT') currentVal = config.effect;
+
+                const isSelected = currentVal === opt;
+                
+                return (
+                  <button
+                    key={opt}
+                    onClick={() => {
+                      if (activeCategory === 'FACE') setConfig({...config, face: opt});
+                      if (activeCategory === 'HAIR') setConfig({...config, hair: opt});
+                      if (activeCategory === 'COLOR') setConfig({...config, hairColor: opt});
+                      if (activeCategory === 'OUTFIT') setConfig({...config, outfit: opt});
+                      if (activeCategory === 'ACCESSORY') setConfig({...config, accessory: opt});
+                      if (activeCategory === 'EFFECT') setConfig({...config, effect: opt});
+                    }}
+                    className={`font-pixel text-[10px] tracking-widest px-2 py-3 border uppercase transition-none ${
+                      isSelected 
+                        ? 'bg-cyan-900 border-cyan-400 text-cyan-100' 
+                        : 'bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700'
+                    }`}
+                  >
+                    {opt}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-col gap-2">
+            <PixelButton 
+              variant="secondary" 
+              onClick={randomize}
+              className="w-full text-xs py-3"
+            >
+              RANDOMIZE
             </PixelButton>
-            <PixelButton variant="primary" onClick={handleSave} disabled={loading} className="w-full text-sm">
-              {loading ? 'INITIALIZING...' : 'ENTER THE WORLD'}
+            
+            <PixelButton 
+              variant="primary" 
+              onClick={handleSave}
+              disabled={loading || !explorerName.trim()}
+              className="w-full text-sm py-4"
+            >
+              {loading ? 'SAVING...' : 'SAVE EXPLORER'}
             </PixelButton>
           </div>
         </div>
+
       </div>
     </main>
   );
 }
-
-
-
-

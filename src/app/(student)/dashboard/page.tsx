@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import CharacterRenderer, { CharacterConfig } from '@/components/character/CharacterRenderer';
 import PixelButton from '@/components/ui/PixelButton';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 export default function MyLabPage() {
   const [characterConfig, setCharacterConfig] = useState<CharacterConfig | null>(null);
   const [level, setLevel] = useState(1);
+  const [stats, setStats] = useState<any>({});
 
   useEffect(() => {
     let isMounted = true;
@@ -21,16 +23,14 @@ export default function MyLabPage() {
         if (!isMounted) return;
         
         if (data?.character) {
-          // eslint-disable-next-line react-hooks/set-state-in-effect
           setCharacterConfig(data.character);
         } else {
           const saved = localStorage.getItem('growthos_character');
-          // eslint-disable-next-line react-hooks/set-state-in-effect
           if (saved) setCharacterConfig(JSON.parse(saved));
         }
         if (data?.stats) {
-          // eslint-disable-next-line react-hooks/set-state-in-effect
           setLevel(data.stats.level);
+          setStats(data.stats);
         }
       } catch (e) {
         console.error(e);
@@ -41,75 +41,128 @@ export default function MyLabPage() {
   }, []);
 
   return (
-    <div className="w-full h-full flex flex-col">
-      <div className="mb-6 shrink-0">
-        <h1 className="text-3xl font-pixel text-white tracking-widest mb-1 uppercase">My Lab</h1>
-        <p className="text-sm text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">Your personal workspace in the GrowthOS network.</p>
+    <div className="w-full h-full flex flex-col relative z-10 p-2 md:p-6 pb-20 md:pb-6 overflow-y-auto overflow-x-hidden scrollbar-hide">
+      
+      <div className="mb-6 shrink-0 z-20">
+        <h1 className="text-3xl font-pixel text-white tracking-widest mb-2 uppercase drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]">HOME BASE</h1>
+        <p className="text-xs text-blue-300 font-pixel tracking-widest uppercase opacity-80">PERSONAL LABORATORY INSTANCE // ACTIVE</p>
       </div>
 
-      <div className="flex-1 min-h-[500px] w-full bg-[#0a0f1c] border-2 border-slate-800 pixel-corners relative overflow-hidden flex items-end justify-center pb-12">
+      {/* THE ROOM */}
+      <div className="flex-1 w-full bg-slate-950/40 backdrop-blur-sm border border-slate-700 relative overflow-hidden flex flex-col items-center justify-end pb-8 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]">
         
-        {/* Deep Grid Background */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:32px_32px] opacity-20" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#0a0f1c_80%)]" />
+        {/* ROOM LIGHTING & EFFECTS */}
+        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-blue-900/20 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,0.2)_50%)] bg-[size:100%_4px] pointer-events-none" />
 
-        {/* Lab Floor/Glow */}
-        <div className="absolute inset-x-0 bottom-0 opacity-40">
-          <div className="w-full h-32 bg-[linear-gradient(to_top,rgba(59,130,246,0.3),transparent)]" />
-          <div className="w-full h-[2px] bg-blue-500 shadow-[0_0_20px_#3b82f6]" />
+        {/* ROOM FLOOR */}
+        <div className="absolute bottom-0 inset-x-0 h-32 border-t-2 border-slate-700 bg-[linear-gradient(to_bottom,#0f172a,#020617)]" style={{ transform: 'perspective(500px) rotateX(45deg)', transformOrigin: 'bottom' }}>
+           {/* Floor Grid */}
+           <div className="w-full h-full opacity-20" style={{ backgroundImage: 'linear-gradient(to right, #3b82f6 1px, transparent 1px), linear-gradient(to bottom, #3b82f6 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
         </div>
 
-        {/* Decorative background servers */}
-        <div className="absolute left-[20%] top-[20%] w-16 h-48 border border-slate-800 bg-slate-900/50 opacity-30 flex flex-col justify-evenly px-2">
-           <div className="w-full h-1 bg-blue-500/50 animate-pulse" />
-           <div className="w-full h-1 bg-blue-500/50 animate-pulse delay-75" />
-           <div className="w-full h-1 bg-blue-500/50 animate-pulse delay-150" />
-        </div>
-        <div className="absolute right-[25%] top-[10%] w-24 h-64 border border-slate-800 bg-slate-900/50 opacity-30 flex flex-col justify-end pb-4 px-2 gap-2">
-           <div className="w-4 h-4 rounded-none bg-green-500/30 animate-pulse" />
-           <div className="w-4 h-4 rounded-none bg-red-500/30" />
-        </div>
-
-        {/* Level 1: Basic Workstation */}
-        <div className="absolute left-2 md:left-[10%] bottom-8 w-24 md:w-48 h-20 md:h-32 border-2 border-slate-700 bg-slate-900 flex flex-col justify-end p-1 md:p-2 opacity-80">
-          <div className="w-full h-8 md:h-16 bg-slate-950 border border-slate-800 relative overflow-hidden">
-            <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,255,0,0.1)_50%)] bg-[size:100%_4px]" />
-            <div className="text-[10px] md:text-xs text-green-500 font-mono p-1 leading-tight">INIT ENV...<br/>NODE ACTIVE</div>
-          </div>
-          <div className="text-[10px] md:text-xs text-slate-500 font-pixel text-center mt-1 md:mt-2">TERMINAL L1</div>
-        </div>
-
-        {/* Level 2: Referral Terminal (Unlocked) */}
-        {level >= 2 && (
-          <div className="absolute right-2 md:right-[10%] bottom-8 w-20 md:w-32 h-24 md:h-48 border-2 border-blue-900 bg-slate-900 flex flex-col items-center justify-start p-1 md:p-2 z-20">
-            <div className="w-full h-12 md:h-24 bg-blue-950 border border-blue-500 relative flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-              <div className="text-blue-400 text-[8px] md:text-xs font-pixel text-center leading-tight">NETWORK<br/>LINK<br/>ACTIVE</div>
+        {/* SCENE OBJECTS */}
+        <div className="relative w-full max-w-4xl h-96 flex items-end justify-between px-10">
+          
+          {/* OBJECT 1: QUEST BOARD (LEFT) */}
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            className="group relative flex flex-col items-center"
+          >
+            <div className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-slate-900 border border-slate-600 px-3 py-1 font-pixel text-[10px] text-white z-20 pointer-events-none">
+              QUEST BOARD
             </div>
-            <Link href="/crew" className="mt-2 md:mt-4">
-              <PixelButton variant="secondary" className="text-[10px] md:text-xs py-1 px-1 md:px-2">ACCESS</PixelButton>
+            <Link href="/quests" className="block relative z-10 transition-transform hover:scale-105 hover:-translate-y-2">
+              <div className="w-32 h-40 bg-slate-800 border-4 border-slate-600 shadow-[0_10px_20px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center p-2">
+                 <div className="w-full h-4 bg-slate-700 mb-2" />
+                 <div className="w-full flex-1 border-2 border-dashed border-slate-600 flex flex-wrap gap-1 p-1">
+                    <div className="w-4 h-4 bg-yellow-400/50" />
+                    <div className="w-4 h-4 bg-yellow-400/50" />
+                    <div className="w-4 h-4 bg-slate-700" />
+                 </div>
+              </div>
+              {/* Stand */}
+              <div className="w-4 h-16 bg-slate-700 mx-auto" />
+              <div className="w-16 h-2 bg-slate-600 mx-auto" />
             </Link>
-          </div>
-        )}
+          </motion.div>
 
-        {/* Level 3: AI Model Display (Locked) */}
-        {level < 3 && (
-          <div className="absolute top-[10%] md:top-[20%] right-10 md:right-[30%] opacity-20">
-            <div className="w-20 h-20 md:w-40 md:h-40 border-2 border-dashed border-slate-600 rounded-none flex items-center justify-center">
-              <span className="text-[10px] md:text-xs font-pixel text-slate-500">LVL 3 REQ</span>
+          {/* PLAYER CHARACTER (CENTER) */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative z-20 pb-4 flex flex-col items-center"
+          >
+            <div className="absolute bottom-4 w-32 h-8 bg-black/50 blur-md rounded-[100%]" />
+            <div className="relative">
+              {characterConfig ? (
+                <CharacterRenderer config={characterConfig} size="lg" />
+              ) : (
+                <div className="w-48 h-48 bg-slate-800/50 animate-pulse border border-slate-700 flex items-center justify-center font-pixel text-slate-500">
+                  NO IDENTITY
+                </div>
+              )}
             </div>
-          </div>
-        )}
+          </motion.div>
 
-        {/* Character */}
-        <div className="relative z-10 mb-8 md:mb-8 pointer-events-none">
-           {characterConfig && (
-             <CharacterRenderer config={characterConfig} size="lg" className="scale-75 md:scale-100" />
-           )}
-           {/* Shadow */}
-           <div className="w-24 md:w-32 h-4 bg-black/50 blur-sm rounded-none absolute -bottom-2 left-1/2 -translate-x-1/2 -z-10" />
+          {/* OBJECT 2: PROJECT TERMINAL (RIGHT) */}
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
+            className="group relative flex flex-col items-center"
+          >
+            <div className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-slate-900 border border-slate-600 px-3 py-1 font-pixel text-[10px] text-white z-20 pointer-events-none">
+              PROJECT TERMINAL
+            </div>
+            <Link href="/project" className="block relative z-10 transition-transform hover:scale-105 hover:-translate-y-2">
+              <div className="w-24 h-24 bg-slate-800 border-4 border-slate-600 shadow-[0_10px_20px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center p-2 relative">
+                 {/* Screen */}
+                 <div className="w-full flex-1 bg-slate-900 border-2 border-slate-950 overflow-hidden relative">
+                    <div className="absolute inset-0 bg-blue-500/10" />
+                    <div className="w-full h-[1px] bg-blue-400/50 animate-[scanline_2s_linear_infinite]" />
+                    <div className="absolute top-2 left-2 w-4 h-4 bg-blue-500 animate-pulse" />
+                 </div>
+                 {/* Keyboard */}
+                 <div className="w-full h-3 bg-slate-700 mt-1 flex justify-between px-1 items-center">
+                    <div className="w-2 h-1 bg-slate-500" />
+                    <div className="w-6 h-1 bg-slate-500" />
+                    <div className="w-2 h-1 bg-slate-500" />
+                 </div>
+              </div>
+              {/* Stand */}
+              <div className="w-8 h-20 bg-slate-700 mx-auto" />
+              <div className="w-20 h-4 bg-slate-600 mx-auto" />
+            </Link>
+          </motion.div>
+
         </div>
+        
+        {/* WORKSHOP MONITOR (BACKGROUND CENTER-HIGH) */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="absolute top-12 left-1/2 -translate-x-1/2 z-0 group"
+        >
+          <Link href="/workshop" className="block">
+            <div className="w-64 h-32 bg-slate-900 border-4 border-slate-700 shadow-[0_0_30px_rgba(16,185,129,0.1)] p-2 relative flex flex-col items-center justify-center transition-colors group-hover:border-emerald-500 group-hover:shadow-[0_0_40px_rgba(16,185,129,0.3)]">
+              <div className="absolute -top-3 w-16 h-3 bg-slate-700 mx-auto flex justify-around items-center">
+                <div className="w-1 h-1 bg-emerald-500 animate-ping" />
+                <div className="w-1 h-1 bg-emerald-500 animate-ping" style={{ animationDelay: '0.5s' }} />
+              </div>
+              <h3 className="font-pixel text-emerald-400 text-sm tracking-widest animate-pulse">WORKSHOP SIGNAL</h3>
+              <p className="font-pixel text-[10px] text-slate-400 mt-2">CLICK TO TUNE IN</p>
+            </div>
+            {/* Hanging Wires */}
+            <div className="absolute -top-12 left-1/4 w-1 h-12 bg-slate-800" />
+            <div className="absolute -top-12 right-1/4 w-1 h-12 bg-slate-800" />
+          </Link>
+        </motion.div>
+
       </div>
     </div>
   );
 }
-
