@@ -1,11 +1,15 @@
 import { Suspense } from 'react';
 import RegistrationForm from './RegistrationForm';
+import DataStreamBackground from '@/components/ui/DataStreamBackground';
 
 export default function RegisterPage() {
   return (
-    <main className="relative min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 overflow-hidden">
-      {/* Background Grid */}
-      <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+    <main className="relative min-h-screen bg-[#020617] flex flex-col items-center justify-center p-4 overflow-hidden">
+      
+      {/* Background Matrix/Data Stream */}
+      <DataStreamBackground />
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,transparent_0%,#020617_100%)] pointer-events-none" />
+
       
       <div className="relative z-10 w-full max-w-lg">
         <div className="mb-6 text-center">
