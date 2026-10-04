@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import PixelButton from '@/components/ui/PixelButton';
-import CharacterRenderer from '@/components/character/CharacterRenderer';
+import StarfieldBackground from '@/components/ui/StarfieldBackground';
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -25,26 +25,8 @@ export default function Home() {
   return (
     <main className="relative min-h-screen bg-slate-950 overflow-hidden flex flex-col items-center justify-center p-4 lg:p-12">
       
-      {/* --- RETRO CITY BACKGROUND --- */}
-      <div 
-        className="absolute inset-0 z-0 bg-cover bg-center"
-        style={{ 
-          backgroundImage: 'url(/retro_city_bg.jpg)',
-          imageRendering: 'pixelated', 
-          backgroundSize: 'cover',
-          animation: 'panBackground 60s linear infinite alternate' 
-        }}
-      >
-        <style dangerouslySetInnerHTML={{__html: `
-          @keyframes panBackground {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
-          }
-        `}} />
-      </div>
-      
-      {/* Dark overlay for readability */}
-      <div className="absolute inset-0 z-0 bg-slate-950/60 mix-blend-multiply pointer-events-none"></div>
+      {/* --- PARALLAX STARFIELD BACKGROUND --- */}
+      <StarfieldBackground />
 
       {/* --- TOP NAV --- */}
       <nav className="absolute top-0 left-0 right-0 z-20 w-full flex justify-between items-center p-6 lg:p-8">
@@ -116,7 +98,7 @@ export default function Home() {
         </motion.div>
       </div>
 
-      {/* --- FLOATING FEATURES (Now at bottom) --- */}
+      {/* --- FLOATING FEATURES --- */}
       {mounted && (
         <div className="relative z-10 w-full max-w-5xl mt-24 grid grid-cols-1 md:grid-cols-3 gap-6">
           <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{delay: 1.2}} className="bg-slate-900/70 border border-slate-700 p-6 backdrop-blur-sm">
