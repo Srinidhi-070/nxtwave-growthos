@@ -8,19 +8,11 @@ import CharacterRenderer from '@/components/character/CharacterRenderer';
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
-  const [particles, setParticles] = useState<{x: number, y: number, duration: number, delay: number, drop: number}[]>([]);
   const [stats, setStats] = useState({ registered: 482, capacity: 500 });
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
-    setParticles([...Array(20)].map(() => ({
-      x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
-      y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
-      duration: Math.random() * 5 + 5,
-      delay: Math.random() * 5,
-      drop: Math.random() * -100 - 50
-    })));
     // Fetch real stats
     fetch('/api/stats/workshop')
       .then(res => res.json())
@@ -33,63 +25,35 @@ export default function Home() {
   return (
     <main className="relative min-h-screen bg-slate-950 overflow-hidden flex flex-col items-center justify-center p-4 lg:p-12">
       
-      {/* --- DEEP ANIMATED CYBER BACKGROUND --- */}
-      <div className="absolute inset-0 z-0 bg-[#020617] overflow-hidden">
-        {/* Animated Perspective Grid */}
-        <div 
-          className="absolute z-0 opacity-50"
-          style={{
-            width: '200vw',
-            height: '200vh',
-            left: '-50vw',
-            top: '0',
-            backgroundImage: 'linear-gradient(to right, rgba(59,130,246,0.4) 1px, transparent 1px), linear-gradient(to bottom, rgba(59,130,246,0.4) 1px, transparent 1px)',
-            backgroundSize: '40px 40px',
-            transform: 'perspective(1000px) rotateX(70deg) translateY(-20%)',
-            animation: 'gridMove 2s steps(20) infinite',
-            transformOrigin: 'top center'
-          }}
-        />
+      {/* --- RETRO CITY BACKGROUND --- */}
+      <div 
+        className="absolute inset-0 z-0 bg-cover bg-center"
+        style={{ 
+          backgroundImage: 'url(/retro_city_bg.jpg)',
+          imageRendering: 'pixelated', 
+          backgroundSize: 'cover',
+          animation: 'panBackground 60s linear infinite alternate' 
+        }}
+      >
         <style dangerouslySetInnerHTML={{__html: `
-          @keyframes gridMove {
-            0% { background-position: 0 0; }
-            100% { background-position: 0 40px; }
+          @keyframes panBackground {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
           }
         `}} />
-        {/* Radial Fade to mask the edges */}
-        <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_top,#020617_10%,transparent_50%,#020617_90%)]"></div>
-        <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#020617] via-transparent to-[#020617]"></div>
       </div>
-
-      {/* Floating Particles */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        {particles.map((p, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-2 h-2 bg-blue-500/50 pixel-corners shadow-[0_0_10px_#3b82f6]"
-            initial={{ x: p.x, y: p.y }}
-            animate={{ 
-              y: [null, p.drop],
-              opacity: [0, 1, 0]
-            }}
-            transition={{ 
-              duration: p.duration, 
-              repeat: Infinity,
-              ease: "linear",
-              delay: p.delay
-            }}
-          />
-        ))}
-      </div>
+      
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 z-0 bg-slate-950/60 mix-blend-multiply pointer-events-none"></div>
 
       {/* --- TOP NAV --- */}
       <nav className="absolute top-0 left-0 right-0 z-20 w-full flex justify-between items-center p-6 lg:p-8">
         <div className="text-white font-pixel text-xl tracking-widest flex items-center gap-2">
-          <div className="w-4 h-4 bg-blue-500 pixel-corners animate-pulse" />
+          <div className="w-4 h-4 bg-blue-500 rounded-none animate-pulse" />
           GROWTH_OS
         </div>
         <Link href="/admin">
-          <button className="text-xs font-pixel text-slate-500 hover:text-blue-400 uppercase tracking-widest transition-colors">
+          <button className="font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed text-slate-500 hover:text-blue-400 uppercase tracking-widest transition-colors">
             Admin Telemetry
           </button>
         </Link>
@@ -102,7 +66,7 @@ export default function Home() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-1 mb-8 bg-slate-900/80 border border-slate-700 text-amber-400 font-pixel text-sm md:text-lg tracking-widest uppercase pixel-corners shadow-[0_0_15px_rgba(251,191,36,0.2)] backdrop-blur-sm"
+          className="inline-flex items-center gap-2 px-4 py-1 mb-8 bg-slate-900/80 border border-slate-700 text-amber-400 font-pixel text-sm md:text-lg tracking-widest uppercase shadow-[0_0_15px_rgba(251,191,36,0.2)] backdrop-blur-sm"
         >
           <span className="w-2 h-2 bg-amber-400 animate-pulse"></span>
           INITIATING CAMPUS SIMULATION
@@ -112,44 +76,36 @@ export default function Home() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="text-6xl md:text-8xl lg:text-9xl font-pixel text-white leading-[0.9] mb-6 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]"
+          className="text-5xl md:text-7xl lg:text-8xl font-pixel text-white mb-6 tracking-widest uppercase drop-shadow-[0_0_20px_rgba(59,130,246,0.5)]"
+          style={{ textShadow: '4px 4px 0 #1e3a8a, -2px -2px 0 #3b82f6' }}
         >
-          BUILD YOUR <br/>
-          <span className="text-blue-500">AI CREW</span>
+          BUILD YOUR<br/>AI CREW
         </motion.h1>
 
         <motion.p 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="text-lg md:text-2xl text-slate-300 font-pixel tracking-wide mb-10 max-w-2xl uppercase leading-relaxed"
+          transition={{ duration: 1, delay: 0.5 }}
+          className="max-w-2xl text-lg md:text-xl text-blue-200 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed mb-12 tracking-wide"
         >
           Enter the digital campus. Create your explorer. Invite your network. Deploy your first AI project in 60 minutes.
         </motion.p>
-        
-        <motion.div 
+
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.8 }}
-          className="flex flex-col sm:flex-row gap-6 justify-center items-center w-full max-w-md"
+          className="flex flex-col items-center gap-6"
         >
-          <Link href="/register" className="w-full">
-            <PixelButton variant="primary" className="w-full text-xl md:text-2xl py-4">
+          <Link href="/register">
+            <PixelButton variant="primary" className="text-2xl px-12 py-4">
               ENTER WORLD
             </PixelButton>
           </Link>
-        </motion.div>
-
-        {/* Live Capacity Tracker */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 1 }}
-          className="mt-8 text-center"
-        >
-          <div className="text-xs font-pixel text-slate-500 uppercase tracking-widest mb-2">LIVE NETWORK CAPACITY</div>
-          <div className="flex items-center gap-4 justify-center">
-            <div className="w-48 h-2 bg-slate-800 rounded-none overflow-hidden">
+          
+          <div className="flex flex-col items-center gap-2 mt-4 bg-slate-900/50 p-4 border border-slate-800 backdrop-blur-sm">
+            <div className="text-xs text-slate-400 font-pixel tracking-widest uppercase">LIVE NETWORK CAPACITY</div>
+            <div className="w-48 h-2 bg-slate-800 overflow-hidden rounded-none">
                <div 
                  className="h-full bg-blue-500" 
                  style={{ width: `${Math.min(100, (stats.registered / stats.capacity) * 100)}%` }} 
@@ -160,52 +116,26 @@ export default function Home() {
         </motion.div>
       </div>
 
-      {/* --- FEATURE HIGHLIGHTS --- */}
-      <motion.div 
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 1.2 }}
-        className="relative z-10 w-full max-w-6xl mt-24 grid grid-cols-1 md:grid-cols-3 gap-6"
-      >
-        <div className="bg-slate-900/60 border-2 border-slate-700 pixel-corners p-6 backdrop-blur-md hover:bg-slate-800 transition-colors">
-          <div className="h-32 w-full flex items-center justify-center mb-4 bg-slate-950 border border-slate-800">
-            {mounted && <CharacterRenderer config={{ body: 'body-1', face: 'face-1', hair: 'hair-2', hairColor: '#3b82f6', outfit: 'outfit-1', accessory: 'none', effect: 'none' }} size="lg" />}
-          </div>
-          <h3 className="font-pixel text-xl text-white tracking-widest mb-2">CREATE IDENTITY</h3>
-          <p className="text-sm text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">Customize your unique AI Explorer avatar to represent you across the campus network.</p>
+      {/* --- FLOATING FEATURES (Now at bottom) --- */}
+      {mounted && (
+        <div className="relative z-10 w-full max-w-5xl mt-24 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{delay: 1.2}} className="bg-slate-900/70 border border-slate-700 p-6 backdrop-blur-sm">
+            <div className="w-8 h-8 bg-blue-500 mb-4 rounded-none flex items-center justify-center font-pixel text-white">01</div>
+            <h3 className="font-pixel text-xl text-white mb-2">Create Identity</h3>
+            <p className="font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed text-slate-400">Customize your unique AI Explorer avatar to represent you across the campus network.</p>
+          </motion.div>
+          <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{delay: 1.4}} className="bg-slate-900/70 border border-slate-700 p-6 backdrop-blur-sm">
+            <div className="w-8 h-8 bg-amber-500 mb-4 rounded-none flex items-center justify-center font-pixel text-white">02</div>
+            <h3 className="font-pixel text-xl text-white mb-2">Grow Crew</h3>
+            <p className="font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed text-slate-400">Invite peers via your unique network link to unlock exclusive AI resources and XP.</p>
+          </motion.div>
+          <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{delay: 1.6}} className="bg-slate-900/70 border border-slate-700 p-6 backdrop-blur-sm">
+            <div className="w-8 h-8 bg-green-500 mb-4 rounded-none flex items-center justify-center font-pixel text-white">03</div>
+            <h3 className="font-pixel text-xl text-white mb-2">Deploy AI</h3>
+            <p className="font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed text-slate-400">Join the live 60-minute session to build and ship your first AI-powered application.</p>
+          </motion.div>
         </div>
-
-        <div className="bg-slate-900/60 border-2 border-slate-700 pixel-corners p-6 backdrop-blur-md hover:bg-slate-800 transition-colors">
-          <div className="h-32 w-full flex items-center justify-center mb-4 bg-slate-950 border border-slate-800 overflow-hidden relative">
-             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.2),transparent)] animate-pulse" />
-             <div className="flex gap-4 items-center">
-               <div className="w-3 h-3 bg-blue-500 rounded-none" />
-               <div className="w-12 h-1 bg-slate-700" />
-               <div className="w-5 h-5 bg-white rounded-none shadow-[0_0_15px_#fff]" />
-               <div className="w-12 h-1 bg-slate-700" />
-               <div className="w-3 h-3 bg-blue-500 rounded-none" />
-             </div>
-          </div>
-          <h3 className="font-pixel text-xl text-white tracking-widest mb-2">GROW YOUR CREW</h3>
-          <p className="text-sm text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">Invite peers via your unique network link to unlock exclusive AI resources and XP.</p>
-        </div>
-
-        <div className="bg-slate-900/60 border-2 border-slate-700 pixel-corners p-6 backdrop-blur-md hover:bg-slate-800 transition-colors">
-          <div className="h-32 w-full flex items-center justify-center mb-4 bg-slate-950 border border-slate-800 font-mono text-green-400 text-xs text-left p-4 leading-tight whitespace-pre-wrap">
-             {`> npm run deploy\n> compiling...\n> building AI node\n> LIVE: vercel.app\n> SUCCESS`}
-          </div>
-          <h3 className="font-pixel text-xl text-white tracking-widest mb-2">DEPLOY PROJECT</h3>
-          <p className="text-sm text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">Join the live 60-minute session to build and ship your first AI-powered application.</p>
-        </div>
-      </motion.div>
-
-      {/* Decorative scanline effect */}
-      <div className="pointer-events-none fixed inset-0 z-50 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] opacity-20 mix-blend-overlay"></div>
+      )}
     </main>
   );
 }
-
-
-
-
-
