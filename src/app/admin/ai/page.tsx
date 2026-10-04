@@ -28,88 +28,141 @@ export default function AIInsightsPage() {
       .catch(() => setLoading(false));
   }, []);
 
-  if (loading) return (
-    <div className="flex-1 flex flex-col items-center justify-center p-8 text-zinc-500 font-mono text-sm gap-4">
-      <Cpu className="w-8 h-8 animate-pulse text-blue-500/50" />
-      <span>Growth Copilot is analyzing telemetry...</span>
-    </div>
-  );
-
-  if (!insight) return <div className="flex-1 p-8 text-rose-400 font-mono text-sm">Error initializing Copilot instance.</div>;
+  if (loading) {
+    return (
+      <div className="w-full h-[600px] flex flex-col items-center justify-center font-mono text-emerald-500">
+        <div className="w-16 h-16 border-4 border-emerald-900 border-t-emerald-400 rounded-none animate-spin mb-4" />
+        <div className="tracking-widest animate-pulse text-xs">BOOTING AI COPILOT KERNEL...</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex-1 p-6 lg:p-10 max-w-5xl mx-auto w-full text-slate-200">
-      <div className="mb-8 flex items-center gap-3">
-        <Cpu className="w-6 h-6 text-blue-500" />
-        <div>
-          <h1 className="text-2xl font-semibold text-white tracking-tight">Growth Copilot</h1>
-          <p className="text-sm text-zinc-500 font-medium">Deterministic Synthesis Engine</p>
+    <div className="w-full flex flex-col gap-6 relative z-10 font-mono">
+      
+      {/* HEADER COMMAND BAR */}
+      <div className="bg-[#021008] border border-emerald-900 p-4 flex justify-between items-center shadow-[0_0_20px_rgba(16,185,129,0.2)] shrink-0">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 bg-emerald-950 flex items-center justify-center border border-emerald-800 animate-pulse">
+             <Cpu className="text-emerald-500 w-6 h-6" />
+          </div>
+          <div>
+            <h1 className="text-xl font-pixel text-emerald-500 tracking-widest drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]">AI COPILOT TERMINAL</h1>
+            <p className="text-[10px] text-emerald-700 tracking-widest mt-1 opacity-80">AUTONOMOUS GROWTH ANALYSIS ENGINE</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 border border-emerald-800 bg-emerald-950/50 px-4 py-2">
+           <div className="w-2 h-2 bg-emerald-500 animate-pulse" />
+           <span className="font-pixel text-[10px] text-emerald-400">ENGINE ONLINE</span>
         </div>
       </div>
 
-      <motion.div 
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-[#111] border border-blue-900/30 rounded-xl overflow-hidden shadow-[0_0_40px_rgba(59,130,246,0.05)]"
-      >
-        <div className="bg-blue-950/20 p-6 border-b border-blue-900/30 flex justify-between items-start">
-          <div className="max-w-2xl">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="flex h-2 w-2 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-blue-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-none h-2 w-2 bg-blue-500"></span>
-              </span>
-              <span className="text-xs text-blue-400 font-mono uppercase tracking-widest">Signal Detected • {insight.window}</span>
-            </div>
-            <h2 className="text-2xl font-medium text-white leading-tight">{insight.claim}</h2>
-          </div>
-          <div className="text-right shrink-0">
-            <span className="text-xs text-zinc-500 uppercase tracking-widest block mb-1">Confidence</span>
-            <span className="text-lg font-mono text-emerald-400">{insight.confidence}</span>
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* LOG STREAM */}
+        <div className="col-span-1 lg:col-span-1 bg-[#020a06] border border-emerald-900 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] flex flex-col h-[600px] relative">
+           <div className="absolute top-0 right-0 p-2 font-pixel text-[8px] text-emerald-900">TTY1</div>
+           <div className="p-4 border-b border-emerald-900 bg-emerald-950/20">
+             <div className="font-pixel text-[10px] text-emerald-600 tracking-widest">SYSTEM_LOGS</div>
+           </div>
+           <div className="flex-1 p-4 overflow-y-auto text-[10px] leading-relaxed text-emerald-500 opacity-70">
+             <div>{`> [INFO] Booting GrowthOS AI Model v4.2`}</div>
+             <div>{`> [INFO] Loading dataset constraints... OK`}</div>
+             <div>{`> [INFO] Scanning recent funnel events...`}</div>
+             <div>{`> [INFO] Detected anomaly in conversion node B.`}</div>
+             <div>{`> [WARN] Drop-off rate exceeded threshold (15%)`}</div>
+             <div>{`> [INFO] Generating hypothesis...`}</div>
+             <div>{`> [INFO] Hypothesis generated. Analyzing significance...`}</div>
+             <div>{`> [INFO] P-value: 0.03 (Significant)`}</div>
+             <div className="animate-pulse">{`> [INFO] Waiting for human authorization...`}</div>
+           </div>
         </div>
 
-        <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Evidence
-            </h3>
-            <ul className="space-y-3">
-              {insight.evidence.map((ev, i) => (
-                <li key={i} className="text-sm text-zinc-300 pl-4 border-l-2 border-white/10 leading-relaxed">
-                  {ev}
-                </li>
-              ))}
-            </ul>
-          </div>
+        {/* INSIGHT ANALYSIS */}
+        <div className="col-span-1 lg:col-span-2 bg-[#021008] border border-emerald-800 p-6 flex flex-col relative overflow-hidden shadow-xl">
+           <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,0.2)_50%)] bg-[size:100%_4px] pointer-events-none opacity-30" />
+           
+           <div className="flex items-center gap-4 border-b border-emerald-900 pb-4 mb-6">
+              <Zap className="text-emerald-400 w-8 h-8" />
+              <div>
+                <h2 className="font-pixel text-lg text-emerald-300 tracking-widest">LATEST INSIGHT</h2>
+                <div className="text-[10px] text-emerald-600">ID: INS-8924-ALPHA</div>
+              </div>
+           </div>
 
-          <div>
-            <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-amber-500" /> Alternative Explanations
-            </h3>
-            <ul className="space-y-3">
-              {insight.alternative_explanations.map((alt, i) => (
-                <li key={i} className="text-sm text-zinc-300 pl-4 border-l-2 border-white/10 leading-relaxed">
-                  {alt}
-                </li>
-              ))}
-            </ul>
-          </div>
+           {insight ? (
+             <div className="flex flex-col gap-8 relative z-10">
+               
+               <div>
+                 <div className="font-pixel text-[10px] text-emerald-700 tracking-widest mb-2">PRIMARY CLAIM</div>
+                 <div className="text-xl text-emerald-400 font-medium leading-relaxed bg-emerald-950/30 p-4 border-l-4 border-emerald-500">
+                   "{insight.claim}"
+                 </div>
+               </div>
+
+               <div className="grid grid-cols-2 gap-8">
+                 <div>
+                   <div className="font-pixel text-[10px] text-emerald-700 tracking-widest mb-2">SUPPORTING EVIDENCE</div>
+                   <ul className="list-disc list-inside text-xs text-emerald-500 space-y-2">
+                     {insight.evidence.map((ev, i) => <li key={i}>{ev}</li>)}
+                   </ul>
+                 </div>
+                 
+                 <div>
+                   <div className="font-pixel text-[10px] text-emerald-700 tracking-widest mb-2">ALTERNATIVE EXPLANATIONS</div>
+                   <ul className="list-disc list-inside text-xs text-emerald-600 space-y-2">
+                     {insight.alternative_explanations.map((alt, i) => <li key={i}>{alt}</li>)}
+                   </ul>
+                 </div>
+               </div>
+
+               <div className="grid grid-cols-3 gap-4">
+                 <div className="bg-emerald-950/20 border border-emerald-900 p-3">
+                   <div className="font-pixel text-[8px] text-emerald-700 mb-1">CONFIDENCE</div>
+                   <div className="text-lg text-emerald-400">{insight.confidence}</div>
+                 </div>
+                 <div className="bg-emerald-950/20 border border-emerald-900 p-3">
+                   <div className="font-pixel text-[8px] text-emerald-700 mb-1">ANALYSIS WINDOW</div>
+                   <div className="text-lg text-emerald-400">{insight.window}</div>
+                 </div>
+                 <div className="bg-emerald-950/20 border border-emerald-900 p-3 flex flex-col justify-center items-center">
+                   <div className="font-pixel text-[8px] text-emerald-700 mb-1">STATUS</div>
+                   {insight.human_approval_required ? (
+                     <div className="flex items-center gap-2 text-amber-500 text-xs">
+                       <AlertCircle className="w-4 h-4" /> HUMAN REVIEW REQ
+                     </div>
+                   ) : (
+                     <div className="flex items-center gap-2 text-emerald-500 text-xs">
+                       <CheckCircle2 className="w-4 h-4" /> AUTO-EXECUTED
+                     </div>
+                   )}
+                 </div>
+               </div>
+
+               <div className="mt-4 p-4 border border-emerald-500/50 bg-emerald-900/20">
+                 <div className="font-pixel text-[10px] text-emerald-400 mb-2">RECOMMENDED NEXT TEST</div>
+                 <div className="text-emerald-300 text-sm">{insight.recommended_next_test}</div>
+                 
+                 <div className="mt-6 flex justify-end gap-4">
+                   <button className="px-6 py-2 border border-emerald-800 text-emerald-600 hover:bg-emerald-950 font-pixel text-[10px] transition-colors">
+                     REJECT HYPOTHESIS
+                   </button>
+                   <button className="px-6 py-2 border border-emerald-400 bg-emerald-900/50 text-emerald-300 hover:bg-emerald-800 font-pixel text-[10px] transition-colors shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                     DEPLOY EXPERIMENT
+                   </button>
+                 </div>
+               </div>
+
+             </div>
+           ) : (
+             <div className="flex-1 flex items-center justify-center text-emerald-700 text-xs tracking-widest font-pixel animate-pulse">
+               AWAITING INSIGHT GENERATION...
+             </div>
+           )}
+
         </div>
 
-        <div className="bg-[#0a0a0a] p-6 border-t border-white/5 flex flex-col md:flex-row gap-6 justify-between items-center">
-          <div>
-            <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-1 flex items-center gap-2">
-              <Zap className="w-4 h-4 text-blue-500" /> Recommended Action
-            </h3>
-            <p className="text-sm text-zinc-200">{insight.recommended_next_test}</p>
-          </div>
-          <button className="w-full md:w-auto shrink-0 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20">
-            <Beaker className="w-4 h-4" /> Create Experiment
-          </button>
-        </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
-
