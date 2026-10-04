@@ -47,7 +47,7 @@ export default function MyCrewPage() {
   };
 
   return (
-    <div className="w-full h-full flex flex-col gap-6 overflow-y-auto">
+    <div className="w-full flex flex-col gap-6 pb-12">
       <div className="shrink-0">
         <h1 className="text-3xl font-pixel text-white tracking-widest mb-1 uppercase">My Crew</h1>
         <p className="text-sm text-slate-400 font-sans">People connected to your journey.</p>
@@ -196,3 +196,4 @@ export default function MyCrewPage() {
     </div>
   );
 }
+

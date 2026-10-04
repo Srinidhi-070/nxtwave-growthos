@@ -70,7 +70,7 @@ export default function ProjectPassportPage() {
   };
 
   return (
-    <div className="w-full h-full flex flex-col gap-6 overflow-y-auto">
+    <div className="w-full flex flex-col gap-6 pb-12">
       <div className="shrink-0 mb-2">
         <h1 className="text-3xl font-pixel text-white tracking-widest mb-1 uppercase">AI Project Passport</h1>
         <p className="text-sm text-slate-400 font-sans">Track your build progress and unlock lab upgrades.</p>
@@ -96,14 +96,25 @@ export default function ProjectPassportPage() {
              {MODULES.map((mod, i) => {
                const isComplete = i < currentStep;
                const isActive = i === currentStep;
+               const desc = [
+                 "Initialize AI model configuration.",
+                 "Connect context data sources.",
+                 "Train / Fine-tune the pipeline.",
+                 "Wrap in a full-stack Next.js app.",
+                 "Deploy to Vercel edge network."
+               ][i];
+
                return (
-                 <div key={mod} className={`flex items-center gap-4 ${isComplete ? 'opacity-100' : isActive ? 'opacity-100' : 'opacity-40'}`}>
-                   <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 border-2 ${isComplete ? 'bg-green-500 border-green-500' : isActive ? 'bg-blue-500 border-blue-400 animate-pulse' : 'bg-slate-900 border-slate-600'}`}>
-                     {isComplete && <span className="text-slate-900 font-bold font-sans">✓</span>}
+                 <div key={mod} className={`flex items-start gap-4 ${isComplete ? 'opacity-100' : isActive ? 'opacity-100' : 'opacity-40'}`}>
+                   <div className={`mt-1 w-8 h-8 rounded-full flex items-center justify-center shrink-0 border-2 ${isComplete ? 'bg-green-500 border-green-500' : isActive ? 'bg-blue-500 border-blue-400 animate-pulse' : 'bg-slate-900 border-slate-600'}`}>
+                     {isComplete && <span className="text-slate-900 font-bold font-sans">?</span>}
                    </div>
-                   <div className="flex-1 border-b border-dashed border-slate-700 pb-2">
-                     <div className={`font-pixel text-sm tracking-widest uppercase ${isComplete ? 'text-green-400' : isActive ? 'text-blue-400' : 'text-slate-500'}`}>
+                   <div className="flex-1 border-b border-dashed border-slate-700 pb-3">
+                     <div className={`font-pixel text-base tracking-widest uppercase mb-1 ${isComplete ? 'text-green-400' : isActive ? 'text-blue-400' : 'text-slate-500'}`}>
                        {mod}
+                     </div>
+                     <div className={`text-xs font-sans ${isComplete ? 'text-green-200/70' : isActive ? 'text-blue-200/80' : 'text-slate-600'}`}>
+                       {desc}
                      </div>
                    </div>
                  </div>
@@ -151,3 +162,6 @@ export default function ProjectPassportPage() {
     </div>
   );
 }
+
+
+

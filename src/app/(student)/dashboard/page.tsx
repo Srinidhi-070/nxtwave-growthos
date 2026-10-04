@@ -47,12 +47,27 @@ export default function MyLabPage() {
         <p className="text-sm text-slate-400 font-sans">Your personal workspace in the GrowthOS network.</p>
       </div>
 
-      <div className="flex-1 w-full bg-[#0a0f1c] border-2 border-slate-800 pixel-corners relative overflow-hidden flex items-end justify-center">
+      <div className="flex-1 min-h-[500px] w-full bg-[#0a0f1c] border-2 border-slate-800 pixel-corners relative overflow-hidden flex items-end justify-center pb-12">
         
-        {/* Lab Background Grid / Depth */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute bottom-0 w-full h-1/2 bg-[linear-gradient(to_top,rgba(59,130,246,0.3),transparent)]" />
-          <div className="absolute bottom-0 w-full h-[1px] bg-blue-500 shadow-[0_0_10px_#3b82f6]" />
+        {/* Deep Grid Background */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:32px_32px] opacity-20" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#0a0f1c_80%)]" />
+
+        {/* Lab Floor/Glow */}
+        <div className="absolute inset-x-0 bottom-0 opacity-40">
+          <div className="w-full h-32 bg-[linear-gradient(to_top,rgba(59,130,246,0.3),transparent)]" />
+          <div className="w-full h-[2px] bg-blue-500 shadow-[0_0_20px_#3b82f6]" />
+        </div>
+
+        {/* Decorative background servers */}
+        <div className="absolute left-[20%] top-[20%] w-16 h-48 border border-slate-800 bg-slate-900/50 opacity-30 flex flex-col justify-evenly px-2">
+           <div className="w-full h-1 bg-blue-500/50 animate-pulse" />
+           <div className="w-full h-1 bg-blue-500/50 animate-pulse delay-75" />
+           <div className="w-full h-1 bg-blue-500/50 animate-pulse delay-150" />
+        </div>
+        <div className="absolute right-[25%] top-[10%] w-24 h-64 border border-slate-800 bg-slate-900/50 opacity-30 flex flex-col justify-end pb-4 px-2 gap-2">
+           <div className="w-4 h-4 rounded-full bg-green-500/30 animate-pulse" />
+           <div className="w-4 h-4 rounded-full bg-red-500/30" />
         </div>
 
         {/* Level 1: Basic Workstation */}

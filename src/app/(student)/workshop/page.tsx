@@ -64,7 +64,7 @@ export default function WorkshopPage() {
   };
 
   return (
-    <div className="w-full h-full flex flex-col gap-6 overflow-y-auto relative">
+    <div className="w-full flex flex-col gap-6 pb-12 relative">
       {/* Dev Toggle */}
       <button 
         onClick={() => setForceLive(!forceLive)}
@@ -222,3 +222,4 @@ export default function WorkshopPage() {
     </div>
   );
 }
+

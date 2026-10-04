@@ -26,3 +26,31 @@ body {
     4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
   );
 }
+
+/* Custom Pixel/Dark Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a; /* slate-900 */
+  border-left: 1px solid #1e293b; /* slate-800 */
+}
+::-webkit-scrollbar-thumb {
+  background: #3b82f6; /* blue-500 */
+  border: 2px solid #0f172a;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #60a5fa; /* blue-400 */
+}
+::-webkit-scrollbar-corner {
+  background: #0f172a;
+}
+
+.pixel-corners-top {
+  clip-path: polygon(
+    0 4px, 4px 4px, 4px 0, 
+    calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px, 
+    100% 100%, 0 100%
+  );
+}

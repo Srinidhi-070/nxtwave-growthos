@@ -4,7 +4,7 @@ import PixelPanel from '@/components/ui/PixelPanel';
 
 export default function QuestsPage() {
   return (
-    <div className="w-full h-full flex flex-col gap-6 overflow-y-auto">
+    <div className="w-full flex flex-col gap-6 pb-12">
       <div className="shrink-0 mb-2">
         <h1 className="text-3xl font-pixel text-white tracking-widest mb-1 uppercase">Quest Map</h1>
         <p className="text-sm text-slate-400 font-sans">Your progression graph through the GrowthOS ecosystem.</p>
@@ -33,7 +33,7 @@ export default function QuestsPage() {
            </div>
 
            {/* Branching Nodes */}
-           <div className="flex w-full justify-center gap-8 md:gap-32 relative z-10">
+           <div className="flex w-full justify-center items-center gap-8 md:gap-32 relative z-10">
              {/* Branch line */}
              <div className="absolute top-1/2 left-[20%] right-[20%] h-1 bg-slate-800 -z-10" />
              
