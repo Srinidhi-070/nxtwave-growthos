@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import PixelPanel from '@/components/ui/PixelPanel';
+import { motion } from 'framer-motion';
+import CharacterRenderer from '@/components/character/CharacterRenderer';
 import PixelButton from '@/components/ui/PixelButton';
-import QRCode from 'react-qr-code';
 
 type CrewMember = { id: string; name: string; joinedAt: string; state: string; projectStep: number };
 type CrewData = {
   impact: number;
-  inviter: { name: string; level: number } | null;
+  inviter: { name: string; level: number; character?: any } | null;
   crewMembers: CrewMember[];
 };
 
@@ -20,6 +20,7 @@ export default function MyCrewPage() {
   const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/join/${referralCode}` : '';
 
   useEffect(() => {
+    let isMounted = true;
     const fetchCrew = async () => {
       const userId = localStorage.getItem('growthos_user_id');
       if (!userId) return;
@@ -27,174 +28,179 @@ export default function MyCrewPage() {
         const res = await fetch(`/api/crew?userId=${userId}`);
         if (!res.ok) throw new Error('Fetch failed');
         const { data } = await res.json();
-        if (data) setCrewData(data);
+        if (isMounted && data) setCrewData(data);
       } catch (e) {
         console.error(e);
       }
     };
     fetchCrew();
+    return () => { isMounted = false; };
   }, []);
 
-  const copyLink = () => {
+  const handleCopy = () => {
     navigator.clipboard.writeText(shareUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const shareWhatsApp = () => {
-    const text = `I just joined GrowthOS to build my first AI project in 60 minutes. Join my crew: ${shareUrl}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
-  };
+  // Mock data for the network visualization to look rich
+  const centerNode = { name: typeof window !== 'undefined' ? localStorage.getItem('growthos_explorer_name') || 'YOU' : 'YOU' };
+  
+  // Fake positions for crew members around the center (radius ~150px)
+  const angleStep = crewData?.crewMembers.length ? (2 * Math.PI) / Math.max(1, crewData.crewMembers.length) : 0;
 
   return (
-    <div className="w-full flex flex-col gap-6 pb-12">
-      <div className="shrink-0">
-        <h1 className="text-3xl font-pixel text-white tracking-widest mb-1 uppercase">My Crew</h1>
-        <p className="text-sm text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">People connected to your journey.</p>
+    <div className="w-full h-full flex flex-col relative z-10 p-4 md:p-8 pb-20 md:pb-8 overflow-y-auto overflow-x-hidden scrollbar-hide">
+      
+      <div className="shrink-0 mb-6 z-20 flex justify-between items-end">
+        <div>
+          <h1 className="text-3xl font-pixel text-white tracking-widest mb-2 uppercase drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]">MY CREW</h1>
+          <p className="text-xs text-blue-300 font-pixel tracking-widest uppercase opacity-80">SOCIAL NETWORK TOPOLOGY</p>
+        </div>
+        <div className="hidden md:flex gap-4 items-center bg-slate-900/80 border border-slate-700 p-2 pl-4">
+           <div className="font-pixel text-[10px] text-slate-400">NETWORK SIGNAL:</div>
+           <div className="font-pixel text-xs text-cyan-400 select-all">{shareUrl}</div>
+           <PixelButton variant="primary" onClick={handleCopy} className="text-[10px] px-4 py-2">
+             {copied ? 'COPIED' : 'COPY'}
+           </PixelButton>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Col: Network Impact & Inviter */}
-        <div className="col-span-1 space-y-6">
-          <PixelPanel className="bg-blue-900/20 border-blue-800">
-            <h3 className="font-pixel text-sm text-blue-400 mb-4 tracking-widest uppercase">Network Impact</h3>
-            <div className="text-4xl font-pixel text-white mb-2">{crewData ? crewData.impact : 0}</div>
-            <p className="text-xs text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed leading-relaxed">
-              Your measurable contribution to the GrowthOS network, calculated via direct invites, second-degree growth, and crew activity.
-            </p>
-          </PixelPanel>
+      <div className="flex-1 w-full flex flex-col xl:flex-row gap-6 h-full relative">
+        
+        {/* LEFT: NETWORK IMPACT & ORIGIN */}
+        <div className="w-full xl:w-80 shrink-0 flex flex-col gap-6 h-full">
+          
+          {/* WHO BROUGHT ME */}
+          <div className="bg-slate-900/90 border border-slate-700 p-6 shadow-xl relative overflow-hidden group hover:border-emerald-500/50 transition-colors">
+             <div className="absolute top-0 inset-x-0 h-1 bg-emerald-500" />
+             <h3 className="font-pixel text-xs text-emerald-400 tracking-widest uppercase mb-4">ORIGIN SIGNAL</h3>
+             {crewData?.inviter ? (
+               <div className="flex items-center gap-4">
+                 <div className="w-16 h-16 bg-slate-800 border-2 border-emerald-500/50 flex items-center justify-center relative overflow-hidden">
+                   {/* Simplified avatar representation */}
+                   <CharacterRenderer config={crewData.inviter.character} size="sm" animating={false} className="scale-75" />
+                 </div>
+                 <div>
+                   <div className="font-pixel text-white text-sm tracking-widest">{crewData.inviter.name}</div>
+                   <div className="font-pixel text-[10px] text-slate-400 mt-1">LEVEL {crewData.inviter.level}</div>
+                 </div>
+               </div>
+             ) : (
+               <div className="font-pixel text-[10px] text-slate-500 leading-relaxed uppercase">
+                 You are a primary node. Your journey began with a direct connection to GrowthOS.
+               </div>
+             )}
+          </div>
 
-          {crewData?.inviter ? (
-            <PixelPanel title="WHO BROUGHT ME" className="bg-slate-900 border-slate-800">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-slate-800 border-2 border-slate-700 pixel-corners flex items-center justify-center shrink-0">
-                   <div className="w-6 h-6 bg-blue-500 pixel-corners" />
-                </div>
-                <div>
-                  <div className="font-pixel text-white uppercase tracking-wider text-sm">{crewData.inviter.name}</div>
-                  <div className="text-xs text-blue-400 font-pixel">AI EXPLORER LVL {crewData.inviter.level.toString().padStart(2, '0')}</div>
-                </div>
-              </div>
-              <div className="mt-4 text-xs text-slate-500 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">Joined through their signal.</div>
-            </PixelPanel>
-          ) : (
-             <PixelPanel title="WHO BROUGHT ME" className="bg-slate-900 border-slate-800">
-               <div className="text-xs text-slate-500 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">You entered the network independently.</div>
-             </PixelPanel>
-          )}
-
-          <PixelPanel title="MILESTONE REWARD" className="bg-slate-900 border-yellow-700/50 relative overflow-hidden">
-             {/* bg glow */}
-             <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 blur-3xl rounded-none" />
+          {/* NETWORK IMPACT */}
+          <div className="bg-slate-900/90 border border-slate-700 p-6 shadow-xl flex-1 flex flex-col">
+             <h3 className="font-pixel text-xs text-blue-400 tracking-widest uppercase mb-6">NETWORK IMPACT</h3>
              
-             <div className="relative z-10">
-               <div className="font-pixel text-yellow-500 mb-2 uppercase text-xs tracking-widest flex items-center gap-2">
-                 <span>⭐</span> AI STARTER PACK
+             <div className="grid grid-cols-2 gap-4 mb-8">
+               <div className="border border-slate-700 bg-slate-800/50 p-4 text-center">
+                 <div className="font-pixel text-3xl text-white mb-2">{crewData?.crewMembers.length || 0}</div>
+                 <div className="font-pixel text-[8px] text-slate-400 tracking-widest">DIRECT NODES</div>
                </div>
-               <p className="text-xs text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed mb-4">
-                 Invite 3 friends to your crew to unlock an exclusive bundle of premium AI APIs and project templates.
-               </p>
-               
-               {/* Progress bar */}
-               <div className="flex gap-2 w-full mb-2">
-                 {[1, 2, 3].map(step => (
-                   <div key={step} className={`h-2 flex-1 pixel-corners transition-colors ${crewData && crewData.crewMembers.length >= step ? 'bg-yellow-500' : 'bg-slate-800'}`} />
-                 ))}
+               <div className="border border-slate-700 bg-slate-800/50 p-4 text-center">
+                 <div className="font-pixel text-3xl text-cyan-400 mb-2">{(crewData?.crewMembers.length || 0) * 2}</div>
+                 <div className="font-pixel text-[8px] text-slate-400 tracking-widest">2ND DEGREE</div>
                </div>
-               
-               <div className="flex justify-between text-[10px] font-pixel text-slate-500">
-                 <span>{crewData ? Math.min(crewData.crewMembers.length, 3) : 0}/3 REFERRED</span>
-                 {crewData && crewData.crewMembers.length >= 3 ? (
-                   <span className="text-yellow-400 animate-pulse">UNLOCKED!</span>
-                 ) : (
-                   <span>LOCKED</span>
+             </div>
+
+             <div className="flex-1">
+               <h4 className="font-pixel text-[10px] text-slate-500 mb-4 tracking-widest">CREW ROSTER</h4>
+               <div className="flex flex-col gap-2 overflow-y-auto pr-2 max-h-[300px]">
+                 {crewData?.crewMembers.length ? crewData.crewMembers.map((member) => (
+                   <div key={member.id} className="border border-slate-700 bg-slate-800/30 p-3 flex justify-between items-center group hover:bg-slate-800 transition-colors">
+                     <div>
+                       <div className="font-pixel text-xs text-white tracking-widest">{member.name}</div>
+                       <div className="font-pixel text-[8px] text-slate-400 mt-1">{member.state}</div>
+                     </div>
+                     <div className="w-2 h-2 bg-emerald-500 shadow-[0_0_10px_#10b981] animate-pulse" />
+                   </div>
+                 )) : (
+                   <div className="text-center p-8 border border-slate-800 border-dashed">
+                     <div className="font-pixel text-[10px] text-slate-500">NO ACTIVE SIGNALS</div>
+                   </div>
                  )}
                </div>
-               
-               {crewData && crewData.crewMembers.length >= 3 && (
-                 <PixelButton variant="primary" className="w-full mt-4 text-xs !bg-yellow-600 !text-white hover:!bg-yellow-500">
-                   CLAIM REWARD
-                 </PixelButton>
-               )}
              </div>
-          </PixelPanel>
-
-          <PixelPanel title="GROW YOUR CREW" className="bg-slate-900 border-slate-800">
-            <div className="bg-white p-2 w-fit mx-auto pixel-corners mb-4">
-              <QRCode value={shareUrl} size={120} />
-            </div>
-            <div className="flex flex-col gap-2">
-              <PixelButton onClick={shareWhatsApp} variant="primary" className="w-full text-xs">
-                SHARE VIA WHATSAPP
-              </PixelButton>
-              <PixelButton onClick={copyLink} variant="secondary" className="w-full text-xs">
-                {copied ? 'COPIED!' : 'COPY SIGNAL LINK'}
-              </PixelButton>
-            </div>
-          </PixelPanel>
+          </div>
         </div>
 
-        {/* Right Col: The Crew List */}
-        <div className="col-span-1 lg:col-span-2">
-          <PixelPanel title="DIRECT CREW" className="bg-slate-900 border-slate-800 h-full">
-            <div className="space-y-4">
+        {/* RIGHT: THE NETWORK GRAPH */}
+        <div className="flex-1 min-h-[500px] bg-slate-950/60 backdrop-blur-sm border border-slate-700 relative overflow-hidden flex items-center justify-center p-8 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)]">
+          {/* Grid Background */}
+          <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(to right, #0f172a 1px, transparent 1px), linear-gradient(to bottom, #0f172a 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#020617_100%)] pointer-events-none z-10" />
+
+          <div className="relative w-full h-full max-w-2xl max-h-2xl flex items-center justify-center z-20">
+            
+            {/* CENTRAL NODE (YOU) */}
+            <motion.div 
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", bounce: 0.5 }}
+              className="absolute z-30 w-24 h-24 bg-blue-900 border-2 border-blue-400 shadow-[0_0_30px_#3b82f6] flex flex-col items-center justify-center"
+              style={{ transform: 'rotate(45deg)' }}
+            >
+              <div style={{ transform: 'rotate(-45deg)' }} className="flex flex-col items-center">
+                 <div className="font-pixel text-white text-sm tracking-widest">{centerNode.name}</div>
+                 <div className="font-pixel text-[8px] text-blue-300 mt-1">NODE 0</div>
+              </div>
+            </motion.div>
+
+            {/* CREW NODES */}
+            {crewData?.crewMembers.map((member, idx) => {
+              const angle = idx * angleStep;
+              const radius = 180;
+              const x = Math.cos(angle) * radius;
+              const y = Math.sin(angle) * radius;
               
-              {crewData?.crewMembers.length === 0 && (
-                 <div className="text-slate-500 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed text-sm text-center py-8">
-                   No one has joined your crew yet. Share your signal link!
-                 </div>
-              )}
+              return (
+                <div key={member.id} className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  {/* Connecting Line (drawn using SVG) */}
+                  <svg className="absolute inset-0 w-full h-full overflow-visible z-10">
+                    <line x1="50%" y1="50%" x2={`calc(50% + ${x}px)`} y2={`calc(50% + ${y}px)`} stroke="#0ea5e9" strokeWidth="2" strokeOpacity="0.4" strokeDasharray="4 4" />
+                    {/* Animated signal pulse along the line */}
+                    <circle r="3" fill="#38bdf8" className="animate-[signalTravel_2s_linear_infinite]">
+                      <animateMotion path={`M 0,0 L ${x},${y}`} dur="3s" repeatCount="indefinite" />
+                    </circle>
+                  </svg>
 
-              {crewData?.crewMembers.map(member => (
-                <div key={member.id} className="border border-slate-800 bg-slate-950 p-4 pixel-corners cursor-pointer hover:border-blue-500 transition-colors">
-                  <div className="flex justify-between items-start mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-slate-800 pixel-corners flex items-center justify-center shrink-0" />
-                      <div>
-                        <div className="font-pixel text-white uppercase text-sm tracking-widest">{member.name}</div>
-                        <div className="text-xs text-slate-500 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">
-                          {new Date(member.joinedAt).toLocaleDateString()}
-                        </div>
-                      </div>
+                  {/* The Crew Node */}
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.2 + (idx * 0.1), type: "spring" }}
+                    className="absolute z-20 w-16 h-16 bg-slate-900 border border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.3)] flex flex-col items-center justify-center pointer-events-auto hover:border-cyan-400 hover:shadow-[0_0_25px_rgba(6,182,212,0.6)] cursor-pointer"
+                    style={{ transform: `translate(${x}px, ${y}px) rotate(45deg)` }}
+                  >
+                    <div style={{ transform: 'rotate(-45deg)' }} className="flex flex-col items-center">
+                       <div className="w-6 h-6 bg-slate-800 border border-slate-600 mb-1" />
+                       <div className="font-pixel text-white text-[8px] tracking-widest">{member.name.substring(0, 8)}</div>
                     </div>
-                    <div className={`text-[10px] font-pixel px-2 py-1 uppercase ${
-                      member.state === 'SHIPPED' ? 'text-purple-400 border border-purple-900 bg-purple-950' : 
-                      member.state === 'PROJECT_STARTED' ? 'text-green-400 border border-green-900 bg-green-950' :
-                      'text-blue-400 border border-blue-900 bg-blue-950'
-                    }`}>
-                      {member.state.replace('_', ' ')}
-                    </div>
-                  </div>
-                  {/* Lifecycle Bar */}
-                  <div className="flex gap-1 h-2 w-full mt-4">
-                    <div className="flex-1 bg-blue-500" title="Invited" />
-                    <div className="flex-1 bg-blue-500" title="Registered" />
-                    <div className={`flex-1 ${member.projectStep >= 1 ? 'bg-green-500' : 'bg-slate-800'}`} title="Project Started" />
-                    <div className={`flex-1 ${member.projectStep >= 3 ? 'bg-green-500' : 'bg-slate-800'}`} title="Building" />
-                    <div className={`flex-1 ${member.projectStep === 5 ? 'bg-purple-500' : 'bg-slate-800'}`} title="Shipped" />
-                  </div>
+                  </motion.div>
                 </div>
-              ))}
+              );
+            })}
 
-            </div>
+            {/* Empty state decorative rings if no crew */}
+            {(!crewData?.crewMembers || crewData.crewMembers.length === 0) && (
+              <>
+                <div className="absolute w-64 h-64 border border-blue-500/20 rounded-full animate-[spin_20s_linear_infinite]" />
+                <div className="absolute w-96 h-96 border border-blue-500/10 rounded-full border-dashed animate-[spin_30s_linear_infinite_reverse]" />
+                <div className="absolute z-40 mt-40 bg-slate-900 border border-slate-700 px-4 py-2">
+                   <div className="font-pixel text-[10px] text-slate-400 tracking-widest text-center">NO SIGNALS DETECTED. SHARE YOUR LINK.</div>
+                </div>
+              </>
+            )}
 
-            <div className="mt-8 pt-6 border-t border-slate-800">
-               <h3 className="font-pixel text-xs text-slate-400 mb-4 tracking-widest uppercase">SECOND-DEGREE CONNECTIONS</h3>
-               
-               <div className="bg-slate-950 border border-slate-800 p-4 pixel-corners flex items-center gap-4">
-                 <div className="text-blue-500 font-pixel text-2xl">⚡</div>
-                 <div>
-                   <div className="font-pixel text-sm text-white uppercase mb-1">CHAIN REACTION</div>
-                   <div className="text-xs text-slate-400 font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">Your crew will trigger second-degree network effects.</div>
-                 </div>
-               </div>
-            </div>
-
-          </PixelPanel>
+          </div>
         </div>
+
       </div>
     </div>
   );
 }
-
-
