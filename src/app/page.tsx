@@ -9,7 +9,7 @@ import CharacterRenderer from '@/components/character/CharacterRenderer';
 export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [particles, setParticles] = useState<{x: number, y: number, duration: number, delay: number, drop: number}[]>([]);
-  const [stats, setStats] = useState({ registered: 482, max: 500 });
+  const [stats, setStats] = useState({ registered: 482, capacity: 500 });
 
   useEffect(() => {
     setMounted(true);
@@ -30,7 +30,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="relative min-h-screen bg-slate-950 overflow-hidden flex flex-col items-center p-4 lg:p-12 pb-24">
+    <main className="relative min-h-screen bg-slate-950 overflow-hidden flex flex-col items-center justify-center p-4 lg:p-12">
       
       {/* --- DEEP ANIMATED CYBER BACKGROUND --- */}
       <div className="absolute inset-0 z-0 bg-[#020617] overflow-hidden">
@@ -61,7 +61,7 @@ export default function Home() {
       </div>
 
       {/* --- TOP NAV --- */}
-      <nav className="relative z-20 w-full max-w-6xl flex justify-between items-center mb-16 lg:mb-24 pt-4">
+      <nav className="absolute top-0 left-0 right-0 z-20 w-full flex justify-between items-center p-6 lg:p-8">
         <div className="text-white font-pixel text-xl tracking-widest flex items-center gap-2">
           <div className="w-4 h-4 bg-blue-500 pixel-corners animate-pulse" />
           GROWTH_OS
@@ -130,10 +130,10 @@ export default function Home() {
             <div className="w-48 h-2 bg-slate-800 rounded-full overflow-hidden">
                <div 
                  className="h-full bg-blue-500" 
-                 style={{ width: `${Math.min(100, (stats.registered / stats.max) * 100)}%` }} 
+                 style={{ width: `${Math.min(100, (stats.registered / stats.capacity) * 100)}%` }} 
                />
             </div>
-            <div className="font-pixel text-blue-400">{stats.registered} / {stats.max}</div>
+            <div className="font-pixel text-blue-400">{stats.registered} / {stats.capacity}</div>
           </div>
         </motion.div>
       </div>
@@ -182,5 +182,6 @@ export default function Home() {
     </main>
   );
 }
+
 
 
