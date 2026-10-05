@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { calculateLevel } from '@/lib/progression';
 
 export const dynamic = 'force-dynamic';
 export async function GET(req: Request) {
@@ -11,31 +12,45 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'User ID required' }, { status: 400 });
     }
 
-    // Get the user's crew (people they referred)
+    // 1. Direct Crew (First Degree)
     const directCrew = await prisma.referral.findMany({
       where: { referrerId: userId },
       include: {
         referee: {
-          include: {
+          select: {
+            id: true,
             character: true,
             project: true,
+            xpTransactions: true,
+            createdAt: true
           }
         }
       },
       orderBy: { attributedAt: 'desc' }
     });
 
-    // Get who referred this user (Who Brought Me)
+    const directIds = directCrew.map(r => r.referee.id);
+
+    // 2. Second Degree Crew (Network Growth)
+    const secondDegree = await prisma.referral.findMany({
+      where: { referrerId: { in: directIds }, qualificationState: 'QUALIFIED' },
+      select: { id: true, referrerId: true }
+    });
+
+    // 3. Inviter (Who Brought Me)
     const inviterRel = await prisma.referral.findFirst({
       where: { refereeId: userId },
       include: {
         referrer: {
-          include: { character: true, trackingEvents: true, givenReferrals: true }
+          select: {
+            character: true,
+            xpTransactions: true
+          }
         }
       }
     });
 
-    // Format Crew
+    // Formatting Crew with privacy (No emails or phone hashes exposed)
     const crewMembers = directCrew.map(rel => {
       const p = rel.referee.project;
       let step = 0;
@@ -47,43 +62,45 @@ export async function GET(req: Request) {
          if (p.shipped) step = 5;
       }
       
-      // Determine state based on project or referral status
-      let state = 'REGISTERED';
-      if (step > 0) state = 'PROJECT_STARTED';
-      if (step === 5) state = 'SHIPPED';
+      const totalXP = rel.referee.xpTransactions.reduce((acc, tx) => acc + tx.amount, 0);
+      const levelStats = calculateLevel(totalXP);
       
       return {
-        id: rel.refereeId,
+        id: rel.referee.id,
         name: rel.referee.character?.displayName || 'Unknown',
-        joinedAt: rel.attributedAt,
-        state,
-        projectStep: step
+        joinedAt: rel.attributedAt || rel.referee.createdAt,
+        state: rel.lifecycleState,
+        projectStep: step,
+        level: levelStats.level,
+        xp: totalXP
       };
     });
 
-    // Format Inviter
+    // Formatting Inviter safely
     let inviter = null;
     if (inviterRel) {
-       // Calc level
-       const refXP = inviterRel.referrer.givenReferrals.filter(r => r.qualificationState === 'QUALIFIED').length * 150;
-       const baseXP = inviterRel.referrer.trackingEvents.some(e => e.eventName === 'character_created') ? 100 : 0;
-       const level = Math.floor((refXP + baseXP) / 300) + 1;
+       const inviterXP = inviterRel.referrer.xpTransactions.reduce((acc, tx) => acc + tx.amount, 0);
+       const inviterLevel = calculateLevel(inviterXP);
        
        inviter = {
          name: inviterRel.referrer.character?.displayName || 'Unknown',
-         level
+         level: inviterLevel.level,
+         title: inviterLevel.title
        };
     }
 
-    // Network Impact (Direct + Second Degree mock)
-    // For a real app we'd do a recursive CTE, but for now we'll do Direct * 50
-    const impact = directCrew.length * 50;
+    const networkStats = {
+      direct: directCrew.length,
+      active: directCrew.filter(c => c.lifecycleState !== 'CLICKED' && c.lifecycleState !== 'REGISTERED').length,
+      secondDegree: secondDegree.length,
+      impactXP: (directCrew.length * 150) + (secondDegree.length * 50) // Assuming theoretical second degree impact
+    };
 
     return NextResponse.json({
       success: true,
       data: {
         inviter,
-        impact,
+        networkStats,
         crewMembers
       }
     }, { status: 200 });
@@ -93,4 +110,3 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
-

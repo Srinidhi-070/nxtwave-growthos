@@ -9,13 +9,22 @@ import { EventStream } from '@/components/ops/EventStream';
 import { useLiveEvents } from '@/hooks/useLiveEvents';
 import { useCountUp } from '@/hooks/useCountUp';
 import { CAMPAIGN, CAMPUSES, DAILY_REGS, PROJECTED_REGS } from '@/data/ops';
+import { useEffect, useState } from 'react';
 
 export default function OpsOverview() {
   const { events } = useLiveEvents();
-  const regs = useCountUp(CAMPAIGN.registrations, 1000);
-  const gap = CAMPAIGN.target - CAMPAIGN.registrations;
+  const [liveRegs, setLiveRegs] = useState(CAMPAIGN.registrations);
+  const [liveTarget, setLiveTarget] = useState(CAMPAIGN.target);
+
+  useEffect(() => {
+    fetch('/api/campaigns').then(r => r.json()).then(d => { if(d.success && d.data) setLiveTarget(d.data.targetRegistrations) });
+    fetch('/api/analytics/funnel').then(r => r.json()).then(d => { if(d.success && d.data?.funnel) { const rs = d.data.funnel.find((f:any)=>f.key==='ACCOUNT CREATED'); if(rs) setLiveRegs(rs.count); } });
+  }, []);
+
+  const regs = useCountUp(liveRegs, 1000);
+  const gap = liveTarget - liveRegs;
   const segments = 50;
-  const filled = Math.round(CAMPAIGN.registrations / CAMPAIGN.target * segments);
+  const filled = Math.round(liveRegs / (liveTarget || 1) * segments);
   const maxBar = 170;
 
   return (
@@ -131,6 +140,7 @@ export default function OpsOverview() {
     </div>);
 
 }
+
 
 
 
