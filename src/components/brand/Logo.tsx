@@ -16,9 +16,9 @@ export function LogoMark({ size = 22 }: {size?: number;}) {
 
 }
 
-export function Logo({ to = '/', sub }: {to?: string;sub?: string;}) {
+export function Logo({ href = '/', sub }: {href?: string;sub?: string;}) {
   return (
-    <Link href={to} className="flex items-center gap-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan">
+    <Link href={href} className="flex items-center gap-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan">
       <LogoMark />
       <span className="flex flex-col leading-none">
         <span className="font-pixel text-[11px] tracking-tight text-ink">
@@ -29,5 +29,6 @@ export function Logo({ to = '/', sub }: {to?: string;sub?: string;}) {
     </Link>);
 
 }
+
 
 

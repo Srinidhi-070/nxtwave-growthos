@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       className={`${inter.variable} ${vt323.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-pixel text-[10px] sm:text-xs tracking-wider uppercase leading-relaxed">
+      <body className="min-h-full bg-void text-ink font-sans antialiased">
         <PlayerProvider>
           {children}
         </PlayerProvider>
@@ -34,6 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
+
 
 
 
