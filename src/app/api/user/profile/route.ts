@@ -33,6 +33,11 @@ export async function GET(req: Request) {
 
     const qualifiedReferrals = user.givenReferrals.filter(r => r.qualificationState === 'QUALIFIED').length;
 
+    // Determine completed quests
+    const completedQuests = user.xpTransactions
+      .filter(tx => tx.source === 'QUEST' && tx.referenceId)
+      .map(tx => tx.referenceId);
+
     return NextResponse.json({
       success: true,
       data: {
@@ -47,6 +52,7 @@ export async function GET(req: Request) {
           nextLevelXP: levelStats.nextLevelXP,
           progress: levelStats.progress,
           crewCount: qualifiedReferrals,
+          completedQuests,
         }
       }
     }, { status: 200 });

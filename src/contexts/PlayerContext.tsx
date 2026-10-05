@@ -18,6 +18,7 @@ interface PlayerContextValue extends PlayerProfile {
   xp: number;
   xpMax: number;
   crewCount: number;
+  completedQuests: string[];
   setProfile: (p: Partial<PlayerProfile>) => void;
   setCharacter: (c: CharacterConfig) => void;
   toggleSound: () => void;
@@ -53,6 +54,7 @@ export function PlayerProvider({ children }: {children: React.ReactNode;}) {
   const [xp, setXp] = useState(0);
   const [xpMax, setXpMax] = useState(300);
   const [crewCount, setCrewCount] = useState(0);
+  const [completedQuests, setCompletedQuests] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -75,6 +77,7 @@ export function PlayerProvider({ children }: {children: React.ReactNode;}) {
           setXp(data.stats.totalXP || 0);
           if (data.stats.nextLevelXP) setXpMax(data.stats.nextLevelXP);
           setCrewCount(data.stats.crewCount || 0);
+          setCompletedQuests(data.stats.completedQuests || []);
         }
         
         setProfileState(prev => ({
@@ -105,11 +108,12 @@ export function PlayerProvider({ children }: {children: React.ReactNode;}) {
       xp,
       xpMax,
       crewCount,
+      completedQuests,
       setProfile,
       setCharacter,
       toggleSound
     }),
-    [profile, character, sound, level, xp, xpMax, crewCount, setProfile, toggleSound]
+    [profile, character, sound, level, xp, xpMax, crewCount, completedQuests, setProfile, toggleSound]
   );
 
   return <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>;
@@ -120,4 +124,7 @@ export function usePlayer(): PlayerContextValue {
   if (!ctx) throw new Error('usePlayer must be used inside PlayerProvider');
   return ctx;
 }
+
+
+
 

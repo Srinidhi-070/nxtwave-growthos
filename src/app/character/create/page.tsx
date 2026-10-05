@@ -68,15 +68,34 @@ export default function CharacterCreator() {
     setRollKey((k) => k + 1);
   };
 
-  const enter = () => {
+  const enter = async () => {
     const clean = name.trim().toUpperCase();
     if (clean.length < 2 || clean.length > 14) {
       setNameError('Explorer name must be 2–14 characters.');
       return;
     }
-    setCharacter(cfg);
-    setProfile({ explorerName: clean });
-    router.push('/init');
+    try {
+      // 1. Validate
+      if (clean.length < 2 || clean.length > 14) {
+        setNameError('Explorer name must be 2-14 characters.');
+        return;
+      }
+      // 2. Persist to backend
+      const res = await fetch('/api/character', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ config: cfg, displayName: clean })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to save character');
+      
+      // 3. Update local cache & transition
+      setCharacter(cfg);
+      setProfile({ explorerName: clean });
+      router.push('/init');
+    } catch (e: any) {
+      setNameError(e.message);
+    }
   };
 
   const accent = accentOf(cfg);
@@ -295,6 +314,8 @@ function Swatches({ label, colors, value, onChange }: {label: string;colors: {na
     </div>);
 
 }
+
+
 
 
 
