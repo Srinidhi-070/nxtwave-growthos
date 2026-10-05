@@ -71,8 +71,8 @@ export default function RegistrationForm() {
       addLog('OTP TRANSMITTED SUCCESSFULLY.');
       setStep(2);
     } catch (err: unknown) {
-      setError(err.message);
-      addLog(`ERROR: ${err.message}`);
+      setError((err as Error).message);
+      addLog(`ERROR: ${(err as Error).message}`);
     } finally {
       setLoading(false);
     }
@@ -121,8 +121,8 @@ export default function RegistrationForm() {
       }, 1000);
 
     } catch (err: unknown) {
-      setError(err.message);
-      addLog(`ERROR: ${err.message}`);
+      setError((err as Error).message);
+      addLog(`ERROR: ${(err as Error).message}`);
       setLoading(false);
     }
   };
@@ -287,6 +287,7 @@ export default function RegistrationForm() {
     </div>
   );
 }
+
 
 
 
