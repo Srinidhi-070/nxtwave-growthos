@@ -8,61 +8,66 @@ datasource db {
 }
 
 model User {
-  id              String   @id @default(uuid())
-  emailHash       String   @unique
-  phoneHash       String?
-  collegeId       String?
-  graduationYear  Int?
-  consentFlags    String?  // JSON string or comma separated
-  createdAt       DateTime @default(now())
+  id             String   @id @default(uuid())
+  emailHash      String   @unique
+  phoneHash      String?
+  collegeId      String?
+  graduationYear Int?
+  consentFlags   String? // JSON string or comma separated
+  createdAt      DateTime @default(now())
 
-  connector       Connector?
-  givenReferrals  Referral[] @relation("Referrer")
-  receivedReferrals Referral[] @relation("Referee")
-  trackingEvents  TrackingEvent[]
-  assignments     ExperimentAssignment[]
-  rewards         Reward[]
-  character       Character?
-  project         Project?
+  connector         Connector?
+  givenReferrals    Referral[]             @relation("Referrer")
+  receivedReferrals Referral[]             @relation("Referee")
+  trackingEvents    TrackingEvent[]
+  assignments       ExperimentAssignment[]
+  rewards           Reward[]
+  character         Character?
+  project           Project?
+  xpTransactions    XPTransaction[]
+  achievements      AchievementUnlock[]
+  workshops         WorkshopRegistration[]
+  notifications     Notification[]
 }
 
 model Connector {
-  id           String   @id @default(uuid())
-  userId       String   @unique
+  id           String    @id @default(uuid())
+  userId       String    @unique
   collegeId    String?
-  referralCode String   @unique
-  status       String   @default("PENDING") // PENDING, ACTIVE, SUSPENDED
-  tier         String   @default("STANDARD")
+  referralCode String    @unique
+  status       String    @default("PENDING") // PENDING, ACTIVE, SUSPENDED
+  tier         String    @default("STANDARD")
   activatedAt  DateTime?
 
-  user         User     @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 model CampaignLink {
-  id         String   @id @default(uuid())
-  ownerType  String   // e.g., "CONNECTOR", "USER"
-  ownerId    String
-  source     String?
-  medium     String?
-  campaign   String?
-  content    String?
-  token      String   @unique
-  createdAt  DateTime @default(now())
+  id        String   @id @default(uuid())
+  ownerType String // e.g., "CONNECTOR", "USER"
+  ownerId   String
+  source    String?
+  medium    String?
+  campaign  String?
+  content   String?
+  token     String   @unique
+  createdAt DateTime @default(now())
 }
 
 model Referral {
-  id                 String   @id @default(uuid())
+  id                 String    @id @default(uuid())
   referrerId         String
   refereeId          String
   referralCode       String
   firstClickAt       DateTime?
   lastClickAt        DateTime?
   attributedAt       DateTime?
-  qualificationState String   @default("PENDING") // PENDING, QUALIFIED, REJECTED
+  qualificationState String    @default("PENDING") // PENDING, QUALIFIED, REJECTED
+  lifecycleState     String    @default("CLICKED") // CLICKED, REGISTERED, ACTIVE, WORKSHOP_READY, etc.
   attributionRule    String?
 
-  referrer           User     @relation("Referrer", fields: [referrerId], references: [id])
-  referee            User     @relation("Referee", fields: [refereeId], references: [id])
+  referrer User @relation("Referrer", fields: [referrerId], references: [id])
+  referee  User @relation("Referee", fields: [refereeId], references: [id])
 }
 
 model TrackingEvent {
@@ -78,20 +83,20 @@ model TrackingEvent {
   receivedAt     DateTime @default(now())
   idempotencyKey String   @unique
 
-  user           User?    @relation(fields: [userId], references: [id])
+  user User? @relation(fields: [userId], references: [id])
 }
 
 model Experiment {
-  id            String   @id @default(uuid())
-  name          String
-  hypothesis    String
-  primaryMetric String
+  id             String    @id @default(uuid())
+  name           String
+  hypothesis     String
+  primaryMetric  String
   allocationJson String
-  startAt       DateTime?
-  endAt         DateTime?
-  status        String   @default("DRAFT") // DRAFT, RUNNING, ENDED
+  startAt        DateTime?
+  endAt          DateTime?
+  status         String    @default("DRAFT") // DRAFT, RUNNING, ENDED
 
-  assignments   ExperimentAssignment[]
+  assignments ExperimentAssignment[]
 }
 
 model ExperimentAssignment {
@@ -100,31 +105,31 @@ model ExperimentAssignment {
   variant      String
   assignedAt   DateTime @default(now())
 
-  experiment   Experiment @relation(fields: [experimentId], references: [id])
-  user         User       @relation(fields: [userId], references: [id])
+  experiment Experiment @relation(fields: [experimentId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
 
   @@id([experimentId, userId])
 }
 
 model RiskFlag {
-  id           String   @id @default(uuid())
-  subjectType  String   // USER, CONNECTOR, REFERRAL
-  subjectId    String
-  score        Int
-  signalsJson  String
-  status       String   @default("OPEN") // OPEN, REVIEWED, RESOLVED
-  reviewedBy   String?
-  reviewedAt   DateTime?
+  id          String    @id @default(uuid())
+  subjectType String // USER, CONNECTOR, REFERRAL
+  subjectId   String
+  score       Int
+  signalsJson String
+  status      String    @default("OPEN") // OPEN, REVIEWED, RESOLVED
+  reviewedBy  String?
+  reviewedAt  DateTime?
 }
 
 model Reward {
-  id         String   @id @default(uuid())
-  userId     String
-  milestone  String
-  state      String   @default("PENDING") // PENDING, ISSUED, HOLD
-  issuedAt   DateTime?
+  id        String    @id @default(uuid())
+  userId    String
+  milestone String
+  state     String    @default("PENDING") // PENDING, ISSUED, HOLD
+  issuedAt  DateTime?
 
-  user       User     @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 model AbuseAudit {
@@ -138,34 +143,145 @@ model AbuseAudit {
 }
 
 model Character {
-  id           String   @id @default(uuid())
-  userId       String   @unique
-  displayName  String
-  body         String   @default("base")
-  face         String   @default("default")
-  hair         String   @default("none")
-  hairColor    String   @default("black")
-  outfit       String   @default("explorer")
-  accessory    String   @default("none")
-  effect       String   @default("none")
-  background   String   @default("lab")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  displayName String
+  body        String   @default("base")
+  face        String   @default("default")
+  hair        String   @default("none")
+  hairColor   String   @default("black")
+  outfit      String   @default("explorer")
+  accessory   String   @default("none")
+  effect      String   @default("none")
+  background  String   @default("lab")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Project {
-  id           String   @id @default(uuid())
-  userId       String   @unique
-  status       String   @default("NOT_STARTED") // NOT_STARTED, IN_PROGRESS, READY, SHIPPED
-  idea         Boolean  @default(false)
-  data         Boolean  @default(false)
-  model        Boolean  @default(false)
-  app          Boolean  @default(false)
-  shipped      Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  status    String   @default("NOT_STARTED") // NOT_STARTED, IN_PROGRESS, READY, SHIPPED
+  idea      Boolean  @default(false)
+  data      Boolean  @default(false)
+  model     Boolean  @default(false)
+  app       Boolean  @default(false)
+  shipped   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  milestones ProjectMilestone[]
+}
+
+// ==========================================
+// GROWTHOS CORE EXTENSIONS (PHASE 1)
+// ==========================================
+
+model XPTransaction {
+  id             String   @id @default(uuid())
+  userId         String
+  source         String // e.g. REGISTRATION, REFERRAL, QUEST
+  amount         Int
+  referenceId    String? // ID of the quest/referral/event
+  metadataJson   String?
+  idempotencyKey String   @unique
+  createdAt      DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AchievementUnlock {
+  id             String   @id @default(uuid())
+  userId         String
+  achievementKey String // e.g. FIRST_SIGNAL, CREW_BUILDER
+  metadataJson   String?
+  unlockedAt     DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementKey])
+}
+
+model Workshop {
+  id               String    @id @default(uuid())
+  title            String
+  description      String?
+  startsAt         DateTime?
+  endsAt           DateTime?
+  status           String    @default("DRAFT") // DRAFT, SCHEDULED, LIVE, ENDED
+  registrationOpen Boolean   @default(false)
+  metadataJson     String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  registrations WorkshopRegistration[]
+}
+
+model WorkshopRegistration {
+  id               String    @id @default(uuid())
+  userId           String
+  workshopId       String
+  attendanceStatus String    @default("REGISTERED") // REGISTERED, ATTENDED, COMPLETED
+  checkInAt        DateTime?
+  completedAt      DateTime?
+  metadataJson     String?
+  registeredAt     DateTime  @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workshop Workshop @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, workshopId])
+}
+
+model Notification {
+  id           String    @id @default(uuid())
+  userId       String
+  type         String // CREW_JOINED, LEVEL_UP, QUEST_UNLOCKED
+  title        String
+  body         String
+  metadataJson String?
+  readAt       DateTime?
+  createdAt    DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Campaign {
+  id                  String    @id @default(uuid())
+  name                String    @unique
+  targetRegistrations Int       @default(0)
+  budget              Int       @default(0)
+  referralReward      Int       @default(0)
+  status              String    @default("DRAFT")
+  startDate           DateTime?
+  endDate             DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
+model AuditLog {
+  id           String   @id @default(uuid())
+  actorId      String // Admin user ID
+  action       String // RISK_CLEARED, EXPERIMENT_CREATED
+  targetType   String // USER, EXPERIMENT
+  targetId     String
+  metadataJson String?
+  createdAt    DateTime @default(now())
+}
+
+model ProjectMilestone {
+  id           String    @id @default(uuid())
+  projectId    String
+  milestoneKey String // IDEA, BUILD, AI, APP, SHIP
+  status       String    @default("LOCKED") // LOCKED, IN_PROGRESS, COMPLETED
+  unlockedAt   DateTime?
+  completedAt  DateTime?
+  metadataJson String?
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, milestoneKey])
 }
