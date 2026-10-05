@@ -51,6 +51,7 @@ export function PlayerProvider({ children }: {children: React.ReactNode;}) {
   const [sound, setSound] = useState(true);
   const [level, setLevel] = useState(1);
   const [xp, setXp] = useState(0);
+  const [xpMax, setXpMax] = useState(300);
   const [crewCount, setCrewCount] = useState(0);
 
   useEffect(() => {
@@ -71,7 +72,8 @@ export function PlayerProvider({ children }: {children: React.ReactNode;}) {
 
         if (data.stats) {
           setLevel(data.stats.level || 1);
-          setXp(data.stats.currentXP || 0);
+          setXp(data.stats.totalXP || 0);
+          if (data.stats.nextLevelXP) setXpMax(data.stats.nextLevelXP);
           setCrewCount(data.stats.crewCount || 0);
         }
         
@@ -101,13 +103,13 @@ export function PlayerProvider({ children }: {children: React.ReactNode;}) {
       sound,
       level,
       xp,
-      xpMax: level * 300,
+      xpMax,
       crewCount,
       setProfile,
       setCharacter,
       toggleSound
     }),
-    [profile, character, sound, level, xp, crewCount, setProfile, toggleSound]
+    [profile, character, sound, level, xp, xpMax, crewCount, setProfile, toggleSound]
   );
 
   return <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>;
@@ -118,3 +120,4 @@ export function usePlayer(): PlayerContextValue {
   if (!ctx) throw new Error('usePlayer must be used inside PlayerProvider');
   return ctx;
 }
+

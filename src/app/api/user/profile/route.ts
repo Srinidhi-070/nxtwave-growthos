@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { calculateLevel } from '@/lib/progression';
 
 export const dynamic = 'force-dynamic';
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -17,7 +19,7 @@ export async function GET(req: Request) {
         character: true,
         project: true,
         givenReferrals: true,
-        trackingEvents: true,
+        xpTransactions: true,
       },
     });
 
@@ -25,33 +27,26 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Calculate XP
-    let totalXP = 0;
-    
-    // Base XP for account creation (handled by event)
-    const hasAccountEvent = user.trackingEvents.some(e => e.eventName === 'character_created');
-    if (hasAccountEvent) totalXP += 100;
+    // Calculate dynamic XP from Ledger
+    const totalXP = user.xpTransactions.reduce((acc, tx) => acc + tx.amount, 0);
+    const levelStats = calculateLevel(totalXP);
 
-    // XP for referrals
     const qualifiedReferrals = user.givenReferrals.filter(r => r.qualificationState === 'QUALIFIED').length;
-    totalXP += (qualifiedReferrals * 150);
-
-    // Calc Level
-    const level = Math.floor(totalXP / 300) + 1;
-    const currentXP = totalXP % 300;
-    const maxXP = 300;
 
     return NextResponse.json({
       success: true,
       data: {
+        id: user.id,
         character: user.character,
         project: user.project,
         stats: {
           totalXP,
-          level,
-          currentXP,
-          maxXP,
-          qualifiedReferrals,
+          level: levelStats.level,
+          title: levelStats.title,
+          currentXP: levelStats.currentXP,
+          nextLevelXP: levelStats.nextLevelXP,
+          progress: levelStats.progress,
+          crewCount: qualifiedReferrals,
         }
       }
     }, { status: 200 });
@@ -61,4 +56,3 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
-
