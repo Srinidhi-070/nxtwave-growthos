@@ -6,8 +6,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const { action, reason, reviewerId } = await req.json();
     const { id } = await params;
 
-    if (!['APPROVE', 'REJECT'].includes(action)) {
-      return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
+    if (!['CLEAR', 'QUARANTINE'].includes(action)) {
+      return NextResponse.json({ error: 'Invalid action. Must be CLEAR or QUARANTINE' }, { status: 400 });
     }
 
     const flag = await prisma.riskFlag.findUnique({ where: { id } });
@@ -16,17 +16,39 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const updatedFlag = await prisma.riskFlag.update({
       where: { id },
       data: {
-        status: action === 'APPROVE' ? 'RESOLVED' : 'REVIEWED',
-        reviewedBy: reviewerId || 'system_admin',
+        status: action === 'CLEAR' ? 'RESOLVED' : 'REVIEWED',
+        reviewedBy: reviewerId || 'SYSTEM_ADMIN',
         reviewedAt: new Date(),
       }
     });
 
-    // Write to audit log
+    if (action === 'QUARANTINE' && flag.subjectType === 'USER') {
+      // Suspend connector if it exists
+      const connector = await prisma.connector.findUnique({ where: { userId: flag.subjectId } });
+      if (connector) {
+        await prisma.connector.update({
+          where: { id: connector.id },
+          data: { status: 'SUSPENDED' }
+        });
+      }
+    }
+
+    // Write to unified AuditLog (Masterplan constraint)
+    await prisma.auditLog.create({
+      data: {
+        actorId: reviewerId || 'SYSTEM_ADMIN',
+        action: action === 'CLEAR' ? 'RISK_CLEARED' : 'RISK_QUARANTINED',
+        targetType: flag.subjectType,
+        targetId: flag.subjectId,
+        metadataJson: JSON.stringify({ reason: reason || 'Manual review', flagId: flag.id, score: flag.score }),
+      }
+    });
+
+    // Also keep legacy AbuseAudit for compatibility if it's queried elsewhere
     await prisma.abuseAudit.create({
       data: {
-        action: action === 'APPROVE' ? 'risk_approved' : 'risk_rejected',
-        actorId: reviewerId || 'system_admin',
+        action: action === 'CLEAR' ? 'risk_approved' : 'risk_rejected',
+        actorId: reviewerId || 'SYSTEM_ADMIN',
         reason: reason || 'Manual review',
         entityId: flag.subjectId,
         metadataJson: JSON.stringify({ flagId: flag.id, score: flag.score }),
