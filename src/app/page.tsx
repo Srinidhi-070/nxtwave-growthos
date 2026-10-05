@@ -17,10 +17,10 @@ import { IMAGES } from '@/data/images';
 import { NPC_CONFIGS } from '@/data/characters';
 
 const HOTSPOTS = [
-{ label: 'CREW TERMINAL', to: '/crew', x: 14, y: 75, color: '#ff3fa4', desc: 'Bring friends in. Watch your signal spread.' },
-{ label: 'AI LAB', to: '/project', x: 33, y: 64, color: '#b6ff3b', desc: 'Where your first AI project gets built.' },
-{ label: 'WORKSHOP HUB', to: '/workshop', x: 68, y: 72, color: '#3ef2ff', desc: 'Live, free, 60 minutes. Doors open soon.' },
-{ label: 'PROJECT VAULT', to: '/project', x: 90, y: 46, color: '#ffc94a', desc: 'Every shipped project, archived forever.' }];
+{ label: 'CREW TERMINAL', to: '/crew', x: 62, y: 80, color: '#ff3fa4', desc: 'Bring friends in. Watch your signal spread.' },
+{ label: 'AI LAB', to: '/project', x: 75, y: 55, color: '#b6ff3b', desc: 'Where your first AI project gets built.' },
+{ label: 'WORKSHOP HUB', to: '/workshop', x: 82, y: 70, color: '#3ef2ff', desc: 'Live, free, 60 minutes. Doors open soon.' },
+{ label: 'PROJECT VAULT', to: '/project', x: 90, y: 40, color: '#ffc94a', desc: 'Every shipped project, archived forever.' }];
 
 
 const TICKER = [
@@ -87,7 +87,7 @@ export default function Landing() {
               <span className="block text-[15px] text-magenta md:text-[24px]">IN 60 MINUTES</span>
             </h1>
             <TypeLine text="Your first AI project starts here." delay={500} keepCursor className="mt-6 text-2xl text-ink/90" />
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-8 flex flex-wrap gap-4">
               <PixelButton href="/register" size="lg" icon={<ArrowRightIcon className="h-4 w-4" />}>
                 Enter GrowthOS
               </PixelButton>
@@ -158,5 +158,6 @@ export default function Landing() {
     </div>);
 
 }
+
 
 
