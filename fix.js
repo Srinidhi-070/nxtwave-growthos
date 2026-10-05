@@ -1,1 +1,0 @@
-const fs = require('fs'); let c = fs.readFileSync('src/components/character/CharacterRenderer.tsx', 'utf8'); c = c.replace(/<div className=\{\n?elative flex items-center justify-center  \}>/, '<div className={\elative flex items-center justify-center \ \\}>'); fs.writeFileSync('src/components/character/CharacterRenderer.tsx', c);

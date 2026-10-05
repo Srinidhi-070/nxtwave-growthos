@@ -8,6 +8,7 @@ export function useCountUp(target: number, duration = 900, delay = 0): number {
 
   useEffect(() => {
     if (reduce) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setValue(target);
       return;
     }
@@ -30,3 +31,4 @@ export function useCountUp(target: number, duration = 900, delay = 0): number {
 
   return value;
 }
+

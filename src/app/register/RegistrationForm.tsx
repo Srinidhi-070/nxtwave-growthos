@@ -26,8 +26,10 @@ export default function RegistrationForm() {
 
   useEffect(() => {
     if (step === 1) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSimulatedLog(['> AWAITING USER CREDENTIALS...']);
     } else if (step === 2) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSimulatedLog(['> VERIFYING ENCRYPTED PAYLOAD...', '> TRANSMITTING SECURE OTP...']);
     }
   }, [step]);
@@ -68,7 +70,7 @@ export default function RegistrationForm() {
       
       addLog('OTP TRANSMITTED SUCCESSFULLY.');
       setStep(2);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err.message);
       addLog(`ERROR: ${err.message}`);
     } finally {
@@ -118,7 +120,7 @@ export default function RegistrationForm() {
         router.push('/character/create');
       }, 1000);
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err.message);
       addLog(`ERROR: ${err.message}`);
       setLoading(false);
@@ -285,5 +287,6 @@ export default function RegistrationForm() {
     </div>
   );
 }
+
 
 

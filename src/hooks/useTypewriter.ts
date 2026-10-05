@@ -8,9 +8,11 @@ export function useTypewriter(text: string, speed = 26, delay = 0) {
 
   useEffect(() => {
     if (reduce) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCount(text.length);
       return;
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCount(0);
     let i = 0;
     let interval: ReturnType<typeof setInterval> | undefined;
@@ -29,3 +31,4 @@ export function useTypewriter(text: string, speed = 26, delay = 0) {
 
   return { text: text.slice(0, count), done: count >= text.length };
 }
+

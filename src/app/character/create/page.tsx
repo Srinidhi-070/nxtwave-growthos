@@ -93,7 +93,7 @@ export default function CharacterCreator() {
       <header className="relative z-20 mx-auto flex h-16 max-w-[1440px] items-center justify-between px-5 md:px-8">
         <div className="flex items-center gap-6">
           <Logo />
-          <span className="hidden font-px text-[10px] tracking-widest text-mute md:inline">// CHARACTER CHAMBER · 05 CREATE EXPLORER</span>
+          <span className="hidden font-px text-[10px] tracking-widest text-mute md:inline">{'//'} CHARACTER CHAMBER · 05 CREATE EXPLORER</span>
         </div>
         <SoundToggle />
       </header>
@@ -276,7 +276,7 @@ function Swatches({ label, colors, value, onChange }: {label: string;colors: {na
   return (
     <div>
       <p className="mb-3 font-px text-[10px] tracking-widest text-mute">
-        {label} <span className="text-ink">// {colors[value]?.name}</span>
+        {label} <span className="text-ink">{'//'} {colors[value]?.name}</span>
       </p>
       <div className="flex flex-wrap gap-3" role="radiogroup" aria-label={label}>
         {colors.map((c, i) =>
@@ -295,4 +295,5 @@ function Swatches({ label, colors, value, onChange }: {label: string;colors: {na
     </div>);
 
 }
+
 

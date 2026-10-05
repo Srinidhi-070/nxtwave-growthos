@@ -18,7 +18,7 @@ export function PublicTopBar({ label, hideCta }: PublicTopBarProps) {
         <div className="flex items-center gap-6">
           <Logo />
           {label ?
-          <span className="hidden font-px text-[10px] tracking-widest text-mute md:inline">// {label}</span> :
+          <span className="hidden font-px text-[10px] tracking-widest text-mute md:inline">{'//'} {label}</span> :
 
           <nav className="hidden items-center gap-5 md:flex" aria-label="Public">
               {[
@@ -49,6 +49,7 @@ export function PublicTopBar({ label, hideCta }: PublicTopBarProps) {
     </header>);
 
 }
+
 
 
 
