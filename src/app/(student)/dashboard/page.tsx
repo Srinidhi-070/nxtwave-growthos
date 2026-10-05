@@ -53,12 +53,12 @@ export default function StudentHome() {
           </div>
         </div>
 
-        <div className="pointer-events-none mt-4 grid gap-4 px-4 sm:grid-cols-2 md:absolute md:inset-0 md:mt-0 md:block md:p-5">
+        <div className="pointer-events-none mt-4 grid gap-4 px-4 sm:grid-cols-2 lg:absolute md:inset-0 md:mt-0 md:block md:p-5">
           <motion.div
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="pointer-events-auto md:absolute md:left-5 md:top-5 md:w-[300px]">
+            className="pointer-events-auto lg:absolute lg:left-5 lg:top-5 lg:w-[300px]">
             
             <PixelPanel tone="cyan" className="bg-void/90 p-4">
               <div className="flex items-start justify-between">
@@ -73,7 +73,7 @@ export default function StudentHome() {
             </PixelPanel>
           </motion.div>
 
-          <div className="pointer-events-auto md:absolute md:right-5 md:top-5">
+          <div className="pointer-events-auto lg:absolute lg:right-5 lg:top-5">
             <Link href="/countdown" className="block">
               <PixelPanel tone="magenta" className="bg-void/90 px-4 py-3 transition-[filter] duration-150 hover:brightness-125">
                 <p className="font-px text-[10px] tracking-widest text-magenta">WORKSHOP</p>
@@ -84,7 +84,7 @@ export default function StudentHome() {
             </Link>
           </div>
 
-          <div className="pointer-events-auto sm:col-span-2 md:absolute md:bottom-5 md:left-5 md:w-[380px]">
+          <div className="pointer-events-auto sm:col-span-2 lg:absolute lg:bottom-5 lg:left-5 lg:w-[380px]">
             <PixelPanel tone="lime" className="bg-void/92 p-4">
               <div className="flex items-center justify-between">
                 <p className="font-px text-[10px] tracking-widest text-lime">CURRENT QUEST</p>
@@ -108,7 +108,7 @@ export default function StudentHome() {
             </PixelPanel>
           </div>
 
-          <div className="pointer-events-auto md:absolute md:bottom-5 md:right-5">
+          <div className="pointer-events-auto lg:absolute lg:bottom-5 lg:right-5">
             <Link href="/crew" className="block">
               <PixelPanel tone="magenta" className="flex items-center gap-4 bg-void/90 px-4 py-3 transition-[filter] duration-150 hover:brightness-125">
                 <div>
@@ -158,5 +158,6 @@ export default function StudentHome() {
     </div>);
 
 }
+
 
 

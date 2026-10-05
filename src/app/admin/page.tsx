@@ -93,7 +93,7 @@ export default function OpsOverview() {
           </div>
         </OpsPanel>
 
-        <div className="grid grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <TelemetryCard label="REFERRED" value={CAMPAIGN.referred} sub="67.0% of registrations" color="#ff3fa4" spark={[40, 72, 88, 86]} />
           <TelemetryCard label="ACTIVE REFERRERS" value={CAMPAIGN.activeReferrers} sub="24.4% of students" color="#3ef2ff" spark={[18, 31, 29, 26]} delay={80} />
           <TelemetryCard label="CHARACTER COMPLETION" value={CAMPAIGN.characterCompletion} decimals={1} suffix="%" sub="401 of 427 created an explorer" color="#b6ff3b" spark={[90, 92, 95, 96]} delay={160} />
@@ -131,5 +131,6 @@ export default function OpsOverview() {
     </div>);
 
 }
+
 
 

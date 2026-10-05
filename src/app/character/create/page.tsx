@@ -122,7 +122,7 @@ export default function CharacterCreator() {
 
         <section className="order-1 flex flex-col items-center justify-center lg:order-2" aria-label="Explorer preview">
           <div className="relative flex h-[340px] w-full max-w-[460px] items-end justify-center md:h-[480px]">
-            <div className="spin-slow absolute bottom-[40px] left-1/2 h-[300px] w-[300px] -translate-x-1/2 md:h-[400px] md:w-[400px]" aria-hidden>
+            <div className="spin-slow absolute bottom-[40px] left-1/2 h-[300px] w-full max-w-[300px] -translate-x-1/2 md:h-[400px] md:w-[400px]" aria-hidden>
               <div className="absolute inset-0 border-2 border-dashed" style={{ borderColor: `${accent}40` }} />
             </div>
             <div className="scan-sweep absolute inset-x-[15%] top-0 h-[6%] bg-cyan/10" aria-hidden />
@@ -137,9 +137,9 @@ export default function CharacterCreator() {
               <PixelCharacter config={cfg} size={256} className="hidden md:inline-block" label="Your explorer" />
             </motion.div>
             <div className="absolute bottom-0 left-1/2 flex -translate-x-1/2 flex-col items-center" aria-hidden>
-              <div className="h-3 w-[220px] md:w-[300px]" style={{ background: accent, opacity: 0.85 }} />
-              <div className="h-4 w-[250px] bg-deep md:w-[340px]" />
-              <div className="h-3 w-[280px] bg-night md:w-[380px]" />
+              <div className="h-3 w-full max-w-[220px] md:w-full max-w-[300px]" style={{ background: accent, opacity: 0.85 }} />
+              <div className="h-4 w-full max-w-[250px] bg-deep md:w-[340px]" />
+              <div className="h-3 w-full max-w-[280px] bg-night md:w-[380px]" />
             </div>
           </div>
           <dl className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-1 font-term text-lg">
@@ -295,6 +295,7 @@ function Swatches({ label, colors, value, onChange }: {label: string;colors: {na
     </div>);
 
 }
+
 
 
 

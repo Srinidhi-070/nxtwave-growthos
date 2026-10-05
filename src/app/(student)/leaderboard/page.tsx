@@ -53,6 +53,7 @@ export default function Leaderboard() {
         <div className="relative mx-auto flex max-w-[720px] items-end justify-center gap-2 px-4 md:gap-4">
           {PODIUM.map((p, i) => {
             const e = podium[p.rank - 1];
+                  if (!e) return null;
             return (
               <div key={p.rank} className="flex flex-1 flex-col items-center">
                 {p.rank === 1 &&
@@ -160,4 +161,5 @@ function Row({ entry }: {entry: LeaderEntry;}) {
     </tr>);
 
 }
+
 

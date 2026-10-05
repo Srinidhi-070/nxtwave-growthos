@@ -1,29 +1,29 @@
 import { NPC_CONFIGS } from './characters';
 import type { CharacterConfig } from '../types/character';
 
-export const CAMPAIGN = { day: 4, totalDays: 7, registrations: 427, target: 500, referred: 286, activeReferrers: 104, characterCompletion: 93.9, workshopReady: 241 };
+export const CAMPAIGN = { day: 4, totalDays: 7, registrations: 0, target: 500, referred: 0, activeReferrers: 0, characterCompletion: 0, workshopReady: 0 };
 
 export const DAILY_REGS = [
-{ day: 'D1', value: 160 },
-{ day: 'D2', value: 118 },
-{ day: 'D3', value: 87 },
-{ day: 'D4', value: 62, partial: true }];
+{ day: 'D1', value: 0 },
+{ day: 'D2', value: 0 },
+{ day: 'D3', value: 0 },
+{ day: 'D4', value: 0, partial: true }];
 
 export const PROJECTED_REGS = [
-{ day: 'D5', low: 34, high: 48 },
-{ day: 'D6', low: 22, high: 35 },
-{ day: 'D7', low: 15, high: 24 }];
+{ day: 'D5', low: 0, high: 0 },
+{ day: 'D6', low: 0, high: 0 },
+{ day: 'D7', low: 0, high: 0 }];
 
 
 export const FUNNEL = [
-{ key: 'LANDING', count: 6820 },
-{ key: 'WORKSHOP VIEW', count: 3410 },
-{ key: 'REGISTER START', count: 612 },
-{ key: 'ACCOUNT CREATED', count: 427 },
-{ key: 'CHARACTER CREATED', count: 401 },
-{ key: 'FIRST QUEST', count: 352 },
-{ key: 'FIRST REFERRAL', count: 104 },
-{ key: 'ACTIVE STUDENT', count: 88 }];
+{ key: 'LANDING', count: 0 },
+{ key: 'WORKSHOP VIEW', count: 0 },
+{ key: 'REGISTER START', count: 0 },
+{ key: 'ACCOUNT CREATED', count: 0 },
+{ key: 'CHARACTER CREATED', count: 0 },
+{ key: 'FIRST QUEST', count: 0 },
+{ key: 'FIRST REFERRAL', count: 0 },
+{ key: 'ACTIVE STUDENT', count: 0 }];
 
 
 export const FUNNEL_SOURCES: Record<string, {source: string;share: number;}[]> = {
@@ -100,16 +100,16 @@ export const EXPERIMENT = {
 };
 
 export const RISK_DISTRIBUTION = [
-{ level: 'LOW', count: 389, color: '#19c9b6' },
-{ level: 'MEDIUM', count: 29, color: '#ffc94a' },
-{ level: 'HIGH', count: 9, color: '#ff4d5e' }];
+{ level: 'LOW', count: 0, color: '#19c9b6' },
+{ level: 'MEDIUM', count: 0, color: '#ffc94a' },
+{ level: 'HIGH', count: 0, color: '#ff4d5e' }];
 
 
 export const RISK_SIGNALS = [
-{ key: 'Velocity anomaly', severity: 'high' as Risk, count: 6, detail: '14 referrals registered within 9 minutes from one inviter.', trend: [0, 0, 1, 0, 2, 6] },
-{ key: 'Device overlap', severity: 'medium' as Risk, count: 11, detail: '11 accounts share 4 device fingerprints.', trend: [1, 2, 2, 4, 6, 11] },
-{ key: 'Duplicate identity', severity: 'medium' as Risk, count: 3, detail: '3 pairs with matching name + phone hash.', trend: [0, 1, 1, 2, 2, 3] },
-{ key: 'Referral cluster', severity: 'high' as Risk, count: 1, detail: 'Closed loop of 8 accounts referring each other at CBIT.', trend: [0, 0, 0, 0, 1, 1] }];
+{ key: 'Velocity anomaly', severity: 'high' as Risk, count: 0, detail: '14 referrals registered within 9 minutes from one inviter.', trend: [0, 0, 1, 0, 2, 6] },
+{ key: 'Device overlap', severity: 'medium' as Risk, count: 0, detail: '11 accounts share 4 device fingerprints.', trend: [1, 2, 2, 4, 6, 11] },
+{ key: 'Duplicate identity', severity: 'medium' as Risk, count: 0, detail: '3 pairs with matching name + phone hash.', trend: [0, 1, 1, 2, 2, 3] },
+{ key: 'Referral cluster', severity: 'high' as Risk, count: 0, detail: 'Closed loop of 8 accounts referring each other at CBIT.', trend: [0, 0, 0, 0, 1, 1] }];
 
 
 export const FLAGGED = [
