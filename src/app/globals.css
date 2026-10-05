@@ -231,7 +231,6 @@ body {
   .glow-pulse,
   .drive-right,
   .drive-left,
-  .marquee,
   .spin-slow {
     animation: none !important;
   }
@@ -242,6 +241,7 @@ body {
 }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
+
 
 
 
