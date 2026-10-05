@@ -37,7 +37,7 @@ const ADMIN_GROUPS = [
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const connected = true;
+  const { connected } = useLiveEvents();
   const pathname = usePathname();
 
   return (
@@ -100,5 +100,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </div>
   );
 }
+
 
 

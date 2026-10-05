@@ -42,7 +42,7 @@ export default function MyCrew() {
 
 
   const copy = () => {
-    navigator.clipboard?.writeText('growthos.gg/register/SRINIDHI-7Q4').catch(() => undefined);
+    navigator.clipboard?.writeText(`growthos.gg/register/${explorerName}`).catch(() => undefined);
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
   };
@@ -175,7 +175,7 @@ export default function MyCrew() {
           <PixelPanel tone="lime" className="bg-void p-5">
             <p className="font-px text-[10px] tracking-widest text-lime">YOUR INVITE LINK</p>
             <div className="mt-3 flex items-center gap-2 bg-deep px-3 py-2.5">
-              <span className="flex-1 truncate font-term text-xl text-ink">growthos.gg/register/SRINIDHI-7Q4</span>
+              <span className="flex-1 truncate font-term text-xl text-ink">growthos.gg/register/${explorerName}</span>
               <button onClick={copy} className="text-mute transition-colors duration-150 hover:text-lime" aria-label="Copy invite link">
                 {copied ? <CheckIcon className="h-4 w-4 text-lime" /> : <CopyIcon className="h-4 w-4" />}
               </button>
@@ -220,6 +220,8 @@ function CrewNode({ member, size, onClick, ring }: {member: CrewMember;size: num
     </button>);
 
 }
+
+
 
 
 

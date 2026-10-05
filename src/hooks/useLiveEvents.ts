@@ -1,6 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
-import { EVENT_POOL, SEED_EVENTS } from '../data/ops';
+import { useEffect, useState } from 'react';
 
 export interface LiveEvent {
   id: number;
@@ -10,32 +9,42 @@ export interface LiveEvent {
   meta: string;
 }
 
-function addSeconds(t: string, s: number): string {
-  const [h, m, sec] = t.split(':').map(Number);
-  const total = h * 3600 + m * 60 + sec + s;
-  const hh = Math.floor(total / 3600) % 24;
-  const mm = Math.floor(total % 3600 / 60);
-  const ss = total % 60;
-  return [hh, mm, ss].map((n) => String(n).padStart(2, '0')).join(':');
-}
-
-export function useLiveEvents(intervalMs = 2400, paused = false, limit = 40) {
-  const [events, setEvents] = useState<LiveEvent[]>(() => SEED_EVENTS.map((e, i) => ({ ...e, id: SEED_EVENTS.length - i })));
-  const idx = useRef(0);
-  const nextId = useRef(SEED_EVENTS.length + 1);
+export function useLiveEvents(limit = 40) {
+  const [events, setEvents] = useState<LiveEvent[]>([]);
+  const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    if (paused) return;
-    const t = setInterval(() => {
-      setEvents((prev) => {
-        const tmpl = EVENT_POOL[idx.current % EVENT_POOL.length];
-        idx.current += 1;
-        const time = addSeconds(prev[0]?.time ?? '21:14:43', 3 + idx.current % 9);
-        return [{ ...tmpl, time, id: nextId.current++ }, ...prev].slice(0, limit);
-      });
-    }, intervalMs);
-    return () => clearInterval(t);
-  }, [intervalMs, paused, limit]);
+    const sse = new EventSource('/api/events');
+    
+    sse.onopen = () => setConnected(true);
+    
+    sse.onmessage = (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.type === 'ping') return;
+        
+        const now = new Date();
+        const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+        
+        const newEvent: LiveEvent = {
+          id: Date.now(),
+          time: timeStr,
+          type: data.type || 'EVENT',
+          actor: data.actor || 'SYSTEM',
+          meta: data.text || data.metadata || JSON.stringify(data)
+        };
+        
+        setEvents(prev => [newEvent, ...prev].slice(0, limit));
+      } catch (err) {}
+    };
 
-  return events;
+    sse.onerror = () => setConnected(false);
+
+    return () => {
+      sse.close();
+      setConnected(false);
+    };
+  }, [limit]);
+
+  return { events, connected };
 }

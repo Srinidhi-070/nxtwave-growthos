@@ -29,7 +29,8 @@ const TEMPLATES = [
 export default function ProjectLab() {
   const { character } = usePlayer();
   const reduce = useReducedMotion();
-  const currentStage = 0;
+  const { level } = usePlayer();
+  const currentStage = Math.max(0, level - 1);
   const [view, setView] = useState(currentStage);
   const [template, setTemplate] = useState<string | null>(null);
   const stage = STAGES[view];
@@ -171,4 +172,5 @@ export default function ProjectLab() {
     </div>);
 
 }
+
 

@@ -11,7 +11,7 @@ import { useCountUp } from '@/hooks/useCountUp';
 import { CAMPAIGN, CAMPUSES, DAILY_REGS, PROJECTED_REGS } from '@/data/ops';
 
 export default function OpsOverview() {
-  const events = useLiveEvents(3200);
+  const { events } = useLiveEvents();
   const regs = useCountUp(CAMPAIGN.registrations, 1000);
   const gap = CAMPAIGN.target - CAMPAIGN.registrations;
   const segments = 50;
@@ -131,4 +131,5 @@ export default function OpsOverview() {
     </div>);
 
 }
+
 

@@ -14,7 +14,7 @@ const NAV = [
   { href: '/dashboard', label: 'Base' },
   { href: '/quests', label: 'Quests' },
   { href: '/crew', label: 'Crew' },
-  { href: '/dashboard', label: 'Campus' },
+  
   { href: '/project', label: 'Lab' },
   { href: '/leaderboard', label: 'Ranks' },
   
@@ -24,7 +24,7 @@ const MOBILE_NAV = [
   { href: '/dashboard', label: 'Base', Icon: HomeIcon },
   { href: '/quests', label: 'Quests', Icon: MapIcon },
   { href: '/crew', label: 'Crew', Icon: UsersIcon },
-  { href: '/dashboard', label: 'Campus', Icon: Building2Icon },
+  
   { href: '/character/create', label: 'Me', Icon: UserIcon }
 ];
 
@@ -105,6 +105,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
     </div>
   );
 }
+
 
 
 
