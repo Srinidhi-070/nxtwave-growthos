@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { awardXP, unlockAchievement } from '@/lib/progression';
 
 export const dynamic = 'force-dynamic';
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -35,49 +37,90 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
+    // Input Validation (Master Prompt: Character Validation)
+    const allowedBodies = ['base', 'slim', 'heavy']; // Example allowlist
+    const bodyType = allowedBodies.includes(config.body) ? config.body : 'base';
+
+    const isNew = !(await prisma.character.findUnique({ where: { userId } }));
+
     const character = await prisma.character.upsert({
       where: { userId },
       update: {
         displayName,
-        body: config.body,
-        face: config.face,
-        hair: config.hair,
-        hairColor: config.hairColor,
-        outfit: config.outfit,
-        accessory: config.accessory,
-        effect: config.effect,
+        body: bodyType,
+        face: config.face || 'default',
+        hair: config.hair || 'none',
+        hairColor: String(config.hairColor || '1'),
+        outfit: config.outfit || 'explorer',
+        accessory: config.accessory || 'none',
+        effect: config.effect || 'none',
       },
       create: {
         userId,
         displayName,
-        body: config.body,
-        face: config.face,
-        hair: config.hair,
-        hairColor: config.hairColor,
-        outfit: config.outfit,
-        accessory: config.accessory,
-        effect: config.effect,
+        body: bodyType,
+        face: config.face || 'default',
+        hair: config.hair || 'none',
+        hairColor: String(config.hairColor || '1'),
+        outfit: config.outfit || 'explorer',
+        accessory: config.accessory || 'none',
+        effect: config.effect || 'none',
       },
     });
 
-    // Also award initial XP for creating character
-    // We check if this tracking event already exists to prevent farming XP
-    const eventExists = await prisma.trackingEvent.findFirst({
-      where: {
-        userId,
-        eventName: 'character_created'
-      }
-    });
+    if (isNew) {
+      // 1. Emit telemetry
+      await prisma.trackingEvent.create({
+        data: {
+          eventName: 'character_created',
+          userId,
+          idempotencyKey: `char_create_${userId}`,
+          propertiesJson: JSON.stringify({ characterId: character.id })
+        }
+      });
 
-    if (!eventExists) {
-       await prisma.trackingEvent.create({
-         data: {
-           eventName: 'character_created',
-           userId,
-           idempotencyKey: `char_create_${userId}_${Date.now()}`,
-           propertiesJson: JSON.stringify({ characterId: character.id })
-         }
-       });
+      // 2. Qualify referral if they were referred
+      const pendingReferral = await prisma.referral.findFirst({
+        where: { refereeId: userId, qualificationState: 'PENDING' }
+      });
+
+      if (pendingReferral) {
+        // Upgrade referral
+        await prisma.referral.update({
+          where: { id: pendingReferral.id },
+          data: {
+            qualificationState: 'QUALIFIED',
+            lifecycleState: 'ACTIVE',
+            attributedAt: new Date()
+          }
+        });
+
+        // Award Referrer XP
+        await awardXP({
+          userId: pendingReferral.referrerId,
+          amount: 150,
+          source: 'REFERRAL_CONVERSION',
+          referenceId: pendingReferral.id,
+          idempotencyKey: `xp_ref_${pendingReferral.id}`
+        });
+
+        // Potentially unlock achievements for the referrer (e.g. FIRST_SIGNAL)
+        const totalReferrals = await prisma.referral.count({
+          where: { referrerId: pendingReferral.referrerId, qualificationState: 'QUALIFIED' }
+        });
+
+        if (totalReferrals === 1) {
+          await unlockAchievement({
+            userId: pendingReferral.referrerId,
+            achievementKey: 'FIRST_SIGNAL'
+          });
+        } else if (totalReferrals === 3) {
+          await unlockAchievement({
+            userId: pendingReferral.referrerId,
+            achievementKey: 'CREW_BUILDER'
+          });
+        }
+      }
     }
 
     return NextResponse.json({ success: true, data: character }, { status: 200 });
@@ -86,4 +129,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
-

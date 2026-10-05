@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { awardXP } from '@/lib/progression';
 import crypto from 'crypto';
 
 function hashIdentity(value: string) {
@@ -24,7 +25,7 @@ export async function POST(req: Request) {
 
     const emailHash = hashIdentity(email);
     const phoneHash = phone ? hashIdentity(phone) : null;
-    const idempotencyKey = `reg_${emailHash}`; // simple idempotency key for this demo
+    const idempotencyKey = `reg_${emailHash}`;
 
     // 1. Idempotent check: Does user exist?
     let user = await prisma.user.findUnique({
@@ -42,7 +43,7 @@ export async function POST(req: Request) {
           phoneHash,
           collegeId,
           graduationYear: graduationYear ? parseInt(graduationYear, 10) : null,
-          consentFlags: JSON.stringify({ whatsappOptIn: false }), // default
+          consentFlags: JSON.stringify({ whatsappOptIn: false }),
         },
       });
 
@@ -63,14 +64,15 @@ export async function POST(req: Request) {
         });
 
         if (referrerConnector && referrerConnector.userId !== user.id) {
-          // Bind Referral
+          // Bind Referral - Starts at REGISTERED lifecycle state
           await prisma.referral.create({
             data: {
               referrerId: referrerConnector.userId,
               refereeId: user.id,
               referralCode,
               attributedAt: new Date(),
-              qualificationState: 'QUALIFIED', // Qualified upon registration for this challenge
+              qualificationState: 'PENDING', // Will qualify when they become ACTIVE
+              lifecycleState: 'REGISTERED',
               attributionRule: 'explicit_code',
             },
           });
@@ -88,9 +90,17 @@ export async function POST(req: Request) {
           idempotencyKey,
         },
       });
+
+      // 6. Award Initial Registration XP securely via Progression API
+      await awardXP({
+        userId: user.id,
+        amount: 100,
+        source: 'REGISTRATION',
+        idempotencyKey: `xp_reg_${user.id}`,
+        metadata: { campaignId, source }
+      });
     }
 
-    // Fetch the connector data to return the user's new referral code
     const userConnector = await prisma.connector.findUnique({
       where: { userId: user.id },
     });
@@ -109,4 +119,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
-
