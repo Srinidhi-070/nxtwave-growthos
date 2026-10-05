@@ -18,9 +18,9 @@ import { NPC_CONFIGS } from '@/data/characters';
 
 const HOTSPOTS = [
 { label: 'CREW TERMINAL', to: '/crew', x: 14, y: 75, color: '#ff3fa4', desc: 'Bring friends in. Watch your signal spread.' },
-{ label: 'AI LAB', to: '/lab', x: 33, y: 64, color: '#b6ff3b', desc: 'Where your first AI project gets built.' },
+{ label: 'AI LAB', to: '/project', x: 33, y: 64, color: '#b6ff3b', desc: 'Where your first AI project gets built.' },
 { label: 'WORKSHOP HUB', to: '/workshop', x: 68, y: 72, color: '#3ef2ff', desc: 'Live, free, 60 minutes. Doors open soon.' },
-{ label: 'PROJECT VAULT', to: '/lab', x: 90, y: 46, color: '#ffc94a', desc: 'Every shipped project, archived forever.' }];
+{ label: 'PROJECT VAULT', to: '/project', x: 90, y: 46, color: '#ffc94a', desc: 'Every shipped project, archived forever.' }];
 
 
 const TICKER = [
@@ -88,7 +88,7 @@ export default function Landing() {
             </h1>
             <TypeLine text="Your first AI project starts here." delay={500} keepCursor className="mt-6 text-2xl text-ink/90" />
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-              <PixelButton href="/join" size="lg" icon={<ArrowRightIcon className="h-4 w-4" />}>
+              <PixelButton href="/register" size="lg" icon={<ArrowRightIcon className="h-4 w-4" />}>
                 Enter GrowthOS
               </PixelButton>
               <PixelButton href="/workshop" size="lg" variant="ghost" icon={<CompassIcon className="h-4 w-4 text-cyan" />}>
@@ -158,4 +158,5 @@ export default function Landing() {
     </div>);
 
 }
+
 

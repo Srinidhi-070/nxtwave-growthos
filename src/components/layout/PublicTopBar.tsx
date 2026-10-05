@@ -23,7 +23,7 @@ export function PublicTopBar({ label, hideCta }: PublicTopBarProps) {
           <nav className="hidden items-center gap-5 md:flex" aria-label="Public">
               {[
             { to: '/workshop', label: 'Workshop' },
-            { to: '/campus', label: 'Campus' },
+            { to: '/dashboard', label: 'Campus' },
             { to: '/leaderboard', label: 'Champions' }].
             map((l) =>
             <Link
@@ -40,7 +40,7 @@ export function PublicTopBar({ label, hideCta }: PublicTopBarProps) {
         <div className="flex items-center gap-3">
           <SoundToggle />
           {!hideCta &&
-          <PixelButton href="/join" size="sm" className="hidden sm:inline-flex">
+          <PixelButton href="/register" size="sm" className="hidden sm:inline-flex">
               Enter
             </PixelButton>
           }
@@ -49,6 +49,7 @@ export function PublicTopBar({ label, hideCta }: PublicTopBarProps) {
     </header>);
 
 }
+
 
 
 

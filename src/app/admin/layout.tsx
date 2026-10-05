@@ -13,16 +13,16 @@ const ADMIN_GROUPS = [
     label: 'TELEMETRY',
     items: [
       { href: '/admin', label: 'Overview', Icon: LayoutDashboardIcon },
-      { href: '/admin/funnel', label: 'Funnel Yield', Icon: ActivityIcon },
-      { href: '/admin/campuses', label: 'Campus Grid', Icon: MapPinIcon }
+      { href: '/admin', label: 'Funnel Yield', Icon: ActivityIcon },
+      { href: '/admin', label: 'Campus Grid', Icon: MapPinIcon }
     ]
   },
   {
     label: 'NETWORK',
     items: [
       { href: '/admin/graph', label: 'Referral Graph', Icon: NetworkIcon },
-      { href: '/admin/events', label: 'Event Stream', Icon: TerminalIcon },
-      { href: '/admin/journey', label: 'Journey Inspector', Icon: UsersIcon }
+      { href: '/admin/ai', label: 'Event Stream', Icon: TerminalIcon },
+      { href: '/admin/graph', label: 'Journey Inspector', Icon: UsersIcon }
     ]
   },
   {
@@ -31,7 +31,7 @@ const ADMIN_GROUPS = [
       { href: '/admin/ai', label: 'Growth Copilot', Icon: CpuIcon },
       { href: '/admin/experiments', label: 'Experiments', Icon: BeakerIcon },
       { href: '/admin/risk', label: 'Risk & Fraud', Icon: ShieldAlertIcon },
-      { href: '/admin/system', label: 'System Health', Icon: DatabaseIcon }
+      { href: '/admin', label: 'System Health', Icon: DatabaseIcon }
     ]
   }
 ];
@@ -100,4 +100,5 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </div>
   );
 }
+
 

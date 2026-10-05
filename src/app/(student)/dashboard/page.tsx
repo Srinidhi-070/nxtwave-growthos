@@ -16,7 +16,7 @@ import { IMAGES } from '@/data/images';
 import { CREW } from '@/data/crew';
 
 const LAB_HOTSPOTS = [
-{ label: 'PROJECT TERMINAL', to: '/lab', x: 17, y: 58, color: '#3ef2ff', desc: 'Open your AI Project Passport.' },
+{ label: 'PROJECT TERMINAL', to: '/project', x: 17, y: 58, color: '#3ef2ff', desc: 'Open your AI Project Passport.' },
 { label: 'QUEST BOARD', to: '/quests', x: 36, y: 36, color: '#ffc94a', desc: '2 of 9 quests complete.' },
 { label: 'ACHIEVEMENTS', to: '/achievements', x: 60, y: 30, color: '#b4a8ff', desc: '3 badges on the wall.' },
 { label: 'AI CORE', to: '/profile', x: 84, y: 46, color: '#b6ff3b', desc: 'Your explorer core — 100 XP charged.' },
@@ -158,4 +158,5 @@ export default function StudentHome() {
     </div>);
 
 }
+
 

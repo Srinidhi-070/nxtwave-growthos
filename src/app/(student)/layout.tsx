@@ -14,18 +14,18 @@ const NAV = [
   { href: '/dashboard', label: 'Base' },
   { href: '/quests', label: 'Quests' },
   { href: '/crew', label: 'Crew' },
-  { href: '/campus', label: 'Campus' },
+  { href: '/dashboard', label: 'Campus' },
   { href: '/project', label: 'Lab' },
   { href: '/leaderboard', label: 'Ranks' },
-  { href: '/achievements', label: 'Badges' }
+  
 ];
 
 const MOBILE_NAV = [
   { href: '/dashboard', label: 'Base', Icon: HomeIcon },
   { href: '/quests', label: 'Quests', Icon: MapIcon },
   { href: '/crew', label: 'Crew', Icon: UsersIcon },
-  { href: '/campus', label: 'Campus', Icon: Building2Icon },
-  { href: '/profile', label: 'Me', Icon: UserIcon }
+  { href: '/dashboard', label: 'Campus', Icon: Building2Icon },
+  { href: '/character/create', label: 'Me', Icon: UserIcon }
 ];
 
 export default function StudentLayout({ children }: { children: React.ReactNode }) {
@@ -71,7 +71,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
               </div>
             </div>
             <SoundToggle compact />
-            <Link href="/profile" className="group relative flex h-10 items-center gap-3 bg-panel px-3 transition-colors hover:bg-line">
+            <Link href="/character/create" className="group relative flex h-10 items-center gap-3 bg-panel px-3 transition-colors hover:bg-line">
               <div className="absolute inset-y-0 left-0 w-1 bg-cyan opacity-0 transition-opacity group-hover:opacity-100" />
               <div className="font-px text-[10px] text-ink/80 group-hover:text-ink">{explorerName}</div>
               <div className="relative h-7 w-7 bg-deep outline outline-1 outline-line/50 overflow-hidden rounded-sm">
@@ -105,4 +105,6 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
     </div>
   );
 }
+
+
 
