@@ -44,7 +44,7 @@ const pick = <T,>(arr: readonly T[]): T => arr[Math.floor(Math.random() * arr.le
 
 export default function CharacterCreator() {
   const router = useRouter();
-  const { character, setCharacter, explorerName, setProfile } = usePlayer();
+  const { character, setCharacter, explorerName, setProfile, id: userId } = usePlayer();
   const [cfg, setCfg] = useState<CharacterConfig>(character);
   const [cat, setCat] = useState<Category>('HAIR');
   const [name, setName] = useState(explorerName);
@@ -71,7 +71,7 @@ export default function CharacterCreator() {
   const enter = async () => {
     const clean = name.trim().toUpperCase();
     if (clean.length < 2 || clean.length > 14) {
-      setNameError('Explorer name must be 2–14 characters.');
+      setNameError('Explorer name must be 2-14 characters.');
       return;
     }
     try {
@@ -84,7 +84,7 @@ export default function CharacterCreator() {
       const res = await fetch('/api/character', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ config: cfg, displayName: clean })
+        body: JSON.stringify({ userId, config: cfg, displayName: clean })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to save character');
