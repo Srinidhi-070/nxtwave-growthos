@@ -38,7 +38,7 @@ export default function StudentHome() {
 
         {/* Character Layer - Centered */}
         <div className="absolute inset-0 z-10 flex items-center justify-center translate-x-[8%] -translate-y-[5%] pointer-events-none">
-          <PixelCharacter config={character} size={160} label={explorerName} />
+          <PixelCharacter config={character} size={220} label={explorerName} />
         </div>
 
         {/* UI Overlay - Responsive Grid Layout */}
@@ -155,6 +155,7 @@ export default function StudentHome() {
     </div>
   );
 }
+
 
 
 
