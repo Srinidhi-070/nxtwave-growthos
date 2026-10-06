@@ -1,122 +1,140 @@
 'use client';
 import React from 'react';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRightIcon, CompassIcon } from 'lucide-react';
+import { ArrowRightIcon, TerminalIcon } from 'lucide-react';
 import { PublicTopBar } from '@/components/layout/PublicTopBar';
 import { PixelPanel } from '@/components/pixel/PixelPanel';
 import { PixelButton } from '@/components/pixel/PixelButton';
 import { PixelBadge } from '@/components/pixel/PixelBadge';
-import { PixelCharacter } from '@/components/pixel/PixelCharacter';
 import { CrtOverlay } from '@/components/pixel/CrtOverlay';
+import { PixelParticles } from '@/components/pixel/PixelParticles';
 import { TypeLine } from '@/components/pixel/TypeLine';
 import { IMAGES } from '@/data/images';
-import { NPC_CONFIGS } from '@/data/characters';
-
-const FEATURES = [
-  { label: 'CREW TERMINAL', to: '/crew', color: '#ff3fa4', desc: 'Bring friends in. Watch your signal spread.' },
-  { label: 'AI LAB', to: '/project', color: '#b6ff3b', desc: 'Where your first AI project gets built.' },
-  { label: 'WORKSHOP HUB', to: '/workshop', color: '#3ef2ff', desc: 'Live, free, 60 minutes. Doors open soon.' },
-  { label: 'PROJECT VAULT', to: '/project', color: '#ffc94a', desc: 'Every shipped project, archived forever.' }
-];
-
-const TICKER = [
-  'MEERA \u2014 PES joined the crew of ARJUN.K',
-  'VIKRAM.S reached LEVEL 06',
-  '+3 explorers from VIT Vellore',
-  'NISHA unlocked CHAIN REACTION',
-  'ROHAN created an explorer',
-  'Campus race: VIT leads with 92 explorers',
-  'ISHA accepted quest BUILD YOUR CREW'
-];
 
 export default function Landing() {
   return (
-    <div className="relative min-h-screen flex flex-col bg-void overflow-x-hidden">
-      {/* Background Environment - STRICTLY VISUAL, NO ABSOLUTE UI */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <img src={IMAGES.city} alt="" className="pixelated h-full w-full object-cover opacity-40" />
+    <div className="relative min-h-screen flex flex-col bg-void overflow-hidden select-none">
+      {/* 1. BACKGROUND ENVIRONMENT */}
+      <div className="absolute inset-0 z-0 pointer-events-none bg-void">
+        <motion.div 
+          initial={{ scale: 1.05, opacity: 0 }}
+          animate={{ scale: 1, opacity: 0.6 }}
+          transition={{ duration: 2, ease: 'easeOut' }}
+          className="absolute inset-0"
+        >
+          <img src={IMAGES.city} alt="Digital Campus City" className="h-full w-full object-cover pixelated opacity-50 mix-blend-screen" />
+          <div className="absolute inset-0 bg-gradient-to-r from-void via-void/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-void via-transparent to-void/50" />
+        </motion.div>
+        
+        {/* ATMOSPHERE */}
+        <PixelParticles />
         <CrtOverlay />
       </div>
 
-      <div className="relative z-10 flex-none">
-        <PublicTopBar />
+      {/* 2. NAVIGATION */}
+      <div className="relative z-30 flex-none">
+        <PublicTopBar label="OBSERVATORY UPLINK" />
       </div>
 
-      {/* Robust Responsive Grid Layout */}
-      <main className="relative z-10 flex-1 w-full max-w-[1400px] mx-auto px-4 py-12 md:py-20 lg:px-8 flex flex-col justify-center">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      {/* 3. HERO CONTENT */}
+      <main className="relative z-20 flex-1 w-full max-w-[1400px] mx-auto px-6 py-12 md:py-20 lg:px-12 flex flex-col justify-center">
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.3, duration: 0.6, type: 'spring', bounce: 0.3 }}
+          className="max-w-2xl"
+        >
+          {/* HUD Target Lock / Decal */}
+          <div className="hidden md:block absolute -left-4 top-1/2 -translate-y-1/2 w-[2px] h-32 bg-cyan/30">
+             <div className="absolute top-0 -left-1 w-2.5 h-[2px] bg-cyan/60" />
+             <div className="absolute bottom-0 -left-1 w-2.5 h-[2px] bg-cyan/60" />
+             <div className="absolute top-1/2 -left-1 w-1.5 h-[2px] bg-cyan/40" />
+          </div>
+
+          <div className="mb-6 flex items-center gap-3">
+            <PixelBadge tone="cyan" dot>SYSTEM ONLINE</PixelBadge>
+            <span className="font-term text-xs md:text-sm text-cyan/70 tracking-widest">v1.0.0.GROWTHOS</span>
+          </div>
+
+          <h1 className="font-pixel leading-[1.3] mb-6">
+            <motion.span 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="block text-[16px] md:text-[24px] text-ink mb-2"
+            >
+              BUILD YOUR FIRST
+            </motion.span>
+            
+            <motion.span 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.8, type: 'spring' }}
+              className="block text-[36px] md:text-[64px] text-cyan text-glow-cyan mb-2"
+            >
+              AI PROJECT
+            </motion.span>
+            
+            <motion.span 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.1 }}
+              className="block text-[16px] md:text-[24px] text-magenta text-glow-magenta"
+            >
+              IN 60 MINUTES
+            </motion.span>
+          </h1>
           
-          {/* Left Column: Hero Panel */}
-          <div className="lg:col-span-7 xl:col-span-6">
-            <PixelPanel tone="cyan" className="bg-void/90 p-6 md:p-10 shadow-2xl">
-              <div className="flex flex-wrap items-center gap-3 mb-6">
-                <PixelBadge tone="lime" dot>Signal live</PixelBadge>
-                <span className="font-term text-lg md:text-xl text-mute">FREE &bull; ONLINE &bull; 60 MIN</span>
-              </div>
-              
-              <h1 id="hero-title" className="font-pixel leading-[1.3] mb-6">
-                <span className="block text-[14px] md:text-[20px] text-ink mb-2">BUILD YOUR FIRST</span>
-                <span className="block text-[28px] md:text-[44px] text-cyan text-glow-cyan mb-2">AI PROJECT</span>
-                <span className="block text-[14px] md:text-[20px] text-magenta">IN 60 MINUTES</span>
-              </h1>
-              
-              <TypeLine text="Your first AI project starts here." delay={300} keepCursor className="text-xl md:text-2xl text-ink/90 mb-8" />
-              
-              <div className="flex flex-wrap gap-4 pt-2">
-                <PixelButton href="/register" size="lg" icon={<ArrowRightIcon className="h-5 w-5" />} className="w-full sm:w-auto">
-                  Enter GrowthOS
-                </PixelButton>
-                <PixelButton href="/workshop" size="lg" variant="ghost" icon={<CompassIcon className="h-5 w-5 text-cyan" />} className="w-full sm:w-auto">
-                  Explore Workshop
-                </PixelButton>
-              </div>
-
-              <div className="mt-10 flex items-center gap-4 border-t-2 border-line pt-6">
-                <div className="flex -space-x-3 shrink-0">
-                  {['meera', 'kabir', 'zoya', 'vikram'].map((k) => (
-                    <span key={k} className="h-10 w-10 overflow-hidden border-2 border-void bg-deep rounded-sm">
-                      <PixelCharacter config={NPC_CONFIGS[k]} size={40} idle={false} shadow={false} showEffect={false} />
-                    </span>
-                  ))}
-                </div>
-                <p className="font-term text-lg md:text-xl leading-tight text-mute">
-                  <span className="text-lime">427 explorers</span> from 38 campuses are already inside.
-                </p>
-              </div>
-            </PixelPanel>
+          <div className="h-16 mb-10">
+            <TypeLine 
+              text="A free online workshop for engineering students ready to start building with AI." 
+              delay={1400} 
+              keepCursor 
+              className="font-term text-lg md:text-xl text-mute max-w-xl leading-relaxed" 
+            />
           </div>
-
-          {/* Right Column: Feature Cards (Replacing floating absolute hotspots) */}
-          <div className="lg:col-span-5 xl:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {FEATURES.map((f) => (
-              <Link key={f.label} href={f.to} className="group outline-none">
-                <PixelPanel tone="default" className="bg-void/80 p-5 h-full transition-all duration-200 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 group-hover:bg-void" style={{ '--b': f.color } as React.CSSProperties}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="h-2 w-2" style={{ background: f.color }} />
-                    <h3 className="font-px text-[11px] tracking-widest text-ink">{f.label}</h3>
-                  </div>
-                  <p className="font-term text-lg text-mute group-hover:text-ink/90 transition-colors">{f.desc}</p>
-                </PixelPanel>
-              </Link>
-            ))}
-          </div>
-
-        </div>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 2.2, duration: 0.4 }}
+            className="flex flex-col sm:flex-row gap-5 pt-4"
+          >
+            <PixelButton 
+              href="/register" 
+              size="lg" 
+              className="w-full sm:w-auto relative group shadow-[0_0_15px_rgba(182,255,59,0.3)] hover:shadow-[0_0_25px_rgba(182,255,59,0.6)] transition-shadow"
+            >
+              <div className="flex items-center gap-3 px-2">
+                <span className="tracking-widest">ENTER GROWTHOS</span>
+                <ArrowRightIcon className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </PixelButton>
+            
+            <PixelButton 
+              href="/workshop" 
+              size="lg" 
+              variant="ghost" 
+              className="w-full sm:w-auto hover:bg-cyan/10 hover:border-cyan/50 transition-colors"
+            >
+              <div className="flex items-center gap-3 px-2">
+                <TerminalIcon className="h-4 w-4 text-cyan" />
+                <span className="tracking-widest text-cyan">EXPLORE WORKSHOP</span>
+              </div>
+            </PixelButton>
+          </motion.div>
+        </motion.div>
       </main>
 
-      {/* Footer Ticker */}
-      <div className="relative z-20 border-t-2 border-line bg-void/95 py-3 mt-auto overflow-hidden">
-        <motion.div animate={{ x: ['0%', '-50%'] }} transition={{ duration: 40, ease: 'linear', repeat: Infinity }} className="flex w-max gap-12 whitespace-nowrap font-term text-lg text-ink/80 pr-12">
-          {[...TICKER, ...TICKER].map((t, i) => (
-            <span key={i} className="flex items-center gap-3">
-              <span className="h-2 w-2 bg-cyan" aria-hidden />
-              {t}
-            </span>
-          ))}
-        </motion.div>
+      {/* 4. ENVIRONMENTAL HUD DECORATIONS */}
+      <div className="absolute right-8 bottom-8 hidden lg:flex flex-col items-end gap-2 pointer-events-none">
+        <div className="font-term text-xs text-mute/50 tracking-[0.2em]">LAT: 34.0522 N</div>
+        <div className="font-term text-xs text-mute/50 tracking-[0.2em]">LNG: 118.2437 W</div>
+        <div className="flex gap-1 mt-2">
+          {[1,2,3,4].map(i => <div key={i} className={`w-2 h-2 ${i===4 ? 'bg-magenta/40' : 'bg-cyan/40'}`} />)}
+        </div>
       </div>
     </div>
   );
 }
-
