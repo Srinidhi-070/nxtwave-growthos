@@ -31,7 +31,19 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { userId, displayName, config } = body;
+    const { displayName, config } = body;
+    let { userId } = body;
+    if (!userId) {
+      // For demo mode when frontend doesn't supply a real userId
+      userId = "demo-user-" + Math.random().toString(36).substring(7);
+      // Ensure the dummy user exists to satisfy FK
+      await prisma.user.create({
+        data: {
+          id: userId,
+          emailHash: userId,
+        }
+      }).catch(() => {});
+    }
 
     if (!userId || !displayName || !config) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
