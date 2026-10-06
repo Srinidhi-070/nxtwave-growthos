@@ -12,7 +12,7 @@ class AudioEngine {
     if (!this.context) return;
     try {
       this.bgmGain = this.context.createGain();
-      this.bgmGain.gain.setValueAtTime(0.15, this.context.currentTime); 
+      this.bgmGain.gain.setValueAtTime(0.04, this.context.currentTime); 
       
       const filter = this.context.createBiquadFilter();
       filter.type = 'lowpass';
