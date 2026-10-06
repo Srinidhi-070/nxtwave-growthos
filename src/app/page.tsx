@@ -7,7 +7,7 @@ import { PixelPanel } from '@/components/pixel/PixelPanel';
 import { PixelButton } from '@/components/pixel/PixelButton';
 import { PixelBadge } from '@/components/pixel/PixelBadge';
 import { CrtOverlay } from '@/components/pixel/CrtOverlay';
-import { PixelParticles } from '@/components/pixel/PixelParticles';
+import { CyberGrid } from '@/components/pixel/CyberGrid';
 import { TypeLine } from '@/components/pixel/TypeLine';
 import { IMAGES } from '@/data/images';
 
@@ -28,7 +28,7 @@ export default function Landing() {
         </motion.div>
         
         {/* ATMOSPHERE */}
-        <PixelParticles />
+        <CyberGrid />
         <CrtOverlay />
       </div>
 
@@ -138,3 +138,4 @@ export default function Landing() {
     </div>
   );
 }
+
