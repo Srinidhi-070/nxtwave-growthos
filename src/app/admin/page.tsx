@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowUpRightIcon, SparklesIcon } from 'lucide-react';
 import { OpsPageHeader, OpsPanel } from '@/components/ops/OpsPanel';
 import { TelemetryCard } from '@/components/ops/TelemetryCard';
-import { EventStream } from '@/components/ops/EventStream';
+import { EventStream } from '@/components/admin/telemetrytream';
 import { useLiveEvents } from '@/hooks/useLiveEvents';
 import { useCountUp } from '@/hooks/useCountUp';
 import { CAMPAIGN, CAMPUSES, DAILY_REGS, PROJECTED_REGS } from '@/data/ops';
@@ -111,7 +111,7 @@ export default function OpsOverview() {
       </div>
 
       <div className="mt-5 grid gap-5 xl:grid-cols-[1.5fr_1fr]">
-        <OpsPanel title="EVENT STREAM" meta={<Link href="/ops/events" className="hover:text-ink">open stream →</Link>} bodyClassName="py-1">
+        <OpsPanel title="EVENT STREAM" meta={<Link href="/admin/telemetry" className="hover:text-ink">open stream →</Link>} bodyClassName="py-1">
           <EventStream events={events} compact max={7} />
         </OpsPanel>
         <div className="flex flex-col gap-5">
@@ -126,7 +126,7 @@ export default function OpsOverview() {
               )}
             </ul>
           </OpsPanel>
-          <Link href="/ops/copilot" className="px-frame-sm group block bg-[#0b0924] p-4 [--b:#221c55] hover:[--b:#19c9b6]">
+          <Link href="/admin/ai" className="px-frame-sm group block bg-[#0b0924] p-4 [--b:#221c55] hover:[--b:#19c9b6]">
             <p className="flex items-center gap-2 font-px text-[10px] tracking-[0.2em] text-teal">
               <SparklesIcon className="h-3.5 w-3.5" /> COPILOT · SIGNAL DETECTED
             </p>
@@ -140,6 +140,9 @@ export default function OpsOverview() {
     </div>);
 
 }
+
+
+
 
 
 
