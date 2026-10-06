@@ -10,6 +10,7 @@ export default function CharacterInitCinematic() {
   const router = useRouter();
 
   useEffect(() => {
+    import('@/utils/audio').then(m => m.audio.boot());
     // Cinematic sequence lasts 5 seconds, then auto-routes to welcome
     const timer = setTimeout(() => {
       router.push('/welcome');
@@ -88,3 +89,4 @@ export default function CharacterInitCinematic() {
     </div>
   );
 }
+

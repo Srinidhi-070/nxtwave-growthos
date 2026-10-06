@@ -2,6 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { cn } from '../../utils/cn';
+import { audio } from '../../utils/audio';
 
 type Variant = 'primary' | 'magenta' | 'cyan' | 'ghost' | 'danger';
 type Size = 'sm' | 'md' | 'lg';
@@ -27,30 +28,52 @@ const SIZES: Record<Size, string> = {
   lg: 'h-14 px-7 text-[15px] gap-2.5'
 };
 
-export function PixelButton({ variant = 'primary', size = 'md', href, icon, className, children, style, ...rest }: PixelButtonProps) {
+export function PixelButton({ variant = 'primary', size = 'md', href, icon, className, children, style, onMouseEnter, onClick, ...rest }: PixelButtonProps) {
   const v = VARIANTS[variant];
   const classes = cn(
-    'px-btn inline-flex shrink-0 select-none items-center justify-center whitespace-nowrap font-px font-bold uppercase tracking-wider disabled:cursor-not-allowed disabled:opacity-50',
+    'px-btn inline-flex shrink-0 select-none items-center justify-center whitespace-nowrap font-px font-bold uppercase tracking-wider disabled:cursor-not-allowed disabled:opacity-50 transition-colors',
     v.cls,
     SIZES[size],
     className
   );
+  
+  const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+    audio.hover();
+    if (onMouseEnter) onMouseEnter(e as any);
+  };
+  
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+    audio.click();
+    if (onClick) onClick(e as any);
+  };
+
   const s = { '--b': v.border, ...style } as React.CSSProperties;
+  
   if (href) {
     return (
-      <Link href={href} className={classes} style={s}>
+      <Link 
+        href={href} 
+        className={classes} 
+        style={s}
+        onMouseEnter={handleMouseEnter as any}
+        onClick={handleClick as any}
+      >
         {icon}
         {children}
-      </Link>);
-
+      </Link>
+    );
   }
+  
   return (
-    <button className={classes} style={s} {...rest}>
+    <button 
+      className={classes} 
+      style={s} 
+      onMouseEnter={handleMouseEnter}
+      onClick={handleClick}
+      {...rest}
+    >
       {icon}
       {children}
-    </button>);
-
+    </button>
+  );
 }
-
-
-

@@ -1,13 +1,25 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { LogOutIcon, AlertTriangleIcon, CheckIcon } from 'lucide-react';
+import { LogOutIcon, AlertTriangleIcon } from 'lucide-react';
 import { PixelPanel } from '@/components/pixel/PixelPanel';
 import { PixelButton } from '@/components/pixel/PixelButton';
+import { audio } from '@/utils/audio';
 
 export default function SettingsPage() {
   const [notifs, setNotifs] = useState(true);
   const [sound, setSound] = useState(true);
+  
+  useEffect(() => {
+    setSound(audio.enabled);
+  }, []);
+
+  const toggleSound = () => {
+    const next = !sound;
+    setSound(next);
+    audio.enabled = next;
+    if (next) audio.success();
+  };
   
   return (
     <div className="relative min-h-[calc(100vh-64px)] overflow-x-hidden p-6 md:p-8">
@@ -42,7 +54,7 @@ export default function SettingsPage() {
                     <p className="font-term text-sm text-mute">Enable mechanical UI sound effects (if available).</p>
                   </div>
                   <button 
-                    onClick={() => setSound(!sound)} 
+                    onClick={toggleSound} 
                     className={`w-12 h-6 border-2 flex items-center p-1 ${sound ? 'border-cyan bg-cyan/20 justify-end' : 'border-line bg-deep justify-start'}`}
                   >
                     <div className={`w-3 h-3 ${sound ? 'bg-cyan' : 'bg-mute'}`} />

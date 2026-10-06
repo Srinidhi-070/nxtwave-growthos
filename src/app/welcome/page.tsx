@@ -21,6 +21,7 @@ export default function WelcomePage() {
       return () => clearTimeout(t);
     }
     if (step === 1) {
+      import('@/utils/audio').then(m => m.audio.success());
       const t = setTimeout(() => setStep(2), 2500);
       return () => clearTimeout(t);
     }
@@ -122,5 +123,6 @@ export default function WelcomePage() {
     </div>
   );
 }
+
 
 
