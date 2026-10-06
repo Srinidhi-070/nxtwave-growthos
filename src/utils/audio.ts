@@ -1,7 +1,7 @@
 'use client';
 
 class AudioEngine {
-  bgmOsc: OscillatorNode | null = null;
+  bgmOsc: any = null;
   bgmGain: GainNode | null = null;
   bgmLfo: OscillatorNode | null = null;
 
@@ -11,36 +11,41 @@ class AudioEngine {
     this.init();
     if (!this.context) return;
     try {
-      this.bgmOsc = this.context.createOscillator();
       this.bgmGain = this.context.createGain();
-      this.bgmLfo = this.context.createOscillator();
+      this.bgmGain.gain.setValueAtTime(0.15, this.context.currentTime); 
       
-      this.bgmOsc.type = 'triangle';
-      this.bgmOsc.frequency.setValueAtTime(55, this.context.currentTime); // Low A1 drone
-      
-      this.bgmLfo.type = 'sine';
-      this.bgmLfo.frequency.setValueAtTime(0.08, this.context.currentTime); // Very slow pulse
-      
-      const lfoGain = this.context.createGain();
-      lfoGain.gain.setValueAtTime(0.03, this.context.currentTime); 
-      
-      this.bgmLfo.connect(lfoGain);
-      lfoGain.connect(this.bgmGain.gain);
-      
-      this.bgmGain.gain.setValueAtTime(0.05, this.context.currentTime); // Base vol
-      
-      // Filter for lo-fi muffled sound
       const filter = this.context.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(400, this.context.currentTime);
+      filter.frequency.setValueAtTime(200, this.context.currentTime); 
       
-      this.bgmOsc.connect(filter);
-      filter.connect(this.bgmGain);
-      this.bgmGain.connect(this.context.destination);
+      this.bgmLfo = this.context.createOscillator();
+      this.bgmLfo.type = 'sine';
+      this.bgmLfo.frequency.setValueAtTime(0.05, this.context.currentTime); 
       
-      this.bgmOsc.start();
+      const lfoGain = this.context.createGain();
+      lfoGain.gain.setValueAtTime(600, this.context.currentTime); 
+      
+      this.bgmLfo.connect(lfoGain);
+      lfoGain.connect(filter.frequency);
+      
+      this.bgmOsc = [];
+      const freqs = [110.00, 164.81, 220.00]; 
+      freqs.forEach(f => {
+        const osc = this.context.createOscillator();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(f, this.context.currentTime);
+        osc.connect(this.bgmGain);
+        osc.start();
+        this.bgmOsc.push(osc);
+      });
+      
       this.bgmLfo.start();
-    } catch(e) {}
+      
+      this.bgmGain.connect(filter);
+      filter.connect(this.context.destination);
+    } catch(e) {
+      console.error("BGM Error:", e);
+    }
   }
 
   stopBGM() {
@@ -48,9 +53,12 @@ class AudioEngine {
       try {
         this.bgmGain.gain.setTargetAtTime(0, this.context.currentTime, 0.5);
         setTimeout(() => {
-          this.bgmOsc?.stop();
+          if (Array.isArray(this.bgmOsc)) {
+             this.bgmOsc.forEach(o => { o.stop(); o.disconnect(); });
+          } else if (this.bgmOsc) {
+             this.bgmOsc.stop(); this.bgmOsc.disconnect();
+          }
           this.bgmLfo?.stop();
-          this.bgmOsc?.disconnect();
           this.bgmLfo?.disconnect();
           this.bgmGain?.disconnect();
           this.bgmOsc = null;
