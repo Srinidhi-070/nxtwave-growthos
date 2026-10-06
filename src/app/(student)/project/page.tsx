@@ -33,6 +33,7 @@ export default function ProjectLab() {
   const currentStage = Math.max(0, level - 1);
   const [view, setView] = useState(currentStage);
   const [template, setTemplate] = useState<string | null>(null);
+  const [isWorking, setIsWorking] = useState(false);
   const stage = STAGES[view];
   const cubes = 2 + view * 3;
 
@@ -171,9 +172,20 @@ export default function ProjectLab() {
                 </button>
               )}
             </div>
-            <PixelButton className="mt-4 w-full" disabled={!template} icon={<SparklesIcon className="h-4 w-4" />}>
-              {template ? 'Lock in idea' : 'Pick an idea'}
-            </PixelButton>
+            <PixelButton 
+      className="mt-4 w-full" 
+      disabled={!template || isWorking} 
+      icon={isWorking ? <LockIcon className="h-4 w-4 animate-pulse" /> : <SparklesIcon className="h-4 w-4" />}
+      onClick={() => {
+        setIsWorking(true);
+        setTimeout(() => {
+          setIsWorking(false);
+          if (view < 4) setView(view + 1);
+        }, 1200);
+      }}
+    >
+      {isWorking ? 'Processing...' : template ? 'Lock in idea' : 'Pick an idea'}
+    </PixelButton>
           </section>
         </aside>
       </div>
