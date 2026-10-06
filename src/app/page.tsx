@@ -42,7 +42,7 @@ export default function Landing() {
         <motion.div 
           initial={{ opacity: 1, x: 0 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3, duration: 0.6, type: 'spring', bounce: 0.3 }}
+          transition={{ delay: 0.1, duration: 0.5, type: 'spring', bounce: 0.2 }}
           className="max-w-2xl"
         >
           {/* HUD Target Lock / Decal */}
@@ -61,7 +61,7 @@ export default function Landing() {
             <motion.span 
               initial={{ opacity: 1, y: 0 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.2 }}
               className="block text-[16px] md:text-[24px] text-ink mb-2"
             >
               BUILD YOUR FIRST
@@ -70,7 +70,7 @@ export default function Landing() {
             <motion.span 
               initial={{ opacity: 1, scale: 1 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.8, type: 'spring' }}
+              transition={{ delay: 0.4, type: 'spring' }}
               className="block text-[36px] md:text-[64px] text-cyan text-glow-cyan mb-2"
             >
               AI PROJECT
@@ -79,7 +79,7 @@ export default function Landing() {
             <motion.span 
               initial={{ opacity: 1, y: 0 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.1 }}
+              transition={{ delay: 0.6 }}
               className="block text-[16px] md:text-[24px] text-magenta text-glow-magenta"
             >
               IN 60 MINUTES
@@ -89,7 +89,7 @@ export default function Landing() {
           <div className="h-16 mb-10">
             <TypeLine 
               text="A free online workshop for engineering students ready to start building with AI." 
-              delay={1400} 
+              delay={800} 
               keepCursor 
               className="font-term text-lg md:text-xl text-mute max-w-xl leading-relaxed" 
             />
@@ -98,7 +98,7 @@ export default function Landing() {
           <motion.div 
             initial={{ opacity: 1, y: 0 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2.2, duration: 0.4 }}
+            transition={{ delay: 1.2, duration: 0.4 }}
             className="flex flex-col sm:flex-row gap-5 pt-4"
           >
             <PixelButton 
@@ -138,5 +138,6 @@ export default function Landing() {
     </div>
   );
 }
+
 
 
