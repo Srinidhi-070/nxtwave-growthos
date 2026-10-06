@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export function CyberGrid() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0 opacity-30" aria-hidden>
+    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0 opacity-30" aria-hidden="true">
       {/* Perspective wrapper */}
       <div 
         className="absolute inset-0"
@@ -36,3 +36,4 @@ export function CyberGrid() {
     </div>
   );
 }
+

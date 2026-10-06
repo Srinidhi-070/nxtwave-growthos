@@ -17,7 +17,7 @@ export default function Landing() {
       {/* 1. BACKGROUND ENVIRONMENT */}
       <div className="absolute inset-0 z-0 pointer-events-none bg-void">
         <motion.div 
-          initial={{ scale: 1.05, opacity: 0 }}
+          initial={{ scale: 1.05, opacity: 1 }}
           animate={{ scale: 1, opacity: 0.6 }}
           transition={{ duration: 2, ease: 'easeOut' }}
           className="absolute inset-0"
@@ -40,7 +40,7 @@ export default function Landing() {
       {/* 3. HERO CONTENT */}
       <main className="relative z-20 flex-1 w-full max-w-[1400px] mx-auto px-6 py-12 md:py-20 lg:px-12 flex flex-col justify-center">
         <motion.div 
-          initial={{ opacity: 0, x: -20 }}
+          initial={{ opacity: 1, x: 0 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3, duration: 0.6, type: 'spring', bounce: 0.3 }}
           className="max-w-2xl"
@@ -59,7 +59,7 @@ export default function Landing() {
 
           <h1 className="font-pixel leading-[1.3] mb-6">
             <motion.span 
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 1, y: 0 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
               className="block text-[16px] md:text-[24px] text-ink mb-2"
@@ -68,7 +68,7 @@ export default function Landing() {
             </motion.span>
             
             <motion.span 
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 1, scale: 1 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.8, type: 'spring' }}
               className="block text-[36px] md:text-[64px] text-cyan text-glow-cyan mb-2"
@@ -77,7 +77,7 @@ export default function Landing() {
             </motion.span>
             
             <motion.span 
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 1, y: 0 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.1 }}
               className="block text-[16px] md:text-[24px] text-magenta text-glow-magenta"
@@ -96,7 +96,7 @@ export default function Landing() {
           </div>
           
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 0 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 2.2, duration: 0.4 }}
             className="flex flex-col sm:flex-row gap-5 pt-4"
@@ -138,4 +138,5 @@ export default function Landing() {
     </div>
   );
 }
+
 

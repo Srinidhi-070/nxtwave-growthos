@@ -26,7 +26,7 @@ export function PixelParticles({ count = 15, colors = ['#3ef2ff'], rise = 500 }:
   if (!particles.length) return null;
 
   return (
-    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden>
+    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
       {particles.map((p) => (
         <motion.div
           key={p.id}
@@ -54,3 +54,4 @@ export function PixelParticles({ count = 15, colors = ['#3ef2ff'], rise = 500 }:
     </div>
   );
 }
+
