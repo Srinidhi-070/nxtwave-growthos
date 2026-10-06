@@ -199,7 +199,7 @@ export default function MyCrew() {
 
 function NodeAt({ pos, children }: {pos: {x: number;y: number;};children: React.ReactNode;}) {
   return (
-    <div className="absolute -translate-x-1/2 -translate-y-1/2" style={{ left: `${pos.x}%`, top: `${pos.y}%` }}>
+    <div className="absolute" style={{ transform: "translate(-50%, -50%)", left: `${pos.x}%`, top: `${pos.y}%` }}>
       {children}
     </div>);
 

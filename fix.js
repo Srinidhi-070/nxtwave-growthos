@@ -1,9 +1,9 @@
 const fs = require('fs');
-let text = fs.readFileSync('src/app/(student)/quests/page.tsx', 'utf8');
+let t = fs.readFileSync('src/app/globals.css', 'utf8');
 
-text = text.replace(
-  /className=\{pointer-events-none absolute -translate-x-1\/2 transition-transform duration-300 \}/g,
-  'className={`pointer-events-none absolute -translate-x-1/2 transition-transform duration-300 ${activeNode.y > 75 ? "-translate-y-[115px]" : "-translate-y-[70px]"}`}'
-);
+t = t.replace(/var\(--color-void\)/g, 'var(--void)');
+t = t.replace(/var\(--color-deep\)/g, 'var(--deep)');
+t = t.replace(/var\(--color-mute\)/g, 'var(--mute)');
+t = t.replace(/var\(--color-cyan\)/g, 'var(--cyan)');
 
-fs.writeFileSync('src/app/(student)/quests/page.tsx', text, 'utf8');
+fs.writeFileSync('src/app/globals.css', t, 'utf8');

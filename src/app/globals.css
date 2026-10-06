@@ -245,3 +245,28 @@ body {
 
 
 
+
+
+/* Custom Terminal Scrollbars */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--void);
+  border-left: 1px solid var(--deep);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--mute);
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--cyan);
+}
+::-webkit-scrollbar-corner {
+  background: var(--void);
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--mute) var(--void);
+}
