@@ -60,7 +60,7 @@ export function PixelQuestNode({ index, title, state, selected, onSelect, labelS
       <span
         className={cn(
           'absolute whitespace-nowrap bg-void/90 px-2 py-1 font-px text-[10px] tracking-widest z-10',
-          labelSide === 'top' ? (selected ? 'bottom-full mb-[64px]' : 'bottom-full mb-2') : 'top-full mt-2',
+          labelSide === 'top' ? 'bottom-full mb-2' : 'top-full mt-2',
           state === 'locked' ? 'text-mute' : state === 'active' ? 'text-cyan' : 'text-lime'
         )}>
         
@@ -69,6 +69,7 @@ export function PixelQuestNode({ index, title, state, selected, onSelect, labelS
     </button>);
 
 }
+
 
 
 
