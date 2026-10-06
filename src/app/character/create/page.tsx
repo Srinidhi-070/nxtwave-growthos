@@ -12,7 +12,7 @@ import { PixelParticles } from '@/components/pixel/PixelParticles';
 import { CrtOverlay } from '@/components/pixel/CrtOverlay';
 import { OptionTile } from '@/components/creator/OptionTile';
 import { usePlayer } from '@/contexts/PlayerContext';
-import { IMAGES } from '@/data/images';
+import { CyberGrid } from '@/components/pixel/CyberGrid';
 import {
   ACCESSORY_LABELS,
   EFFECT_LABELS,
@@ -102,10 +102,7 @@ export default function CharacterCreator() {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-void">
-      <div className="absolute inset-0" aria-hidden>
-        <img src={IMAGES.chamber} alt="" className="pixelated h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-void/75" />
-      </div>
+      <CyberGrid />
       <PixelParticles count={20} colors={['#3ef2ff', '#b6ff3b']} />
       <CrtOverlay />
 
@@ -314,6 +311,9 @@ function Swatches({ label, colors, value, onChange }: {label: string;colors: {na
     </div>);
 
 }
+
+
+
 
 
 

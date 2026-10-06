@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { CrtOverlay } from '@/components/pixel/CrtOverlay';
 import { TypeLine } from '@/components/pixel/TypeLine';
 import { PixelParticles } from '@/components/pixel/PixelParticles';
+import { CyberGrid } from '@/components/pixel/CyberGrid';
 
 export default function CharacterInitCinematic() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function CharacterInitCinematic() {
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center bg-void overflow-hidden select-none">
+      <CyberGrid />
       <CrtOverlay sweep />
       <PixelParticles count={30} colors={['#3ef2ff', '#b6ff3b']} />
 
@@ -89,4 +91,5 @@ export default function CharacterInitCinematic() {
     </div>
   );
 }
+
 

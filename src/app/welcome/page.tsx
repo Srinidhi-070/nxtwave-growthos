@@ -7,7 +7,7 @@ import { PixelPanel } from '@/components/pixel/PixelPanel';
 import { PixelButton } from '@/components/pixel/PixelButton';
 import { CrtOverlay } from '@/components/pixel/CrtOverlay';
 import { PixelParticles } from '@/components/pixel/PixelParticles';
-import { IMAGES } from '@/data/images';
+import { CyberGrid } from '@/components/pixel/CyberGrid';
 import { usePlayer } from '@/contexts/PlayerContext';
 
 export default function WelcomePage() {
@@ -30,15 +30,7 @@ export default function WelcomePage() {
   return (
     <div className="relative min-h-screen flex flex-col bg-void overflow-hidden select-none">
       <div className="fixed inset-0 z-0 pointer-events-none bg-void">
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.3 }}
-          transition={{ duration: 2 }}
-          className="absolute inset-0"
-        >
-          <img src={IMAGES.city} alt="GrowthOS City" className="h-full w-full object-cover pixelated mix-blend-screen" />
-          <div className="absolute inset-0 bg-gradient-to-b from-void via-void/80 to-void" />
-        </motion.div>
+        <CyberGrid />
         <PixelParticles count={20} colors={['#b6ff3b']} />
         <CrtOverlay />
       </div>
@@ -123,6 +115,7 @@ export default function WelcomePage() {
     </div>
   );
 }
+
 
 
 
