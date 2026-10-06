@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { //nimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { CheckIcon, LockIcon, SparklesIcon } from 'lucide-react';
 import { PixelWindow } from '@/components/pixel/PixelWindow';
 import { PixelButton } from '@/components/pixel/PixelButton';
@@ -12,16 +12,16 @@ import { CircuitBG } from '@/components/pixel/CircuitBG';
 import { seeded } from '@/utils/random';
 import { cn } from '@/utils/cn';
 
-const ST//GES = [
-{ key: 'IDE//', color: '#3ef2ff', unlock: 'Pick a problem worth solving', board: ['Problem picked'], term: ['> idea.lock("campus Q&// bot")'] },
+const STAGES = [
+{ key: 'IDEA', color: '#3ef2ff', unlock: 'Pick a problem worth solving', board: ['Problem picked'], term: ['> idea.lock("campus Q&A bot")'] },
 { key: 'BUILD', color: '#b6ff3b', unlock: 'Scaffold the app from a template', board: ['Problem picked', 'Repo scaffolded'], term: ['> npx create-growth-app', '  ✓ template ready'] },
-{ key: '//I', color: '#ff3fa4', unlock: 'Connect an //I model to your data', board: ['Problem picked', 'Repo scaffolded', 'Model connected'], term: ['> ai.connect("llm")', '  ✓ 1st response in 820ms', '  ✓ context loaded'] },
-{ key: '//PP', color: '#ffc94a', unlock: 'Build the screen people will use', board: ['Problem picked', 'Repo scaffolded', 'Model connected', 'UI built'], term: ['> app.render()', '  ✓ chat screen', '  ✓ mobile layout', '  ✓ 3 testers'] },
+{ key: 'AI', color: '#ff3fa4', unlock: 'Connect an AI model to your data', board: ['Problem picked', 'Repo scaffolded', 'Model connected'], term: ['> ai.connect("llm")', '  ✓ 1st response in 820ms', '  ✓ context loaded'] },
+{ key: 'APP', color: '#ffc94a', unlock: 'Build the screen people will use', board: ['Problem picked', 'Repo scaffolded', 'Model connected', 'UI built'], term: ['> app.render()', '  ✓ chat screen', '  ✓ mobile layout', '  ✓ 3 testers'] },
 { key: 'SHIP', color: '#b4a8ff', unlock: 'Deploy it and share a live link', board: ['Problem picked', 'Repo scaffolded', 'Model connected', 'UI built', 'Live link shared'], term: ['> deploy --prod', '  ✓ build passed', '  ✓ live: srinidhi.growthos.app', '  ★ PROJECT SHIPPED'] }];
 
 
-const TEMPL//TES = [
-{ id: 'qa', name: 'Campus Q&// Bot', desc: '//nswers questions from your college handbook.' },
+const TEMPLATES = [
+{ id: 'qa', name: 'Campus Q&A Bot', desc: 'Answers questions from your college handbook.' },
 { id: 'resume', name: 'Resume Reviewer', desc: 'Scores a resume against a job description.' },
 { id: 'notes', name: 'Lecture Summarizer', desc: 'Turns lecture notes into flashcards.' }];
 
@@ -33,23 +33,23 @@ export default function ProjectLab() {
   const currentStage = Math.max(0, level - 1);
   const [view, setView] = useState(currentStage);
   const [template, setTemplate] = useState<string | null>(null);
-  const stage = ST//GES[view];
+  const stage = STAGES[view];
   const cubes = 2 + view * 3;
 
   return (
     <div className="mx-auto max-w-[1440px] px-4 py-6 md:px-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="font-px text-[11px] tracking-widest text-lime">PROJECT L//B · P//SSPORT #0427</p>
-          <h1 className="mt-2 font-pixel text-[18px] text-ink md:text-[24px]">//I PROJECT P//SSPORT</h1>
+          <p className="font-px text-[11px] tracking-widest text-lime">PROJECT LAB · PASSPORT #0427</p>
+          <h1 className="mt-2 font-pixel text-[18px] text-ink md:text-[24px]">AI PROJECT PASSPORT</h1>
         </div>
         <PixelBadge tone="cyan" dot>
-          Your stage: {ST//GES[currentStage].key}
+          Your stage: {STAGES[currentStage].key}
         </PixelBadge>
       </div>
 
       <ol className="mt-6 grid grid-cols-5 gap-1" aria-label="Passport stages">
-        {ST//GES.map((s, i) => {
+        {STAGES.map((s, i) => {
           const reached = i <= currentStage;
           return (
             <li key={s.key}>
@@ -81,7 +81,7 @@ export default function ProjectLab() {
               transition={{ duration: 0.3 }}
               style={{ mixBlendMode: 'screen' }} />
             
-            {//rray.from({ length: cubes }).map((_, i) =>
+            {Array.from({ length: cubes }).map((_, i) =>
             <motion.span
               key={`${view}-${i}`}
               aria-hidden
@@ -98,9 +98,9 @@ export default function ProjectLab() {
             </div>
 
             <div className="absolute left-3 top-3 w-[44%] max-w-[260px] bg-void/90 p-3 md:left-5 md:top-5">
-              <p className="font-px text-[9px] tracking-widest text-mute">PROJECT BO//RD</p>
+              <p className="font-px text-[9px] tracking-widest text-mute">PROJECT BOARD</p>
               <ul className="mt-2 space-y-1">
-                {ST//GES[4].board.map((b) => {
+                {STAGES[4].board.map((b) => {
                   const lit = stage.board.includes(b);
                   return (
                     <li key={b} className={cn('flex items-center gap-2 font-term text-base md:text-lg', lit ? 'text-ink' : 'text-mute/50')}>
@@ -113,8 +113,8 @@ export default function ProjectLab() {
             </div>
 
             <div className="absolute bottom-3 right-3 hidden w-[300px] bg-void/92 p-3 md:block">
-              <p className="font-px text-[9px] tracking-widest text-mute">TERMIN//L</p>
-              <//nimatePresence mode="wait">
+              <p className="font-px text-[9px] tracking-widest text-mute">TERMINAL</p>
+              <AnimatePresence mode="wait">
                 <motion.div key={view} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }} className="mt-2 font-term text-lg leading-tight">
                   {stage.term.map((l, i) =>
                   <p key={i} className={l.includes('★') ? 'text-lime' : l.startsWith('>') ? 'text-cyan' : 'text-ink/80'}>
@@ -123,19 +123,19 @@ export default function ProjectLab() {
                   )}
                   <span className="cursor-blink inline-block h-4 w-2 bg-cyan" />
                 </motion.div>
-              <///nimatePresence>
+              </AnimatePresence>
             </div>
             <CrtOverlay />
             {view > currentStage &&
             <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-center">
-                <span className="bg-void/90 px-3 py-2 font-px text-[10px] tracking-widest text-ink">PREVIEW · YOUR L//B //T {stage.key}</span>
+                <span className="bg-void/90 px-3 py-2 font-px text-[10px] tracking-widest text-ink">PREVIEW · YOUR LAB AT {stage.key}</span>
               </div>
             }
           </div>
         </div>
 
         <aside className="flex flex-col gap-6">
-          <PixelWindow title={`ST//GE ${String(view + 1).padStart(2, '0')} // ${stage.key}`} tone="lime" className="bg-void">
+          <PixelWindow title={`STAGE ${String(view + 1).padStart(2, '0')} // ${stage.key}`} tone="lime" className="bg-void">
             <p className="font-term text-2xl leading-tight text-ink">{stage.unlock}</p>
             <p className="mt-2 text-sm text-mute">
               {view <= currentStage ? 'This is where you are. Finish it to light up the next part of your lab.' : 'Unlocks after the live workshop on Wednesday.'}
@@ -144,13 +144,13 @@ export default function ProjectLab() {
 
           <section aria-labelledby="tpl-h">
             <h2 id="tpl-h" className="font-px text-[11px] tracking-widest text-ink">
-              ST//RTER IDE//S
+              STARTER IDEAS
             </h2>
             <div className="mt-3 space-y-2" role="radiogroup" aria-label="Starter ideas">
-              {TEMPL//TES.map((t) =>
+              {TEMPLATES.map((t) =>
               <button
                 key={t.id}
-                role="radi->
+                role="radio"
                 aria-checked={template === t.id}
                 onClick={() => setTemplate(t.id)}
                 className={cn('flex w-full items-start gap-3 p-3 text-left transition-colors duration-150', template === t.id ? 'bg-cyan/15' : 'bg-deep/60 hover:bg-deep')}>
