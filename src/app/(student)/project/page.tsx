@@ -151,41 +151,127 @@ export default function ProjectLab() {
             </p>
           </PixelWindow>
 
-          <section aria-labelledby="tpl-h">
-            <h2 id="tpl-h" className="font-px text-[11px] tracking-widest text-ink">
-              STARTER IDEAS
-            </h2>
-            <div className="mt-3 space-y-2" role="radiogroup" aria-label="Starter ideas">
-              {TEMPLATES.map((t) =>
-              <button
-                key={t.id}
-                role="radio"
-                aria-checked={template === t.id}
-                onClick={() => setTemplate(t.id)}
-                className={cn('flex w-full items-start gap-3 p-3 text-left transition-colors duration-150', template === t.id ? 'bg-cyan/15' : 'bg-deep/60 hover:bg-deep')}>
-                
-                  <span className={cn('mt-1 h-3 w-3 shrink-0', template === t.id ? 'bg-cyan' : 'bg-line')} />
-                  <span>
-                    <span className="block font-px text-[11px] tracking-wider text-ink">{t.name.toUpperCase()}</span>
-                    <span className="mt-1 block text-sm text-mute">{t.desc}</span>
-                  </span>
-                </button>
-              )}
-            </div>
-            <PixelButton 
-      className="mt-4 w-full" 
-      disabled={!template || isWorking} 
-      icon={isWorking ? <LockIcon className="h-4 w-4 animate-pulse" /> : <SparklesIcon className="h-4 w-4" />}
-      onClick={() => {
-        setIsWorking(true);
-        setTimeout(() => {
-          setIsWorking(false);
-          if (view < 4) setView(view + 1);
-        }, 1200);
-      }}
-    >
-      {isWorking ? 'Processing...' : template ? 'Lock in idea' : 'Pick an idea'}
-    </PixelButton>
+                    <section>
+            {view === 0 && (
+              <>
+                <h2 className="font-px text-[11px] tracking-widest text-ink">STARTER IDEAS</h2>
+                <div className="mt-3 space-y-2" role="radiogroup">
+                  {TEMPLATES.map((t) =>
+                    <button
+                      key={t.id}
+                      role="radio"
+                      aria-checked={template === t.id}
+                      onClick={() => setTemplate(t.id)}
+                      className={cn('flex w-full items-start gap-3 p-3 text-left transition-colors duration-150', template === t.id ? 'bg-cyan/15' : 'bg-deep/60 hover:bg-deep')}>
+                      <span className={cn('mt-1 h-3 w-3 shrink-0', template === t.id ? 'bg-cyan' : 'bg-line')} />
+                      <span>
+                        <span className="block font-px text-[11px] tracking-wider text-ink">{t.name.toUpperCase()}</span>
+                        <span className="mt-1 block text-sm text-mute">{t.desc}</span>
+                      </span>
+                    </button>
+                  )}
+                </div>
+                <PixelButton 
+                  className="mt-4 w-full" 
+                  disabled={!template || isWorking} 
+                  icon={isWorking ? <LockIcon className="h-4 w-4 animate-pulse" /> : <SparklesIcon className="h-4 w-4" />}
+                  onClick={() => {
+                    setIsWorking(true);
+                    setTimeout(() => { setIsWorking(false); setView(1); }, 1200);
+                  }}>
+                  {isWorking ? 'Processing...' : template ? 'Lock in idea' : 'Pick an idea'}
+                </PixelButton>
+              </>
+            )}
+
+            {view === 1 && (
+              <>
+                <h2 className="font-px text-[11px] tracking-widest text-ink">WORKSPACE CONFIG</h2>
+                <div className="mt-3 bg-deep/60 p-4 text-sm text-mute">
+                  Initialize your secure local environment and inject GrowthOS base dependencies.
+                </div>
+                <PixelButton 
+                  className="mt-4 w-full" 
+                  disabled={isWorking} 
+                  icon={isWorking ? <LockIcon className="h-4 w-4 animate-pulse" /> : <SparklesIcon className="h-4 w-4" />}
+                  onClick={() => {
+                    setIsWorking(true);
+                    setTimeout(() => { setIsWorking(false); setView(2); }, 1200);
+                  }}>
+                  {isWorking ? 'Scaffolding...' : 'Initialize Repo'}
+                </PixelButton>
+              </>
+            )}
+
+            {view === 2 && (
+              <>
+                <h2 className="font-px text-[11px] tracking-widest text-ink">MODEL SELECTION</h2>
+                <div className="mt-3 space-y-2">
+                  <div className="flex w-full items-start gap-3 bg-cyan/15 p-3 text-left">
+                    <span className="mt-1 h-3 w-3 shrink-0 bg-cyan" />
+                    <span>
+                      <span className="block font-px text-[11px] tracking-wider text-ink">GPT-4o (INTEGRATED)</span>
+                      <span className="mt-1 block text-sm text-mute">Default high-speed reasoning model.</span>
+                    </span>
+                  </div>
+                </div>
+                <PixelButton 
+                  className="mt-4 w-full" 
+                  disabled={isWorking} 
+                  icon={isWorking ? <LockIcon className="h-4 w-4 animate-pulse" /> : <SparklesIcon className="h-4 w-4" />}
+                  onClick={() => {
+                    setIsWorking(true);
+                    setTimeout(() => { setIsWorking(false); setView(3); }, 1200);
+                  }}>
+                  {isWorking ? 'Connecting...' : 'Connect Model'}
+                </PixelButton>
+              </>
+            )}
+
+            {view === 3 && (
+              <>
+                <h2 className="font-px text-[11px] tracking-widest text-ink">INTERFACE BUILDER</h2>
+                <div className="mt-3 bg-deep/60 p-4 text-sm text-mute">
+                  Generate the React components and route logic required for user interaction.
+                </div>
+                <PixelButton 
+                  className="mt-4 w-full" 
+                  disabled={isWorking} 
+                  icon={isWorking ? <LockIcon className="h-4 w-4 animate-pulse" /> : <SparklesIcon className="h-4 w-4" />}
+                  onClick={() => {
+                    setIsWorking(true);
+                    setTimeout(() => { setIsWorking(false); setView(4); }, 1200);
+                  }}>
+                  {isWorking ? 'Building...' : 'Render Interface'}
+                </PixelButton>
+              </>
+            )}
+
+            {view === 4 && (
+              <>
+                <h2 className="font-px text-[11px] tracking-widest text-ink">DEPLOYMENT TARGET</h2>
+                <div className="mt-3 space-y-2">
+                  <div className="flex w-full items-start gap-3 bg-cyan/15 p-3 text-left">
+                    <span className="mt-1 h-3 w-3 shrink-0 bg-cyan" />
+                    <span>
+                      <span className="block font-px text-[11px] tracking-wider text-ink">VERCEL EDGE</span>
+                      <span className="mt-1 block text-sm text-mute">Global edge network deployment.</span>
+                    </span>
+                  </div>
+                </div>
+                <PixelButton 
+                  className="mt-4 w-full" 
+                  disabled={isWorking} 
+                  icon={isWorking ? <LockIcon className="h-4 w-4 animate-pulse" /> : <SparklesIcon className="h-4 w-4" />}
+                  onClick={() => {
+                    setIsWorking(true);
+                    setTimeout(() => { setIsWorking(false); alert('Project officially shipped! XP Awarded!'); }, 1500);
+                  }}>
+                  {isWorking ? 'Deploying...' : 'Deploy to Web'}
+                </PixelButton>
+              </>
+            )}
+          </section>
           </section>
         </aside>
       </div>
