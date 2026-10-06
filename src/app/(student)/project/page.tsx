@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { //nimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { CheckIcon, LockIcon, SparklesIcon } from 'lucide-react';
 import { PixelWindow } from '@/components/pixel/PixelWindow';
 import { PixelButton } from '@/components/pixel/PixelButton';
@@ -14,10 +14,10 @@ import { cn } from '@/utils/cn';
 
 const STAGES = [
 { key: 'IDEA', color: '#3ef2ff', unlock: 'Pick a problem worth solving', board: ['Problem picked'], term: ['> idea.lock("campus Q&A bot")'] },
-{ key: 'BUILD', color: '#b6ff3b', unlock: 'Scaffold the app from a template', board: ['Problem picked', 'Repo scaffolded'], term: ['> npx create-growth-app', '  ✓ template ready'] },
-{ key: 'AI', color: '#ff3fa4', unlock: 'Connect an AI model to your data', board: ['Problem picked', 'Repo scaffolded', 'Model connected'], term: ['> ai.connect("llm")', '  ✓ 1st response in 820ms', '  ✓ context loaded'] },
-{ key: 'APP', color: '#ffc94a', unlock: 'Build the screen people will use', board: ['Problem picked', 'Repo scaffolded', 'Model connected', 'UI built'], term: ['> app.render()', '  ✓ chat screen', '  ✓ mobile layout', '  ✓ 3 testers'] },
-{ key: 'SHIP', color: '#b4a8ff', unlock: 'Deploy it and share a live link', board: ['Problem picked', 'Repo scaffolded', 'Model connected', 'UI built', 'Live link shared'], term: ['> deploy --prod', '  ✓ build passed', '  ✓ live: srinidhi.growthos.app', '  ★ PROJECT SHIPPED'] }];
+{ key: 'BUILD', color: '#b6ff3b', unlock: 'Scaffold the app from a template', board: ['Problem picked', 'Repo scaffolded'], term: ['> npx create-growth-app', '  -> template ready'] },
+{ key: 'AI', color: '#ff3fa4', unlock: 'Connect an AI model to your data', board: ['Problem picked', 'Repo scaffolded', 'Model connected'], term: ['> ai.connect("llm")', '  -> 1st response in 820ms', '  -> context loaded'] },
+{ key: 'APP', color: '#ffc94a', unlock: 'Build the screen people will use', board: ['Problem picked', 'Repo scaffolded', 'Model connected', 'UI built'], term: ['> app.render()', '  -> chat screen', '  -> mobile layout', '  -> 3 testers'] },
+{ key: 'SHIP', color: '#b4a8ff', unlock: 'Deploy it and share a live link', board: ['Problem picked', 'Repo scaffolded', 'Model connected', 'UI built', 'Live link shared'], term: ['> deploy --prod', '  -> build passed', '  -> live: srinidhi.growthos.app', '  => PROJECT SHIPPED'] }];
 
 
 const TEMPLATES = [
@@ -40,7 +40,7 @@ export default function ProjectLab() {
     <div className="mx-auto max-w-[1440px] px-4 py-6 md:px-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="font-px text-[11px] tracking-widest text-lime">PROJECT LAB · PASSPORT #0427</p>
+          <p className="font-px text-[11px] tracking-widest text-lime">PROJECT LAB // PASSPORT #0427</p>
           <h1 className="mt-2 font-pixel text-[18px] text-ink md:text-[24px]">AI PROJECT PASSPORT</h1>
         </div>
         <PixelBadge tone="cyan" dot>
@@ -128,7 +128,7 @@ export default function ProjectLab() {
             <CrtOverlay />
             {view > currentStage &&
             <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-center">
-                <span className="bg-void/90 px-3 py-2 font-px text-[10px] tracking-widest text-ink">PREVIEW · YOUR LAB AT {stage.key}</span>
+                <span className="bg-void/90 px-3 py-2 font-px text-[10px] tracking-widest text-ink">PREVIEW // YOUR LAB AT {stage.key}</span>
               </div>
             }
           </div>
@@ -150,7 +150,7 @@ export default function ProjectLab() {
               {TEMPLATES.map((t) =>
               <button
                 key={t.id}
-                role="radio"
+                role="radi->
                 aria-checked={template === t.id}
                 onClick={() => setTemplate(t.id)}
                 className={cn('flex w-full items-start gap-3 p-3 text-left transition-colors duration-150', template === t.id ? 'bg-cyan/15' : 'bg-deep/60 hover:bg-deep')}>
