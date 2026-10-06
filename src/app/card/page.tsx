@@ -48,7 +48,7 @@ export default function ShareCardPage() {
           >
             {/* Environment BG */}
             <div className="absolute inset-0 z-0">
-              <img src={IMAGES.chamber} className="w-full h-full object-cover pixelated opacity-40 mix-blend-screen" alt="BG" />
+              <img src={IMAGES.city} className="w-full h-full object-cover pixelated opacity-40 mix-blend-screen" alt="BG" />
               <div className="absolute inset-0 bg-gradient-to-t from-void via-void/60 to-transparent" />
             </div>
 
