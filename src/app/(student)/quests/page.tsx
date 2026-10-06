@@ -121,7 +121,7 @@ export default function QuestWorld() {
               </div>
             )}
             {activeNode && (
-              <div className="pointer-events-none absolute -translate-x-1/2 -translate-y-[50px]" style={{ left: `${activeNode.x }%`, top: `${activeNode.y }%` }}>
+              <div className="pointer-events-none absolute -translate-x-1/2 -translate-y-[75px]" style={{ left: `${activeNode.x }%`, top: `${activeNode.y }%` }}>
                 <PixelCharacter config={character} size={28} />
               </div>
             )}
@@ -193,6 +193,7 @@ export default function QuestWorld() {
     </div>
   );
 }
+
 
 
 
