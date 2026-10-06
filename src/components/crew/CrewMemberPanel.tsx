@@ -45,14 +45,14 @@ export function CrewMemberPanel({ member, onClose }: CrewMemberPanelProps) {
           exit={{ x: 32, opacity: 0 }}
           transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}>
           
-            <div className="flex items-center justify-between border-b-2 border-line px-5 py-3">
+            <div className="shrink-0 flex items-center justify-between border-b-2 border-line px-5 py-3">
               <span className="font-px text-[10px] tracking-widest text-mute">CREW // EXPLORER FILE</span>
               <button onClick={onClose} aria-label="Close" className="p-1 text-mute transition-colors duration-150 hover:text-ink">
                 <XIcon className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="relative flex items-end gap-5 overflow-hidden bg-deep px-5 pb-5 pt-8">
+            <div className="shrink-0 relative flex items-end gap-5 overflow-hidden bg-deep px-5 pb-5 pt-8">
               <div className="grid-floor absolute inset-0 opacity-50" aria-hidden />
               <div className="relative">
                 <PixelCharacter config={member.config} size={112} label={member.name} />
@@ -67,7 +67,7 @@ export function CrewMemberPanel({ member, onClose }: CrewMemberPanelProps) {
               </div>
             </div>
 
-            <dl className="grid grid-cols-2 gap-px bg-line">
+            <dl className="shrink-0 grid grid-cols-2 gap-px bg-line">
               {[
             ['CAMPUS', member.campus],
             ['BRANCH', member.branch],
@@ -81,7 +81,7 @@ export function CrewMemberPanel({ member, onClose }: CrewMemberPanelProps) {
             )}
             </dl>
 
-            <section className="px-5 py-6" aria-labelledby="journey-h">
+            <section className="shrink-0 px-5 py-6" aria-labelledby="journey-h">
               <h3 id="journey-h" className="font-px text-[11px] tracking-widest text-ink">
                 JOURNEY
               </h3>
@@ -116,7 +116,7 @@ export function CrewMemberPanel({ member, onClose }: CrewMemberPanelProps) {
               </ol>
             </section>
 
-            <div className="mt-auto border-t-2 border-line p-5">
+            <div className="mt-auto shrink-0 border-t-2 border-line p-5 pb-8">
               {member.stage < 3 ?
             <>
                   <p className="font-term text-lg text-mute">A nudge from you sends {member.name} a quest reminder and +10 XP when they act on it.</p>
