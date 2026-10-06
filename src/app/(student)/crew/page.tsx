@@ -60,7 +60,7 @@ export default function MyCrew() {
 
       <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_360px]">
         <PixelPanel className="overflow-x-auto bg-void p-0">
-          <div className="relative h-[620px] min-w-[760px] overflow-hidden">
+          <div className="relative h-full min-h-[620px] min-w-[760px] overflow-hidden">
             <div className="dot-grid absolute inset-0" aria-hidden />
             <DataStreamBG />
             <PixelParticles count={16} colors={['#ff3fa4', '#3ef2ff']} rise={30} />
@@ -222,6 +222,7 @@ function CrewNode({ member, size, onClick, ring }: {member: CrewMember;size: num
     </button>);
 
 }
+
 
 
 
