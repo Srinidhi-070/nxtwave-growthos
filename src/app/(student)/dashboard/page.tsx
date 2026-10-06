@@ -11,7 +11,7 @@ import { PixelParticles } from '@/components/pixel/PixelParticles';
 import { CrtOverlay } from '@/components/pixel/CrtOverlay';
 import { usePlayer } from '@/contexts/PlayerContext';
 import { pad2, useCountdown } from '@/hooks/useCountdown';
-import { CyberGrid } from '@/components/pixel/CyberGrid';
+
 import { CREW } from '@/data/crew';
 
 const SIGNALS = [
@@ -30,15 +30,15 @@ export default function StudentHome() {
       <div className="relative rounded-sm overflow-hidden border-2 border-line bg-void min-h-[500px] flex flex-col md:flex-row">
         {/* Background Image Layer */}
         <div className="absolute inset-0 z-0">
-          <CyberGrid />
+          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(to right, #3ef2ff 1px, transparent 1px), linear-gradient(to bottom, #3ef2ff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
           <div className="absolute inset-0 bg-void/40" />
           <CrtOverlay />
-          <PixelParticles count={15} colors={['#3ef2ff', '#b6ff3b']} rise={40} />
+          <PixelParticles count={50} colors={['#3ef2ff', '#b6ff3b']} rise={40} />
         </div>
 
         {/* Character Layer - Centered */}
-        <div className="absolute inset-0 z-10 flex items-end justify-center pb-[5%] pointer-events-none">
-          <PixelCharacter config={character} size={140} label={explorerName} />
+        <div className="absolute inset-0 z-10 flex items-center justify-center pt-[10%] pointer-events-none">
+          <PixelCharacter config={character} size={192} label={explorerName} />
         </div>
 
         {/* UI Overlay - Responsive Grid Layout */}
@@ -155,6 +155,9 @@ export default function StudentHome() {
     </div>
   );
 }
+
+
+
 
 
 
