@@ -6,7 +6,7 @@ import { PixelPanel } from '@/components/pixel/PixelPanel';
 import { CrtOverlay } from '@/components/pixel/CrtOverlay';
 import { PixelParticles } from '@/components/pixel/PixelParticles';
 import { PixelBadge } from '@/components/pixel/PixelBadge';
-import { CyberGrid } from '@/components/pixel/CyberGrid';
+import { RadarSweepBG } from '@/components/pixel/RadarSweepBG';
 import Link from 'next/link';
 
 const CAMPUS_LOCATIONS = [
@@ -23,7 +23,7 @@ export default function CampusWorld() {
     <div className="relative min-h-[calc(100vh-64px)] bg-void overflow-hidden select-none">
       {/* BACKGROUND */}
       <div className="absolute inset-0 z-0">
-        <CyberGrid />
+        <RadarSweepBG />
         <CrtOverlay sweep />
         <PixelParticles count={30} colors={['#3ef2ff', '#b6ff3b']} rise={30} />
       </div>
@@ -69,5 +69,6 @@ export default function CampusWorld() {
     </div>
   );
 }
+
 
 

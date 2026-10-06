@@ -5,6 +5,7 @@ import { PixelPanel } from '@/components/pixel/PixelPanel';
 import { PixelButton } from '@/components/pixel/PixelButton';
 import { PixelCharacter } from '@/components/pixel/PixelCharacter';
 import { PixelParticles } from '@/components/pixel/PixelParticles';
+import { DataStreamBG } from '@/components/pixel/DataStreamBG';
 import { CrewMemberPanel } from '@/components/crew/CrewMemberPanel';
 import { usePlayer } from '@/contexts/PlayerContext';
 import { CREW, CREW_MILESTONES, INVITER, type CrewMember } from '@/data/crew';
@@ -61,6 +62,7 @@ export default function MyCrew() {
         <PixelPanel className="overflow-x-auto bg-void p-0">
           <div className="relative h-[620px] min-w-[760px] overflow-hidden">
             <div className="dot-grid absolute inset-0" aria-hidden />
+            <DataStreamBG />
             <PixelParticles count={16} colors={['#ff3fa4', '#3ef2ff']} rise={30} />
             <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
               {edges.map((e) => {
@@ -220,6 +222,7 @@ function CrewNode({ member, size, onClick, ring }: {member: CrewMember;size: num
     </button>);
 
 }
+
 
 
 

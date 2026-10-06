@@ -10,7 +10,7 @@ import { PixelQuestNode } from '@/components/pixel/PixelQuestNode';
 import { PixelParticles } from '@/components/pixel/PixelParticles';
 import { CrtOverlay } from '@/components/pixel/CrtOverlay';
 import { usePlayer } from '@/contexts/PlayerContext';
-import { CyberGrid } from '@/components/pixel/CyberGrid';
+import { StarfieldBG } from '@/components/pixel/StarfieldBG';
 import { QUESTS } from '@/data/quests';
 import { useRouter } from 'next/navigation';
 
@@ -90,7 +90,7 @@ export default function QuestWorld() {
       <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_340px]">
         <div className="px-frame overflow-x-auto bg-void [--b:#3b2f8f]">
           <div className="relative aspect-[16/9] min-w-[960px]">
-            <CyberGrid />
+            <StarfieldBG />
             <div className="absolute inset-0 bg-void/35" />
             <PixelParticles count={18} rise={30} />
             <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
@@ -193,6 +193,7 @@ export default function QuestWorld() {
     </div>
   );
 }
+
 
 
 

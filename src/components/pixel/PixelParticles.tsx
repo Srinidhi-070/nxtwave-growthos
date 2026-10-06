@@ -21,7 +21,7 @@ export function PixelParticles({ count = 15, colors = ['#3ef2ff'], rise = 500 }:
       c: colors[i % colors.length]
     }));
     setParticles(p);
-  }, [count, colors]);
+  }, [count, colors.join(',')]);
 
   if (!particles.length) return null;
 
@@ -54,4 +54,5 @@ export function PixelParticles({ count = 15, colors = ['#3ef2ff'], rise = 500 }:
     </div>
   );
 }
+
 

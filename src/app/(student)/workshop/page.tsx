@@ -8,7 +8,7 @@ import { PixelParticles } from '@/components/pixel/PixelParticles';
 import { CrtOverlay } from '@/components/pixel/CrtOverlay';
 import { TypeLine } from '@/components/pixel/TypeLine';
 import { pad2, useCountdown } from '@/hooks/useCountdown';
-import { CyberGrid } from '@/components/pixel/CyberGrid';
+import { DataStreamBG } from '@/components/pixel/DataStreamBG';
 
 const READY = [
   { label: 'Seat reserved', done: true },
@@ -38,7 +38,7 @@ export default function WorkshopCountdown() {
           transition={{ duration: 1.5, ease: 'easeOut' }}
           className="absolute inset-0"
         >
-          <CyberGrid />
+          <DataStreamBG />
         </motion.div>
         <PixelParticles />
         <CrtOverlay />
@@ -222,6 +222,7 @@ export default function WorkshopCountdown() {
     </div>
   );
 }
+
 
 
 
