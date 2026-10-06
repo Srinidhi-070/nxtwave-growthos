@@ -11,7 +11,7 @@ import { PixelParticles } from '@/components/pixel/PixelParticles';
 import { CrtOverlay } from '@/components/pixel/CrtOverlay';
 import { usePlayer } from '@/contexts/PlayerContext';
 import { pad2, useCountdown } from '@/hooks/useCountdown';
-import { IMAGES } from '@/data/images';
+import { CyberGrid } from '@/components/pixel/CyberGrid';
 import { CREW } from '@/data/crew';
 
 const SIGNALS = [
@@ -30,7 +30,7 @@ export default function StudentHome() {
       <div className="relative rounded-sm overflow-hidden border-2 border-line bg-void min-h-[500px] flex flex-col md:flex-row">
         {/* Background Image Layer */}
         <div className="absolute inset-0 z-0">
-          <img src={IMAGES.lab} alt="AI Laboratory" className="pixelated w-full h-full object-cover opacity-60" />
+          <CyberGrid />
           <div className="absolute inset-0 bg-void/40" />
           <CrtOverlay />
           <PixelParticles count={15} colors={['#3ef2ff', '#b6ff3b']} rise={40} />
@@ -155,6 +155,7 @@ export default function StudentHome() {
     </div>
   );
 }
+
 
 
 

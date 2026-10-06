@@ -8,7 +8,7 @@ import { PixelBadge } from '@/components/pixel/PixelBadge';
 import { PixelCharacter } from '@/components/pixel/PixelCharacter';
 import { CrtOverlay } from '@/components/pixel/CrtOverlay';
 import { usePlayer } from '@/contexts/PlayerContext';
-import { IMAGES } from '@/data/images';
+import { CyberGrid } from '@/components/pixel/CyberGrid';
 import { seeded } from '@/utils/random';
 import { cn } from '@/utils/cn';
 
@@ -72,7 +72,7 @@ export default function ProjectLab() {
       <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_360px]">
         <div className="px-frame relative overflow-hidden bg-void [--b:#3b2f8f]">
           <div className="relative aspect-[16/9]">
-            <img src={IMAGES.lab} alt="Project laboratory" className="pixelated absolute inset-0 h-full w-full object-cover" />
+            <CyberGrid />
             <motion.div className="absolute inset-0 bg-void" animate={{ opacity: 0.62 - view * 0.12 }} transition={{ duration: 0.3 }} />
             <motion.div
               aria-hidden
@@ -172,5 +172,7 @@ export default function ProjectLab() {
     </div>);
 
 }
+
+
 
 

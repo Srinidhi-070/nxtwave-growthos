@@ -8,7 +8,7 @@ import { PixelParticles } from '@/components/pixel/PixelParticles';
 import { CrtOverlay } from '@/components/pixel/CrtOverlay';
 import { TypeLine } from '@/components/pixel/TypeLine';
 import { pad2, useCountdown } from '@/hooks/useCountdown';
-import { IMAGES } from '@/data/images';
+import { CyberGrid } from '@/components/pixel/CyberGrid';
 
 const READY = [
   { label: 'Seat reserved', done: true },
@@ -38,8 +38,7 @@ export default function WorkshopCountdown() {
           transition={{ duration: 1.5, ease: 'easeOut' }}
           className="absolute inset-0"
         >
-          <img src={IMAGES.campus} alt="Campus Hub" className="pixelated h-full w-full object-cover mix-blend-screen opacity-50" />
-          <div className="absolute inset-0 bg-gradient-to-t from-void via-void/60 to-transparent" />
+          <CyberGrid />
         </motion.div>
         <PixelParticles />
         <CrtOverlay />
@@ -223,4 +222,7 @@ export default function WorkshopCountdown() {
     </div>
   );
 }
+
+
+
 

@@ -6,7 +6,7 @@ import { PixelPanel } from '@/components/pixel/PixelPanel';
 import { PixelButton } from '@/components/pixel/PixelButton';
 import { PixelCharacter } from '@/components/pixel/PixelCharacter';
 import { usePlayer } from '@/contexts/PlayerContext';
-import { IMAGES } from '@/data/images';
+import { CyberGrid } from '@/components/pixel/CyberGrid';
 import Link from 'next/link';
 
 export default function ProfilePage() {
@@ -36,9 +36,7 @@ export default function ProfilePage() {
             className="md:col-span-5"
           >
             <PixelPanel tone="cyan" className="bg-void/90 p-6 flex flex-col items-center border-t-4 border-t-cyan relative overflow-hidden">
-              <div className="absolute inset-0 z-0 opacity-20">
-                <img src={IMAGES.chamber} alt="Chamber bg" className="w-full h-full object-cover pixelated mix-blend-screen" />
-              </div>
+              <div className="absolute inset-0 z-0 opacity-20"><CyberGrid /></div>
               
               <div className="relative z-10 w-full flex justify-between items-start mb-8">
                 <span className="bg-lime px-3 py-1 font-pixel text-[12px] text-void shadow-[0_0_10px_rgba(182,255,59,0.5)]">
@@ -114,3 +112,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+
