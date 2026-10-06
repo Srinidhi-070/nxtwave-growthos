@@ -13,6 +13,8 @@ import { usePlayer } from '@/contexts/PlayerContext';
 import { pad2, useCountdown } from '@/hooks/useCountdown';
 import { IMAGES } from '@/data/images';
 import { CREW } from '@/data/crew';
+import Link from 'next/link';
+import { Share2Icon, ZapIcon, UsersIcon } from 'lucide-react';
 
 const SIGNALS = [
   { who: 'MEERA', what: 'is now WORKSHOP READY', when: '12m', color: '#b6ff3b' },
@@ -155,4 +157,5 @@ export default function StudentHome() {
     </div>
   );
 }
+
 
