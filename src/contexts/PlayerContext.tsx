@@ -1,6 +1,7 @@
 'use client';
 import React, { createContext, useCallback, useContext, useMemo, useState, useEffect } from 'react';
 import type { CharacterConfig } from '../types/character';
+import { audio } from '../utils/audio';
 
 export interface PlayerProfile {
   name: string;
