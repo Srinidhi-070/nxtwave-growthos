@@ -272,7 +272,6 @@ export default function ProjectLab() {
               </>
             )}
           </section>
-          </section>
         </aside>
       </div>
     </div>);
