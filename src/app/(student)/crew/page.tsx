@@ -108,7 +108,7 @@ export default function MyCrew() {
               </NodeAt>
             )}
 
-            <div className="absolute bottom-4 left-4 flex flex-wrap gap-4 bg-void/85 px-3 py-2 font-px text-[9px] tracking-widest">
+            <div className="absolute bottom-0 left-0 flex flex-wrap gap-5 bg-void px-5 py-3 border-t-[3px] border-r-[3px] border-[#3b2f8f] font-px text-[9px] tracking-widest">
               <span className="flex items-center gap-1.5 text-cyan"><span className="h-2 w-2 bg-cyan" />INVITER</span>
               <span className="flex items-center gap-1.5 text-lime"><span className="h-2 w-2 bg-lime" />DIRECT</span>
               <span className="flex items-center gap-1.5 text-magenta"><span className="h-2 w-2 bg-magenta" />2ND DEGREE</span>
@@ -222,6 +222,7 @@ function CrewNode({ member, size, onClick, ring }: {member: CrewMember;size: num
     </button>);
 
 }
+
 
 
 
