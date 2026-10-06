@@ -50,7 +50,7 @@ export async function awardXP({
   source: string;
   referenceId?: string;
   idempotencyKey: string;
-  metadata?: any;
+  metadata?: unknown;
 }) {
   // Use a transaction to ensure idempotency and calculate new total XP safely
   return await prisma.$transaction(async (tx) => {
@@ -87,7 +87,7 @@ export async function unlockAchievement({
 }: {
   userId: string;
   achievementKey: string;
-  metadata?: any;
+  metadata?: unknown;
 }) {
   try {
     const unlock = await prisma.achievementUnlock.create({
@@ -98,11 +98,13 @@ export async function unlockAchievement({
       }
     });
     return { status: 'UNLOCKED', unlock };
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Prisma unique constraint violation (P2002) means already unlocked
-    if (error.code === 'P2002') {
+    if (typeof error === 'object' && error !== null && 'code' in error && (error as any).code === 'P2002') {
       return { status: 'ALREADY_UNLOCKED' };
     }
     throw error;
   }
 }
+
+

@@ -5,7 +5,7 @@ import { DownloadIcon, ArrowLeftIcon, QrCodeIcon } from 'lucide-react';
 import { PixelPanel } from '@/components/pixel/PixelPanel';
 import { PixelButton } from '@/components/pixel/PixelButton';
 import { PixelCharacter } from '@/components/pixel/PixelCharacter';
-import { usePlayer } from '@/components/context/PlayerContext';
+import { usePlayer } from '@/contexts/PlayerContext';
 import { IMAGES } from '@/data/images';
 import Link from 'next/link';
 
@@ -113,3 +113,4 @@ export default function ShareCardPage() {
     </div>
   );
 }
+

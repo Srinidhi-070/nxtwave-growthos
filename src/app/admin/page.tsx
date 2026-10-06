@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowUpRightIcon, SparklesIcon } from 'lucide-react';
 import { OpsPageHeader, OpsPanel } from '@/components/ops/OpsPanel';
 import { TelemetryCard } from '@/components/ops/TelemetryCard';
-import { EventStream } from '@/components/admin/telemetrytream';
+import { EventStream } from '@/components/ops/EventStream';
 import { useLiveEvents } from '@/hooks/useLiveEvents';
 import { useCountUp } from '@/hooks/useCountUp';
 import { CAMPAIGN, CAMPUSES, DAILY_REGS, PROJECTED_REGS } from '@/data/ops';
@@ -140,6 +140,7 @@ export default function OpsOverview() {
     </div>);
 
 }
+
 
 
 

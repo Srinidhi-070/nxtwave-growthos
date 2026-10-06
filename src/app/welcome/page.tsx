@@ -8,10 +8,10 @@ import { PixelButton } from '@/components/pixel/PixelButton';
 import { CrtOverlay } from '@/components/pixel/CrtOverlay';
 import { PixelParticles } from '@/components/pixel/PixelParticles';
 import { IMAGES } from '@/data/images';
-import { usePlayer } from '@/components/context/PlayerContext';
+import { usePlayer } from '@/contexts/PlayerContext';
 
 export default function WelcomePage() {
-  const { player } = usePlayer();
+  const { explorerName } = usePlayer();
   const [step, setStep] = useState(0);
 
   // Auto-progress through the welcome cinematic
@@ -59,7 +59,7 @@ export default function WelcomePage() {
               className="text-center"
             >
               <h1 className="font-pixel text-[32px] md:text-[48px] text-lime text-glow-lime mb-4">WELCOME TO GROWTHOS</h1>
-              <p className="font-term text-xl text-mute tracking-widest uppercase">EXPLORER {player?.name || 'INITIALIZED'}</p>
+              <p className="font-term text-xl text-mute tracking-widest uppercase">EXPLORER {explorerName || 'INITIALIZED'}</p>
             </motion.div>
           )}
 
@@ -122,3 +122,5 @@ export default function WelcomePage() {
     </div>
   );
 }
+
+

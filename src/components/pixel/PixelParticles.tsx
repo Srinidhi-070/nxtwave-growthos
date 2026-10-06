@@ -2,19 +2,26 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
-export function PixelParticles() {
-  const [particles, setParticles] = useState<{ id: number; x: number; y: number; s: number; d: number }[]>([]);
+interface PixelParticlesProps {
+  count?: number;
+  colors?: string[];
+  rise?: number;
+}
+
+export function PixelParticles({ count = 15, colors = ['#3ef2ff'], rise = 500 }: PixelParticlesProps) {
+  const [particles, setParticles] = useState<{ id: number; x: number; y: number; s: number; d: number; c: string }[]>([]);
 
   useEffect(() => {
-    const p = Array.from({ length: 15 }).map((_, i) => ({
+    const p = Array.from({ length: count }).map((_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
       s: Math.random() * 2 + 1, // Size
       d: Math.random() * 15 + 10, // Duration
+      c: colors[i % colors.length]
     }));
     setParticles(p);
-  }, []);
+  }, [count, colors]);
 
   if (!particles.length) return null;
 
@@ -23,15 +30,17 @@ export function PixelParticles() {
       {particles.map((p) => (
         <motion.div
           key={p.id}
-          className="absolute bg-cyan/60 shadow-[0_0_8px_rgba(62,242,255,0.8)]"
+          className="absolute"
           style={{
             width: p.s * 2,
             height: p.s * 2,
             left: `${p.x}%`,
             top: `${p.y}%`,
+            backgroundColor: p.c,
+            boxShadow: `0 0 8px ${p.c}CC`
           }}
           animate={{
-            y: ['0%', '-500%'],
+            y: ['0%', `-${rise}%`],
             opacity: [0, 0.8, 0],
           }}
           transition={{
