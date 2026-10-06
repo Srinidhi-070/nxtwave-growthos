@@ -4,15 +4,17 @@ import { useReducedMotion } from 'framer-motion';
 
 export function useTypewriter(text: string, speed = 26, delay = 0) {
   const reduce = useReducedMotion();
-  const [count, setCount] = useState(reduce ? text.length : 0);
+  
+  // ALWAYS initialize to 0 for SSR hydration match.
+  // We cannot read window.matchMedia during SSR, so we assume normal motion initially.
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     if (reduce) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCount(text.length);
       return;
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    
     setCount(0);
     let i = 0;
     let interval: ReturnType<typeof setInterval> | undefined;
@@ -23,6 +25,7 @@ export function useTypewriter(text: string, speed = 26, delay = 0) {
         if (i >= text.length && interval) clearInterval(interval);
       }, speed);
     }, delay);
+    
     return () => {
       clearTimeout(start);
       if (interval) clearInterval(interval);
@@ -31,4 +34,3 @@ export function useTypewriter(text: string, speed = 26, delay = 0) {
 
   return { text: text.slice(0, count), done: count >= text.length };
 }
-
