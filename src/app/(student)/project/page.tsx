@@ -158,7 +158,7 @@ export default function ProjectLab() {
               {TEMPLATES.map((t) =>
               <button
                 key={t.id}
-                role="radi->
+                role="radio"
                 aria-checked={template === t.id}
                 onClick={() => setTemplate(t.id)}
                 className={cn('flex w-full items-start gap-3 p-3 text-left transition-colors duration-150', template === t.id ? 'bg-cyan/15' : 'bg-deep/60 hover:bg-deep')}>
