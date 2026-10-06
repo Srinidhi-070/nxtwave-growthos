@@ -27,7 +27,7 @@ export default function StudentHome() {
   return (
     <div className="mx-auto max-w-[1440px] md:px-8 md:pt-6 pb-20">
       {/* Hero Environment Section */}
-      <div className="relative rounded-sm overflow-hidden border-2 border-line bg-void min-h-[500px] flex flex-col md:flex-row">
+      <div className="relative rounded-sm overflow-hidden border-2 border-line bg-void min-h-[440px] flex flex-col md:flex-row">
         {/* Background Image Layer */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(to right, #3ef2ff 1px, transparent 1px), linear-gradient(to bottom, #3ef2ff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
@@ -37,8 +37,8 @@ export default function StudentHome() {
         </div>
 
         {/* Character Layer - Centered */}
-        <div className="absolute inset-0 z-10 flex items-center justify-center pt-[10%] pointer-events-none">
-          <PixelCharacter config={character} size={192} label={explorerName} />
+        <div className="absolute inset-0 z-10 flex items-center justify-center translate-x-[8%] -translate-y-[5%] pointer-events-none">
+          <PixelCharacter config={character} size={160} label={explorerName} />
         </div>
 
         {/* UI Overlay - Responsive Grid Layout */}
@@ -46,25 +46,25 @@ export default function StudentHome() {
           
           {/* Top Left: Player Status */}
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="md:col-span-5 lg:col-span-4 pointer-events-auto">
-            <PixelPanel tone="cyan" className="bg-void/90 p-4 sm:p-5 w-full">
+            <PixelPanel tone="cyan" className="bg-void/90 p-3 sm:p-4 w-full">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="font-px text-[10px] tracking-widest text-cyan">AI EXPLORER</p>
-                  <h1 className="mt-1 font-pixel text-[16px] text-ink">{explorerName}</h1>
+                  <h1 className="mt-1 font-pixel text-[14px] text-ink">{explorerName}</h1>
                 </div>
                 <span className="bg-lime px-2 py-1 font-pixel text-[10px] text-void">LV {pad2(level)}</span>
               </div>
-              <PixelXPBar value={xp} max={xpMax} className="mt-5" />
-              <p className="mt-3 font-term text-lg text-mute">150 XP to Level 02</p>
+              <PixelXPBar value={xp} max={xpMax} className="mt-4" />
+              <p className="mt-3 font-term text-sm text-mute">150 XP to Level 02</p>
             </PixelPanel>
           </motion.div>
 
           {/* Top Right: Workshop Countdown */}
           <div className="md:col-span-7 lg:col-span-8 flex md:justify-end pointer-events-auto">
             <Link href="/workshop" className="block w-full sm:w-auto">
-              <PixelPanel tone="magenta" className="bg-void/90 p-4 transition-all hover:bg-void hover:-translate-y-0.5">
+              <PixelPanel tone="magenta" className="bg-void/90 p-3 sm:p-4 transition-all hover:bg-void hover:-translate-y-0.5">
                 <p className="font-px text-[10px] tracking-widest text-magenta">WORKSHOP</p>
-                <p className="mt-1 font-pixel text-[18px] text-ink whitespace-nowrap">
+                <p className="mt-1 font-pixel text-[15px] text-ink whitespace-nowrap">
                   {pad2(days)}D {pad2(hours)}H {pad2(minutes)}M
                 </p>
               </PixelPanel>
@@ -76,19 +76,19 @@ export default function StudentHome() {
 
           {/* Bottom Left: Current Quest */}
           <div className="md:col-span-7 lg:col-span-5 pointer-events-auto self-end">
-            <PixelPanel tone="lime" className="bg-void/90 p-4 sm:p-5 w-full">
+            <PixelPanel tone="lime" className="bg-void/90 p-3 sm:p-4 w-full">
               <div className="flex items-center justify-between">
                 <p className="font-px text-[10px] tracking-widest text-lime">CURRENT QUEST</p>
                 <span className="font-px text-[10px] text-mute">+150 XP</span>
               </div>
-              <p className="mt-2 font-pixel text-[14px] text-ink">BUILD YOUR CREW</p>
+              <p className="mt-2 font-pixel text-[13px] text-ink">BUILD YOUR CREW</p>
               <div className="mt-4 flex gap-1.5 w-full max-w-[200px]" aria-label="3 of 5 recruited">
                 {[0, 1, 2, 3, 4].map((i) => (
                   <span key={i} className={i < crewCount ? 'h-3 flex-1 bg-lime' : 'h-3 flex-1 bg-line'} />
                 ))}
               </div>
-              <p className="mt-3 font-term text-lg text-ink/80">3 of 5 recruited \u2014 2 more for Crew Builder II</p>
-              <div className="mt-5 flex flex-wrap gap-3">
+              <p className="mt-3 font-term text-sm text-ink/80">3 of 5 recruited \u2014 2 more for Crew Builder II</p>
+              <div className="mt-4 flex flex-wrap gap-2">
                 <PixelButton href="/card" size="sm" icon={<Share2Icon className="h-3.5 w-3.5" />}>
                   Share invite
                 </PixelButton>
@@ -102,15 +102,15 @@ export default function StudentHome() {
           {/* Bottom Right: Crew Summary */}
           <div className="md:col-span-5 lg:col-span-7 flex md:justify-end self-end pointer-events-auto">
             <Link href="/crew" className="block w-full sm:w-auto">
-              <PixelPanel tone="magenta" className="flex items-center gap-5 bg-void/90 p-4 transition-all hover:bg-void hover:-translate-y-0.5">
+              <PixelPanel tone="magenta" className="flex items-center gap-5 bg-void/90 p-3 sm:p-4 transition-all hover:bg-void hover:-translate-y-0.5">
                 <div>
                   <p className="font-px text-[10px] tracking-widest text-magenta">CREW</p>
-                  <p className="mt-1 font-pixel text-[22px] text-ink">{pad2(crewCount)}</p>
+                  <p className="mt-1 font-pixel text-[18px] text-ink">{pad2(crewCount)}</p>
                 </div>
                 <div className="flex -space-x-3">
                   {CREW.filter((c) => c.degree === 1).map((c) => (
-                    <span key={c.id} className="h-10 w-10 overflow-hidden border-2 border-void bg-deep rounded-sm">
-                      <PixelCharacter config={c.config} size={40} idle={false} shadow={false} showEffect={false} />
+                    <span key={c.id} className="h-8 w-8 overflow-hidden border-2 border-void bg-deep rounded-sm">
+                      <PixelCharacter config={c.config} size={32} idle={false} shadow={false} showEffect={false} />
                     </span>
                   ))}
                 </div>
@@ -155,6 +155,7 @@ export default function StudentHome() {
     </div>
   );
 }
+
 
 
 
