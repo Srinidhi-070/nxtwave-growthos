@@ -16,7 +16,7 @@ import { CREW } from '@/data/crew';
 
 const SIGNALS = [
   { who: 'MEERA', what: 'is now WORKSHOP READY', when: '12m', color: '#b6ff3b' },
-  { who: 'ISHA', what: 'joined via KABIR \u2014 your network grew', when: '41m', color: '#ff3fa4' },
+  { who: 'ISHA', what: 'joined via KABIR — your network grew', when: '41m', color: '#ff3fa4' },
   { who: 'ZOYA', what: 'registered but hasn\'t created an explorer', when: '2h', color: '#ffc94a' }
 ];
 
@@ -37,7 +37,7 @@ export default function StudentHome() {
         </div>
 
         {/* Character Layer - Centered */}
-        <div className="absolute inset-0 z-10 flex items-center justify-center translate-x-[8%] -translate-y-[5%] pointer-events-none">
+        <div className="absolute inset-0 z-10 flex items-center justify-center  pointer-events-none">
           <PixelCharacter config={character} size={220} label={explorerName} />
         </div>
 
@@ -75,7 +75,7 @@ export default function StudentHome() {
           <div className="md:col-span-12 flex-1 min-h-[150px]"></div>
 
           {/* Bottom Left: Current Quest */}
-          <div className="md:col-span-7 lg:col-span-5 pointer-events-auto self-end">
+          <div className="md:col-span-5 lg:col-span-4 pointer-events-auto self-end">
             <PixelPanel tone="lime" className="bg-void/90 p-3 sm:p-4 w-full">
               <div className="flex items-center justify-between">
                 <p className="font-px text-[10px] tracking-widest text-lime">CURRENT QUEST</p>
@@ -87,7 +87,7 @@ export default function StudentHome() {
                   <span key={i} className={i < crewCount ? 'h-3 flex-1 bg-lime' : 'h-3 flex-1 bg-line'} />
                 ))}
               </div>
-              <p className="mt-3 font-term text-sm text-ink/80">3 of 5 recruited \u2014 2 more for Crew Builder II</p>
+              <p className="mt-3 font-term text-sm text-ink/80">3 of 5 recruited — 2 more for Crew Builder II</p>
               <div className="mt-4 flex flex-wrap gap-2">
                 <PixelButton href="/card" size="sm" icon={<Share2Icon className="h-3.5 w-3.5" />}>
                   Share invite
@@ -100,7 +100,7 @@ export default function StudentHome() {
           </div>
 
           {/* Bottom Right: Crew Summary */}
-          <div className="md:col-span-5 lg:col-span-7 flex md:justify-end self-end pointer-events-auto">
+          <div className="md:col-span-7 lg:col-span-8 flex md:justify-end self-end pointer-events-auto">
             <Link href="/crew" className="block w-full sm:w-auto">
               <PixelPanel tone="magenta" className="flex items-center gap-5 bg-void/90 p-3 sm:p-4 transition-all hover:bg-void hover:-translate-y-0.5">
                 <div>
@@ -155,6 +155,7 @@ export default function StudentHome() {
     </div>
   );
 }
+
 
 
 
