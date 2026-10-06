@@ -130,7 +130,7 @@ export default function InitializeId() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-                  className="mt-8 min-h-[260px]">
+                  className="mt-8">
                   
                   {step === 0 &&
                   <PixelInput
