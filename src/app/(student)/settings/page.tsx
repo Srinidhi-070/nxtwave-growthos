@@ -5,21 +5,12 @@ import { LogOutIcon, AlertTriangleIcon } from 'lucide-react';
 import { PixelPanel } from '@/components/pixel/PixelPanel';
 import { PixelButton } from '@/components/pixel/PixelButton';
 import { audio } from '@/utils/audio';
+import { usePlayer } from '@/contexts/PlayerContext';
 
 export default function SettingsPage() {
+  const { sound, toggleSound } = usePlayer();
   const [notifs, setNotifs] = useState(true);
-  const [sound, setSound] = useState(true);
   
-  useEffect(() => {
-    setSound(audio.enabled);
-  }, []);
-
-  const toggleSound = () => {
-    const next = !sound;
-    setSound(next);
-    audio.enabled = next;
-    if (next) audio.success();
-  };
   
   return (
     <div className="relative min-h-[calc(100vh-64px)] overflow-x-hidden p-6 md:p-8">

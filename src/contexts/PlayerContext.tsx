@@ -57,6 +57,22 @@ export function PlayerProvider({ children }: {children: React.ReactNode;}) {
   const [completedQuests, setCompletedQuests] = useState<string[]>([]);
 
   useEffect(() => {
+    audio.enabled = sound;
+    if (sound) {
+      const startOnInteract = () => {
+        audio.startBGM();
+        window.removeEventListener('click', startOnInteract);
+      };
+      window.addEventListener('click', startOnInteract);
+      audio.startBGM();
+      return () => window.removeEventListener('click', startOnInteract);
+    } else {
+      audio.stopBGM();
+    }
+  }, [sound]);
+
+
+  useEffect(() => {
     const fetchProfile = async () => {
       try {
         const userId = localStorage.getItem('growthos_user_id');
