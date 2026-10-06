@@ -16,7 +16,7 @@ import { CREW } from '@/data/crew';
 
 const SIGNALS = [
   { who: 'MEERA', what: 'is now WORKSHOP READY', when: '12m', color: '#b6ff3b' },
-  { who: 'ISHA', what: 'joined via KABIR — your network grew', when: '41m', color: '#ff3fa4' },
+  { who: 'ISHA', what: 'joined via KABIR â€” your network grew', when: '41m', color: '#ff3fa4' },
   { who: 'ZOYA', what: 'registered but hasn\'t created an explorer', when: '2h', color: '#ffc94a' }
 ];
 
@@ -87,7 +87,7 @@ export default function StudentHome() {
                   <span key={i} className={i < crewCount ? 'h-3 flex-1 bg-lime' : 'h-3 flex-1 bg-line'} />
                 ))}
               </div>
-              <p className="mt-3 font-term text-sm text-ink/80">3 of 5 recruited — 2 more for Crew Builder II</p>
+              <p className="mt-3 font-term text-sm text-ink/80">3 of 5 recruited â€” 2 more for Crew Builder II</p>
               <div className="mt-4 flex flex-wrap gap-2">
                 <PixelButton href="/card" size="sm" icon={<Share2Icon className="h-3.5 w-3.5" />}>
                   Share invite
