@@ -134,12 +134,12 @@ export default function ProjectLab() {
 
             </div>
             <CrtOverlay />
-          </div>view > currentStage &&
-            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-center">
-                <span className="bg-void/90 px-3 py-2 font-px text-[10px] tracking-widest text-ink">PREVIEW // YOUR LAB AT {stage.key}</span>
-              </div>
-            }
-          </div>
+                    {view > currentStage &&
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-center z-50">
+              <span className="bg-void/90 px-4 py-2 font-px text-[12px] tracking-widest text-ink border border-line">PREVIEW // YOUR LAB AT {stage.key}</span>
+            </div>
+          }
+        </div>
         </div>
 
         <aside className="flex flex-col gap-6">
