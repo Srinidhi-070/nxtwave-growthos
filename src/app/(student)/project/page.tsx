@@ -71,62 +71,70 @@ export default function ProjectLab() {
 
       <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_360px]">
         <div className="px-frame relative overflow-hidden bg-void [--b:#3b2f8f]">
-          <div className="relative aspect-[16/9]">
+          <div className="relative aspect-[16/9] md:aspect-[21/9]">
             <CircuitBG />
-            <motion.div className="absolute inset-0 bg-void" animate={{ opacity: 0.62 - view * 0.12 }} transition={{ duration: 0.3 }} />
-            <motion.div
-              aria-hidden
-              className="absolute right-[9%] top-[22%] h-[52%] w-[13%]"
-              animate={{ opacity: 0.1 + view * 0.16, backgroundColor: stage.color }}
-              transition={{ duration: 0.3 }}
-              style={{ mixBlendMode: 'screen' }} />
+            <motion.div className="absolute inset-0 bg-void" animate={{ opacity: 0.8 - view * 0.1 }} transition={{ duration: 0.3 }} />
             
             {Array.from({ length: cubes }).map((_, i) =>
-            <motion.span
-              key={`${view}-${i}`}
-              aria-hidden
-              className="absolute h-2.5 w-2.5 md:h-3.5 md:w-3.5"
-              style={{ left: `${30 + seeded(i + 3) * 50}%`, top: `${18 + seeded(i + 9) * 40}%`, background: i % 3 === 0 ? '#ffffff' : stage.color }}
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={reduce ? { opacity: 0.9 } : { opacity: [0.4, 1, 0.4], y: [0, -10, 0], scale: 1 }}
-              transition={{ duration: 3 + seeded(i) * 2, repeat: Infinity, ease: 'easeInOut', delay: i * 0.05 }} />
-
+              <motion.span
+                key={`${view}-${i}`}
+                aria-hidden
+                className="absolute h-2 w-2 md:h-3 md:w-3 shadow-[0_0_10px_currentColor]"
+                style={{ left: `${20 + seeded(i + 3) * 60}%`, top: `${20 + seeded(i + 9) * 60}%`, background: i % 3 === 0 ? '#ffffff' : stage.color, color: i % 3 === 0 ? '#ffffff' : stage.color }}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={reduce ? { opacity: 0.9 } : { opacity: [0.2, 0.8, 0.2], scale: [1, 1.2, 1] }}
+                transition={{ duration: 2 + seeded(i) * 2, repeat: Infinity, ease: 'easeInOut', delay: i * 0.1 }} 
+              />
             )}
-            <div className="absolute bottom-[9%] left-[30%]">
-              <PixelCharacter config={character} size={64} className="md:hidden" />
-              <PixelCharacter config={character} size={104} className="hidden md:inline-block" />
-            </div>
 
-            <div className="absolute left-3 top-3 w-[44%] max-w-[260px] bg-void/90 p-3 md:left-5 md:top-5">
-              <p className="font-px text-[9px] tracking-widest text-mute">PROJECT BOARD</p>
-              <ul className="mt-2 space-y-1">
-                {STAGES[4].board.map((b) => {
-                  const lit = stage.board.includes(b);
-                  return (
-                    <li key={b} className={cn('flex items-center gap-2 font-term text-base md:text-lg', lit ? 'text-ink' : 'text-mute/50')}>
-                      <span className="h-2 w-2" style={{ background: lit ? stage.color : '#2f2670' }} />
-                      {b}
-                    </li>);
+            <div className="absolute inset-4 md:inset-8 flex flex-col md:flex-row gap-4 md:gap-8 pointer-events-none">
+              
+              {/* Left: Project Board */}
+              <div className="px-frame-sm relative flex-1 bg-panel/90 p-5 flex flex-col pointer-events-auto backdrop-blur-sm">
+                <p className="font-px text-[10px] tracking-widest text-mute">PROJECT BOARD</p>
+                <div className="mt-5 flex-1">
+                  <ul className="space-y-4">
+                    {STAGES[4].board.map((b) => {
+                      const lit = stage.board.includes(b);
+                      return (
+                        <li key={b} className={cn('flex items-center gap-3 font-term text-base md:text-lg transition-colors', lit ? 'text-ink' : 'text-mute/30')}>
+                          <span className={cn("h-2.5 w-2.5", lit ? "shadow-[0_0_8px_currentColor]" : "")} style={{ background: lit ? stage.color : '#2f2670', color: stage.color }} />
+                          {b}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              </div>
 
-                })}
-              </ul>
-            </div>
+              {/* Right: Terminal */}
+              <div className="px-frame-sm relative flex-[1.5] bg-void/95 p-5 flex flex-col pointer-events-auto backdrop-blur-sm border-t-[3px]" style={{ borderTopColor: stage.color }}>
+                <div className="flex items-center justify-between border-b-2 border-line pb-3">
+                  <p className="font-px text-[10px] tracking-widest text-mute">TERMINAL</p>
+                  <span className="font-px text-[10px] tracking-widest" style={{ color: stage.color }}>{stage.key}_ENV</span>
+                </div>
+                <div className="mt-4 flex-1">
+                  <AnimatePresence mode="wait">
+                    <motion.div key={view} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="font-term text-lg leading-relaxed">
+                      {stage.term.map((l, i) =>
+                        <p key={i} className={l.includes('=>') ? 'text-lime mt-2' : l.startsWith('>') ? 'text-cyan mt-2' : 'text-mute/80'}>
+                          {l}
+                        </p>
+                      )}
+                      <span className="cursor-blink inline-block h-4 w-2 mt-1" style={{ background: stage.color }} />
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
 
-            <div className="absolute bottom-3 right-3 hidden w-[300px] bg-void/92 p-3 md:block">
-              <p className="font-px text-[9px] tracking-widest text-mute">TERMINAL</p>
-              <AnimatePresence mode="wait">
-                <motion.div key={view} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }} className="mt-2 font-term text-lg leading-tight">
-                  {stage.term.map((l, i) =>
-                  <p key={i} className={l.includes('★') ? 'text-lime' : l.startsWith('>') ? 'text-cyan' : 'text-ink/80'}>
-                      {l}
-                    </p>
-                  )}
-                  <span className="cursor-blink inline-block h-4 w-2 bg-cyan" />
-                </motion.div>
-              </AnimatePresence>
+                {/* Character Overlay */}
+                <div className="absolute -bottom-1 -right-2 md:-bottom-4 md:-right-6 drop-shadow-[0_0_15px_rgba(0,0,0,0.8)]">
+                  <PixelCharacter config={character} size={84} />
+                </div>
+              </div>
+
             </div>
             <CrtOverlay />
-            {view > currentStage &&
+          </div>view > currentStage &&
             <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-center">
                 <span className="bg-void/90 px-3 py-2 font-px text-[10px] tracking-widest text-ink">PREVIEW // YOUR LAB AT {stage.key}</span>
               </div>
