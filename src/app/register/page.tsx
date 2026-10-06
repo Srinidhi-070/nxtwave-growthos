@@ -66,7 +66,7 @@ export default function InitializeId() {
     }
     setCompiling(true);
     // setProfile({ ...form, explorerName: form.name.split(' ')[0].toUpperCase() });
-    setTimeout(() => router.push('/create'), 1100);
+    setTimeout(() => router.push('/character/create'), 1100);
   };
 
   const back = () => {
@@ -86,7 +86,7 @@ export default function InitializeId() {
         </h1>
         <p className="mt-3 font-term text-xl text-mute">Five quick calibrations. About 60 seconds.</p>
 
-        <div className="mt-10 grid gap-10 lg:grid-cols-[260px_1fr]">
+        <div className="mt-10 grid gap-10 lg:grid-cols-[260px_minmax(0,720px)]">
           <ol className="flex gap-2 overflow-x-auto pb-2 no-scrollbar lg:flex-col lg:gap-0 lg:overflow-visible" aria-label="Progress">
             {STEPS.map((s, i) => {
               const state = i < step ? 'done' : i === step ? 'current' : 'todo';
