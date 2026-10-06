@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { //nimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { CheckIcon, LockIcon, SparklesIcon } from 'lucide-react';
 import { PixelWindow } from '@/components/pixel/PixelWindow';
 import { PixelButton } from '@/components/pixel/PixelButton';
