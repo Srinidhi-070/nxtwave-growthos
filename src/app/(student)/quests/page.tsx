@@ -116,12 +116,12 @@ export default function QuestWorld() {
               })}
             </svg>
             {dynamicQuests.map((q, i) =>
-              <div key={q.id} className="absolute -translate-x-1/2 -translate-y-6" style={{ left: `${q.x}%`, top: `${q.y}%` }}>
+              <div key={q.id} className="absolute -translate-x-1/2 -translate-y-1/2" style={{ left: `${q.x}%`, top: `${q.y}%` }}>
                 <PixelQuestNode index={i} title={q.title} state={q.state} selected={q.id === selectedId} onSelect={() => setSelectedId(q.id)} labelSide={q.y > 75 ? 'top' : 'bottom'} />
               </div>
             )}
             {activeNode && (
-              <div className="pointer-events-none absolute -translate-x-1/2 -translate-y-[65px]" style={{ left: `${activeNode.x }%`, top: `${activeNode.y }%` }}>
+              <div className="pointer-events-none absolute -translate-x-1/2 -translate-y-[50px]" style={{ left: `${activeNode.x }%`, top: `${activeNode.y }%` }}>
                 <PixelCharacter config={character} size={28} />
               </div>
             )}
@@ -193,6 +193,8 @@ export default function QuestWorld() {
     </div>
   );
 }
+
+
 
 
 

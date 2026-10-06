@@ -25,7 +25,7 @@ export function PixelQuestNode({ index, title, state, selected, onSelect, labelS
       onClick={onSelect}
       aria-pressed={selected}
       aria-label={`${title}, ${state === 'done' ? 'completed' : state === 'active' ? 'in progress' : 'locked'}`}
-      className={cn('group flex items-center gap-2 focus-visible:outline-none', labelSide === 'top' ? 'flex-col-reverse' : 'flex-col')}>
+      className="group relative flex items-center justify-center focus-visible:outline-none">
       
       <span className="relative flex h-12 w-12 items-center justify-center">
         {state === 'active' && !reduce &&
@@ -59,7 +59,8 @@ export function PixelQuestNode({ index, title, state, selected, onSelect, labelS
       </span>
       <span
         className={cn(
-          'whitespace-nowrap bg-void/90 px-2 py-1 font-px text-[10px] tracking-widest',
+          'absolute whitespace-nowrap bg-void/90 px-2 py-1 font-px text-[10px] tracking-widest z-10',
+          labelSide === 'top' ? 'bottom-full mb-2' : 'top-full mt-2',
           state === 'locked' ? 'text-mute' : state === 'active' ? 'text-cyan' : 'text-lime'
         )}>
         
@@ -68,4 +69,5 @@ export function PixelQuestNode({ index, title, state, selected, onSelect, labelS
     </button>);
 
 }
+
 
