@@ -82,7 +82,7 @@ export default function LoginPage() {
                   <p className="font-term text-lg text-lime">Signal Transmitted.</p>
                   <p className="font-term text-sm text-mute">Check your inbox for the uplink token.</p>
                 </motion.div>
-              ) : (
+              ) : (<>
                 <AnimatePresence>
                   {status === 'loading' && (
                     <motion.div
@@ -133,7 +133,7 @@ export default function LoginPage() {
                     {status === 'loading' ? 'TRANSMITTING...' : 'AUTHENTICATE SESSION'}
                   </PixelButton>
                 </form>
-              )}
+                </>)}
             </div>
           </PixelPanel>
 
