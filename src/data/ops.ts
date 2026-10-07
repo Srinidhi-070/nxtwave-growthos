@@ -1,18 +1,20 @@
 import { NPC_CONFIGS } from './characters';
 import type { CharacterConfig } from '../types/character';
 
-export const CAMPAIGN = { day: 4, totalDays: 7, registrations: 0, target: 500, referred: 0, activeReferrers: 0, characterCompletion: 0, workshopReady: 0 };
+export const CAMPAIGN = { day: 4, totalDays: 7, registrations: 427, target: 500, referred: 286, activeReferrers: 104, characterCompletion: 93.9, workshopReady: 241 };
 
 export const DAILY_REGS = [
-{ day: 'D1', value: 0 },
-{ day: 'D2', value: 0 },
-{ day: 'D3', value: 0 },
-{ day: 'D4', value: 0, partial: true }];
+  { day: 'D1', value: 142 },
+  { day: 'D2', value: 115 },
+  { day: 'D3', value: 95 },
+  { day: 'D4', value: 75, partial: true }
+];
 
 export const PROJECTED_REGS = [
-{ day: 'D5', low: 0, high: 0 },
-{ day: 'D6', low: 0, high: 0 },
-{ day: 'D7', low: 0, high: 0 }];
+  { day: 'D5', low: 45, high: 55 },
+  { day: 'D6', low: 35, high: 45 },
+  { day: 'D7', low: 25, high: 35 }
+];
 
 
 export const FUNNEL = [
