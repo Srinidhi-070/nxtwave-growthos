@@ -131,9 +131,11 @@ export default function InitializeId() {
         setCompiling(false);
         return;
       }
+      sessionStorage.setItem('growthos_new_explorer', '1');
       setTimeout(() => router.push('/character/create'), 1100);
     } catch(e) {
       // offline fallback
+      sessionStorage.setItem('growthos_new_explorer', '1');
       setTimeout(() => router.push('/character/create'), 1100);
     }
   };

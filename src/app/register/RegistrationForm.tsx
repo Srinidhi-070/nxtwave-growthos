@@ -112,6 +112,8 @@ export default function RegistrationForm() {
       // Store auth state
       localStorage.setItem('growthos_user_id', data.data.user.id);
       localStorage.setItem('growthos_referral_code', data.data.user.referralCode);
+      // Mark this as a brand new explorer so the cinematic plays exactly once
+      sessionStorage.setItem('growthos_new_explorer', '1');
       
       addLog('ACCESS GRANTED. REDIRECTING...');
       

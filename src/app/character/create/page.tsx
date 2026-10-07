@@ -92,7 +92,14 @@ export default function CharacterCreator() {
       // 3. Update local cache & transition
       setCharacter(cfg);
       setProfile({ explorerName: clean });
-      if (explorerName && explorerName !== 'GUEST') { router.push('/dashboard'); } else { router.push('/character/init'); }
+      // Use the session flag set during registration — true first-time only
+      const isNewExplorer = sessionStorage.getItem('growthos_new_explorer') === '1';
+      if (isNewExplorer) {
+        sessionStorage.removeItem('growthos_new_explorer'); // consume it — plays only once
+        router.push('/character/init');
+      } else {
+        router.push('/dashboard');
+      }
     } catch (e: any) {
       setNameError(e.message);
     }
