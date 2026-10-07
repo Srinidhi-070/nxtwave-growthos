@@ -34,6 +34,10 @@ export async function POST(req: Request) {
 
     let isNewUser = false;
 
+    if (user) {
+      return NextResponse.json({ error: 'Identity already initialized. Proceed to Login.' }, { status: 409 });
+    }
+
     if (!user) {
       isNewUser = true;
       // 2. Create User

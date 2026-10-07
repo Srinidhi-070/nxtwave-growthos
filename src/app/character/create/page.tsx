@@ -92,7 +92,7 @@ export default function CharacterCreator() {
       // 3. Update local cache & transition
       setCharacter(cfg);
       setProfile({ explorerName: clean });
-      router.push('/character/init');
+      if (explorerName) { router.push('/dashboard'); } else { router.push('/character/init'); }
     } catch (e: any) {
       setNameError(e.message);
     }

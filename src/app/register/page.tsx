@@ -110,7 +110,7 @@ export default function InitializeId() {
     return undefined;
   };
 
-  const next = () => {
+  const next = async () => {
     const err = validate();
     setError(err);
     if (err) return;
@@ -119,8 +119,23 @@ export default function InitializeId() {
       return;
     }
     setCompiling(true);
-    // setProfile({ ...form, explorerName: form.name.split(' ')[0].toUpperCase() });
-    setTimeout(() => router.push('/character/create'), 1100);
+    try {
+      const res = await fetch('/api/registrations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email, collegeId: form.college, referralCode: form.referralCode })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Failed to initialize ID');
+        setCompiling(false);
+        return;
+      }
+      setTimeout(() => router.push('/character/create'), 1100);
+    } catch(e) {
+      // offline fallback
+      setTimeout(() => router.push('/character/create'), 1100);
+    }
   };
 
   const back = () => {

@@ -30,7 +30,7 @@ export function CyberGrid() {
           }}
         >
           {/* Edge fade */}
-          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-void/50 to-void" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#050314_60%)]" />
         </motion.div>
       </div>
     </div>
