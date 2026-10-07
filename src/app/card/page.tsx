@@ -12,15 +12,12 @@ import Link from 'next/link';
 export default function ShareCardPage() {
   const { character, explorerName, college, level, xp } = usePlayer();
   const cardRef = useRef<HTMLDivElement>(null);
+  const [isExporting, setIsExporting] = React.useState(false);
 
     const handleDownload = async () => {
-    if (!cardRef.current) return;
+    if (!cardRef.current || isExporting) return;
+    setIsExporting(true);
     try {
-      // 1. Give some immediate visual feedback if it takes a second
-      const btn = document.activeElement as HTMLElement;
-      if (btn) btn.style.opacity = '0.5';
-
-      // 2. Import html2canvas dynamically so it doesn't inflate initial bundle
       const html2canvas = (await import('html2canvas')).default;
       const canvas = await html2canvas(cardRef.current, { 
         scale: 2, 
@@ -31,12 +28,10 @@ export default function ShareCardPage() {
       const referralLink = `https://growthos.nxtwave.tech/join/${(explorerName || 'GUEST').replace(/\s+/g, '')}`;
       const message = `Join my crew in GrowthOS! Initialize your explorer to join the AI deployment workshop.\n\nLink: ${referralLink}`;
       
-      // 3. Convert to blob
       canvas.toBlob(async (blob) => {
-        if (btn) btn.style.opacity = '1';
-        if (!blob) return;
+        setIsExporting(false);
+        if (!blob) throw new Error("Canvas toBlob failed");
         
-        // 4. Try Native Web Share API (Mobile devices & modern Safari/Edge)
         if (navigator.share && navigator.canShare) {
           const file = new File([blob], 'growthos-crew-card.png', { type: 'image/png' });
           if (navigator.canShare({ files: [file] })) {
@@ -46,14 +41,13 @@ export default function ShareCardPage() {
                 text: message,
                 files: [file]
               });
-              return; // Successfully shared via native modal!
+              return; 
             } catch (e) {
-              console.warn("Native share cancelled or failed, falling back to download...", e);
+              console.warn("Native share cancelled", e);
             }
           }
         }
         
-        // 5. Fallback: Download the image
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -61,20 +55,17 @@ export default function ShareCardPage() {
         a.click();
         URL.revokeObjectURL(url);
         
-        // 6. Copy text to clipboard so user can just hit paste in WhatsApp/Discord
         try {
           await navigator.clipboard.writeText(message);
-          alert('Card downloaded!\n\nInvite link & message copied to your clipboard. You can now paste it anywhere.');
+          alert('Card downloaded!\n\nInvite link copied to clipboard.');
         } catch (clipErr) {
           alert('Card downloaded!');
         }
-        
       }, 'image/png');
-    } catch(err) {
+    } catch(err: any) {
       console.error(err);
-      alert('Failed to synthesize card.');
-      const btn = document.activeElement as HTMLElement;
-      if (btn) btn.style.opacity = '1';
+      setIsExporting(false);
+      alert('Failed to synthesize card: ' + (err?.message || err));
     }
   };
 
@@ -97,7 +88,7 @@ export default function ShareCardPage() {
           >
             <MessageCircleIcon className="w-4 h-4" /> WHATSAPP
           </a>
-          <PixelButton onClick={handleDownload} icon={<DownloadIcon className="w-4 h-4" />}>
+          <PixelButton onClick={handleDownload} disabled={isExporting} className={isExporting ? "opacity-50" : ""} icon={<DownloadIcon className="w-4 h-4" />}>
             EXPORT SIGNAL
           </PixelButton>
         </div>
