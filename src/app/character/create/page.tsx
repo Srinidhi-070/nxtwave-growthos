@@ -114,8 +114,8 @@ export default function CharacterCreator() {
         <SoundToggle />
       </header>
 
-      <main className="relative z-10 mx-auto grid max-w-[1440px] gap-6 px-5 pb-40 md:px-8 lg:grid-cols-[200px_1fr_380px] lg:pb-32">
-        <nav aria-label="Customization categories" className="order-2 lg:order-1">
+      <main className="relative z-10 mx-auto grid max-w-[1440px] w-full min-w-0 gap-6 px-4 pb-[200px] md:pb-48 md:px-8 lg:grid-cols-[200px_minmax(0,1fr)_380px] lg:pb-32 overflow-hidden lg:overflow-visible">
+        <nav aria-label="Customization categories" className="order-2 lg:order-1 min-w-0">
           <ul className="flex gap-2 overflow-x-auto pb-2 no-scrollbar lg:flex-col lg:gap-1.5 lg:overflow-visible">
             {CATEGORIES.map(({ key, Icon }) =>
             <li key={key}>
@@ -173,7 +173,7 @@ export default function CharacterCreator() {
           </dl>
         </section>
 
-        <div className="order-3">
+        <div className="order-3 min-w-0">
           <PixelWindow title={`${cat} // SELECT`} tone="cyan" className="bg-void/85">
             <CategoryOptions cat={cat} cfg={cfg} update={update} />
           </PixelWindow>
@@ -181,7 +181,7 @@ export default function CharacterCreator() {
       </main>
 
       <footer className="fixed inset-x-0 bottom-0 z-30 border-t-2 border-line bg-void/95">
-        <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-5 py-4 md:flex-row md:items-end md:px-8">
+        <div className="mx-auto flex max-w-[1440px] flex-col gap-2 px-4 py-3 md:flex-row md:items-end md:px-8 md:gap-3">
           <div className="flex-1 md:max-w-[420px]">
             <label htmlFor="explorer-name" className="mb-1.5 block font-px text-[10px] tracking-widest text-cyan">
               EXPLORER NAME
@@ -218,7 +218,7 @@ export default function CharacterCreator() {
 }
 
 function CategoryOptions({ cat, cfg, update }: {cat: Category;cfg: CharacterConfig;update: (p: Partial<CharacterConfig>) => void;}) {
-  const grid = 'grid grid-cols-3 gap-3';
+  const grid = 'grid grid-cols-2 sm:grid-cols-3 gap-3';
   if (cat === 'BODY') {
     return (
       <div className={grid} role="radiogroup" aria-label="Skin tone">
