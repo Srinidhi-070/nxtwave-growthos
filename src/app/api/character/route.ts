@@ -18,7 +18,7 @@ export async function GET(req: Request) {
       character = await prisma.character.findUnique({
         where: { userId },
       });
-    } catch (e) {
+    } catch (e: any) {
       console.warn("Database fallback used for GET due to connection error.");
       character = null;
     }
@@ -146,7 +146,7 @@ export async function POST(req: Request) {
           }
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       console.warn("Database fallback used due to connection error:", e.message);
       character = {
         id: "mock-char-123",

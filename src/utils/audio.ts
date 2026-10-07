@@ -25,23 +25,23 @@ class AudioEngine {
       const lfoGain = this.context.createGain();
       lfoGain.gain.setValueAtTime(600, this.context.currentTime); 
       
-      this.bgmLfo.connect(lfoGain);
+      this.bgmLfo?.connect(lfoGain);
       lfoGain.connect(filter.frequency);
       
       this.bgmOsc = [];
       const freqs = [110.00, 164.81, 220.00]; 
       freqs.forEach(f => {
-        const osc = this.context.createOscillator();
+        const osc = this.context!.createOscillator();
         osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(f, this.context.currentTime);
-        osc.connect(this.bgmGain);
+        osc.frequency.setValueAtTime(f, this.context!.currentTime);
+        if (this.bgmGain) osc.connect(this.bgmGain);
         osc.start();
         this.bgmOsc.push(osc);
       });
       
-      this.bgmLfo.start();
+      this.bgmLfo?.start();
       
-      this.bgmGain.connect(filter);
+      if (this.bgmGain) this.bgmGain.connect(filter);
       filter.connect(this.context.destination);
     } catch(e) {
       console.error("BGM Error:", e);

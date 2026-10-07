@@ -44,7 +44,7 @@ const pick = <T,>(arr: readonly T[]): T => arr[Math.floor(Math.random() * arr.le
 
 export default function CharacterCreator() {
   const router = useRouter();
-  const { character, setCharacter, explorerName, setProfile, id: userId } = usePlayer();
+  const { character, setCharacter, explorerName, setProfile, email } = usePlayer();
   const [cfg, setCfg] = useState<CharacterConfig>(character);
   const [cat, setCat] = useState<Category>('HAIR');
   const [name, setName] = useState(explorerName);
@@ -84,7 +84,7 @@ export default function CharacterCreator() {
       const res = await fetch('/api/character', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, config: cfg, displayName: clean })
+        body: JSON.stringify({ userId: email || "demo-" + Math.random().toString(36).substring(7), config: cfg, displayName: clean })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to save character');
