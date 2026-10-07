@@ -13,13 +13,7 @@ export default function ShareCardPage() {
   const { character, explorerName, college, level, xp } = usePlayer();
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const handleWhatsApp = () => {
-    const referralLink = `https://growthos.nxtwave.tech/join/${(explorerName || 'GUEST').replace(/\s+/g, '')}`;
-    const message = `Join my crew in GrowthOS! Initialize your explorer to join the AI deployment workshop.\n\nLink: ${referralLink}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
-  };
-
-  const handleDownload = async () => {
+    const handleDownload = async () => {
     if (!cardRef.current) return;
     try {
       // 1. Give some immediate visual feedback if it takes a second
@@ -95,12 +89,14 @@ export default function ShareCardPage() {
           <ArrowLeftIcon className="w-4 h-4" /> BACK TO DASHBOARD
         </Link>
         <div className="flex items-center gap-3">
-          <button 
-            onClick={handleWhatsApp} 
+          <a 
+            href={`https://api.whatsapp.com/send?text=${encodeURIComponent("Join my crew in GrowthOS! Initialize your explorer to join the AI deployment workshop.\n\nLink: https://growthos.nxtwave.tech/join/" + (explorerName || "GUEST").replace(/\s+/g, ""))}`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="hidden md:flex items-center gap-2 px-4 py-2 border-2 border-lime text-lime hover:bg-lime/10 font-px text-[10px] tracking-widest transition-colors"
           >
             <MessageCircleIcon className="w-4 h-4" /> WHATSAPP
-          </button>
+          </a>
           <PixelButton onClick={handleDownload} icon={<DownloadIcon className="w-4 h-4" />}>
             EXPORT SIGNAL
           </PixelButton>
