@@ -134,7 +134,19 @@ export default function InitializeId() {
       <PixelParticles count={16} colors={['#3ef2ff', '#b6ff3b']} />
       <PublicTopBar label="ID INITIALIZATION" hideCta />
 
-      <main className="relative z-10 mx-auto max-w-[1180px] px-5 pb-16 pt-24 md:px-10 md:pt-28">
+              <AnimatePresence>
+          {compiling && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-void/90 backdrop-blur-sm"
+            >
+              <LoaderIcon className="mb-4 h-8 w-8 animate-spin text-lime" />
+              <TypeLine text="SYNTHESIZING EXPLORER IDENTITY..." className="font-px text-xs tracking-widest text-lime" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <main className="relative z-10 mx-auto max-w-[1180px] px-5 pb-16 pt-24 md:px-10 md:pt-28">
         <h1 className="font-pixel text-[16px] leading-[1.5] text-ink md:text-[26px]">
           INITIALIZE YOUR <span className="text-cyan">GROWTHOS ID</span>
         </h1>
