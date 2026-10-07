@@ -14,11 +14,7 @@ import { pad2, useCountdown } from '@/hooks/useCountdown';
 
 import { CREW } from '@/data/crew';
 
-const SIGNALS = [
-  { who: 'MEERA', what: 'is now WORKSHOP READY', when: '12m', color: '#b6ff3b' },
-  { who: 'ISHA', what: 'joined via KABIR — your network grew', when: '41m', color: '#ff3fa4' },
-  { who: 'ZOYA', what: 'registered but hasn\'t created an explorer', when: '2h', color: '#ffc94a' }
-];
+const SIGNALS: Array<{who: string, what: string, when: string, color: string}> = [];
 
 export default function StudentHome() {
   const { character, explorerName, level, xp, xpMax, crewCount } = usePlayer();
@@ -127,29 +123,35 @@ export default function StudentHome() {
           <h2 className="flex items-center gap-2 font-px text-[11px] tracking-widest text-ink mb-4">
             <ZapIcon className="h-4 w-4 text-cyan" /> CREW SIGNALS
           </h2>
-          <ul className="divide-y-2 divide-line border-t-2 border-line">
-            {SIGNALS.map((s) => (
-              <li key={s.who} className="flex items-start gap-4 py-3">
-                <span className="h-2 w-2 shrink-0 mt-1.5" style={{ background: s.color }} aria-hidden />
-                <p className="flex-1 font-term text-lg sm:text-xl text-ink/90 leading-tight">
-                  <span style={{ color: s.color }}>{s.who}</span> {s.what}
-                </p>
-                <span className="font-px text-[9px] text-mute whitespace-nowrap">{s.when}</span>
-              </li>
-            ))}
-          </ul>
+          {SIGNALS.length > 0 ? (
+              <ul className="divide-y-2 divide-line border-t-2 border-line">
+                {SIGNALS.map((s) => (
+                  <li key={s.who} className="flex items-start gap-4 py-3">
+                    <span className="h-2 w-2 shrink-0 mt-1.5" style={{ background: s.color }} aria-hidden />
+                    <p className="flex-1 font-term text-lg sm:text-xl text-ink/90 leading-tight">
+                      <span style={{ color: s.color }}>{s.who}</span> {s.what}
+                    </p>
+                    <span className="font-px text-[9px] text-mute whitespace-nowrap">{s.when}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="border-t-2 border-line pt-8 pb-4 text-center">
+                <p className="font-term text-lg text-mute">No active crew signals detected.</p>
+              </div>
+            )}
         </div>
         
         <div className="flex flex-col justify-between gap-4 border-2 border-line bg-deep/40 p-5">
           <div>
-            <p className="font-px text-[11px] tracking-widest text-amber">NUDGE AVAILABLE</p>
-            <p className="mt-3 font-term text-xl leading-relaxed text-ink/90">
-              ZOYA is one step from becoming active. A nudge from a crewmate doubles the chance she finishes.
-            </p>
-          </div>
-          <PixelButton href="/crew" variant="ghost" size="sm" icon={<UsersIcon className="h-4 w-4 text-magenta" />} className="self-start mt-4">
-            Open crew
-          </PixelButton>
+            <p className="font-px text-[11px] tracking-widest text-mute">SYSTEM ALERTS</p>
+              <p className="mt-3 font-term text-xl leading-relaxed text-ink/90">
+                Awaiting intelligence... Broadcast your invite link to expand your crew network.
+              </p>
+            </div>
+          <PixelButton href="/crew" variant="ghost" size="sm" icon={<UsersIcon className="h-4 w-4 text-cyan" />} className="self-start mt-4 border-line text-mute hover:text-ink hover:border-cyan">
+              Network Panel
+            </PixelButton>
         </div>
       </section>
     </div>
