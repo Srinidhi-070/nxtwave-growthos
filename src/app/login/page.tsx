@@ -92,19 +92,19 @@ export default function LoginPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="explorer@campus.edu"
-                      className="w-full h-12 bg-deep border-2 border-line/50 focus:border-cyan text-ink font-term text-lg px-4 outline-none transition-colors"
+                      className="w-full h-12 bg-deep border-2 border-line/50 focus:border-cyan text-ink font-mono text-lg px-4 outline-none transition-colors tracking-widest"
                       required
                     />
                       <label htmlFor="password" className="font-px text-[10px] tracking-widest text-cyan mb-2 block mt-4">
                         SECURITY PASSCODE
                       </label>
                       <input
-                        id="password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="��������"
-                        className="w-full h-12 bg-deep border-2 border-line/50 focus:border-cyan text-ink font-term text-lg px-4 outline-none transition-colors"
+                          id="password"
+                          type="password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          placeholder="********"
+                          className="w-full h-12 bg-deep border-2 border-line/50 focus:border-cyan text-ink font-sans text-xl px-4 outline-none transition-colors tracking-widest"
                         required
                       />
                   </div>
