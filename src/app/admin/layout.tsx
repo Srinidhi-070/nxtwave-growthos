@@ -13,16 +13,16 @@ const ADMIN_GROUPS = [
     label: 'TELEMETRY',
     items: [
       { href: '/admin', label: 'Overview', Icon: LayoutDashboardIcon },
-      { href: '/admin', label: 'Funnel Yield', Icon: ActivityIcon },
-      { href: '/admin', label: 'Campus Grid', Icon: MapPinIcon }
+      { href: '/admin/funnel', label: 'Funnel Yield', Icon: ActivityIcon },
+      { href: '/admin/campus', label: 'Campus Grid', Icon: MapPinIcon }
     ]
   },
   {
     label: 'NETWORK',
     items: [
       { href: '/admin/graph', label: 'Referral Graph', Icon: NetworkIcon },
-      { href: '/admin/ai', label: 'Event Stream', Icon: TerminalIcon },
-      { href: '/admin/graph', label: 'Journey Inspector', Icon: UsersIcon }
+      { href: '/admin/telemetry', label: 'Event Stream', Icon: TerminalIcon },
+      { href: '/admin/users', label: 'Journey Inspector', Icon: UsersIcon }
     ]
   },
   {
@@ -31,7 +31,7 @@ const ADMIN_GROUPS = [
       { href: '/admin/ai', label: 'Growth Copilot', Icon: CpuIcon },
       { href: '/admin/experiments', label: 'Experiments', Icon: BeakerIcon },
       { href: '/admin/risk', label: 'Risk & Fraud', Icon: ShieldAlertIcon },
-      { href: '/admin', label: 'System Health', Icon: DatabaseIcon }
+      { href: '/admin/simulator', label: 'Simulator', Icon: DatabaseIcon }
     ]
   }
 ];
@@ -94,7 +94,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
         </div>
       </aside>
-      <main className="relative z-10 flex-1 overflow-y-auto custom-scrollbar">
+      <main className="relative z-10 flex-1 overflow-y-auto custom-scrollbar p-6 md:p-8">
         {children}
       </main>
     </div>

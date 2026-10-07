@@ -29,7 +29,7 @@ export default function OpsOverview() {
 
   return (
     <div className="mx-auto max-w-[1400px]">
-      <OpsPageHeader eyebrow="CAMPAIGN · LIVE · DAY 4 / 7" title="GROWTHOS CONTROL ROOM" />
+      <OpsPageHeader eyebrow="CAMPAIGN // LIVE // DAY 4 / 7" title="GROWTHOS CONTROL ROOM" />
 
       <div className="grid gap-5 xl:grid-cols-[1.5fr_1fr]">
         <OpsPanel title="REGISTRATIONS VS TARGET" meta="updated 4s ago">

@@ -27,10 +27,10 @@ export function OpsPanel({ title, meta, className, bodyClassName, children }: Op
 
 export function OpsPageHeader({ eyebrow, title, right }: {eyebrow: string;title: string;right?: React.ReactNode;}) {
   return (
-    <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <div className="mb-10 flex flex-wrap items-end justify-between gap-4 leading-normal">
       <div>
         <p className="font-px text-[10px] tracking-[0.25em] text-teal">{eyebrow}</p>
-        <h1 className="mt-2 font-pixel text-[16px] text-ink md:text-[20px]">{title}</h1>
+        <h1 className="mt-4 font-pixel text-[18px] text-ink md:text-[24px] leading-relaxed tracking-wide">{title}</h1>
       </div>
       {right}
     </div>);
