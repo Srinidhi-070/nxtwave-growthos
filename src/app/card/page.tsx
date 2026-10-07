@@ -25,7 +25,8 @@ export default function ShareCardPage() {
         backgroundColor: '#050314' 
       });
       
-      const referralLink = `https://growthos.nxtwave.tech/join/${(explorerName || 'GUEST').replace(/\s+/g, '')}`;
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://growthos-ebsm.vercel.app';
+      const referralLink = `${baseUrl}/join/${(explorerName || 'GUEST').replace(/\s+/g, '')}`;
       const message = `Join my crew in GrowthOS! Initialize your explorer to join the AI deployment workshop.\n\nLink: ${referralLink}`;
       
       canvas.toBlob(async (blob) => {
@@ -81,7 +82,7 @@ export default function ShareCardPage() {
         </Link>
         <div className="flex items-center gap-3">
           <a 
-            href={`https://api.whatsapp.com/send?text=${encodeURIComponent("Join my crew in GrowthOS! Initialize your explorer to join the AI deployment workshop.\n\nLink: https://growthos.nxtwave.tech/join/" + (explorerName || "GUEST").replace(/\s+/g, ""))}`}
+            href={`https://api.whatsapp.com/send?text=${encodeURIComponent("Join my crew in GrowthOS! Initialize your explorer to join the AI deployment workshop.\n\nLink: " + (typeof window !== 'undefined' ? window.location.origin : 'https://growthos-ebsm.vercel.app') + "/join/" + (explorerName || "GUEST").replace(/\s+/g, ""))}`}
             target="_blank"
             rel="noopener noreferrer"
             className="hidden md:flex items-center gap-2 px-4 py-2 border-2 border-lime text-lime hover:bg-lime/10 font-px text-[10px] tracking-widest transition-colors"
