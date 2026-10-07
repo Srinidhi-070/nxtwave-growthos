@@ -117,7 +117,7 @@ export default function WorkshopCountdown() {
             transition={{ delay: 0.8, duration: 0.5 }}
             className="lg:col-span-8"
           >
-            <PixelPanel tone="cyan" className="bg-void/95 p-6 md:p-8 h-full flex flex-col shadow-2xl relative">
+            <PixelPanel tone="cyan" className="bg-void/95 p-6 md:p-8 flex flex-col shadow-2xl relative">
               <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
                 <InfoIcon className="w-32 h-32" />
               </div>
