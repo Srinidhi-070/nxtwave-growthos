@@ -40,7 +40,7 @@ export async function GET(req: Request) {
     start(controller) {
       const encoder = new TextEncoder();
       
-      const send = (data) => {
+      const send = (data: any) => {
         controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
       };
 
