@@ -52,8 +52,24 @@ const COLLEGES = [
   'VIT Vellore',
   'Other / Not Listed'
 ];
-const BRANCHES = ['Computer Science', 'Electronics', 'Information Tech', 'Electrical', 'Mechanical', 'AI & Data Science'];
-const YEARS = ['2025', '2026', '2027'];
+const BRANCHES = [
+  'Computer Science & Engineering (CSE)',
+  'Information Science & Engineering (ISE)',
+  'Information Technology (IT)',
+  'Electronics & Communication (ECE)',
+  'Electrical & Electronics (EEE)',
+  'Artificial Intelligence & Machine Learning',
+  'Artificial Intelligence & Data Science',
+  'Cybersecurity',
+  'Robotics & Automation',
+  'Mechanical Engineering',
+  'Civil Engineering',
+  'Aerospace / Aeronautical',
+  'Biotechnology',
+  'Chemical Engineering',
+  'Other / Not Listed'
+];
+const YEARS = ['2024', '2025', '2026', '2027', '2028'];
 
 export default function InitializeId() {
   const router = useRouter();
