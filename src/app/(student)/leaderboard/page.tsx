@@ -26,7 +26,7 @@ export default function Leaderboard() {
     <div className="mx-auto max-w-[1200px] px-4 py-6 md:px-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="font-px text-[11px] tracking-widest text-amber">SEASON 01 · DAY 4 OF 7</p>
+          <p className="font-px text-[11px] tracking-widest text-amber">SEASON 01 // DAY 4 OF 7</p>
           <h1 className="mt-2 font-pixel text-[18px] text-ink md:text-[24px]">CAMPUS CHAMPIONS</h1>
         </div>
         <div role="tablist" aria-label="Leaderboard scope" className="flex">
@@ -78,7 +78,7 @@ export default function Leaderboard() {
                   </span>
                   <span className="mt-2 font-px text-[10px] text-ink">{e.xp.toLocaleString()} XP</span>
                   <span className="mt-1 hidden font-term text-lg text-mute sm:block">
-                    crew {e.crew} · impact {e.impact}
+                    crew {e.crew} // impact {e.impact}
                   </span>
                 </motion.div>
               </div>);
@@ -130,7 +130,7 @@ export default function Leaderboard() {
           </table>
         </div>
         <p className="mt-4 flex items-center gap-2 font-term text-xl text-mute">
-          <ChevronsUpIcon className="h-4 w-4 text-lime" /> {MY_RANK.nextRankXp} XP to pass #26 — two more crew members gets you there.
+          <ChevronsUpIcon className="h-4 w-4 text-lime" /> {MY_RANK.nextRankXp} XP to pass #26 - two more crew members gets you there.
         </p>
       </section>
     </div>);
