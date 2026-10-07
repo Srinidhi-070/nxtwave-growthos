@@ -1,7 +1,7 @@
 'use client';
 import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
-import { DownloadIcon, ArrowLeftIcon, QrCodeIcon } from 'lucide-react';
+import { DownloadIcon, ArrowLeftIcon, QrCodeIcon, MessageCircleIcon } from 'lucide-react';
 import { PixelPanel } from '@/components/pixel/PixelPanel';
 import { PixelButton } from '@/components/pixel/PixelButton';
 import { PixelCharacter } from '@/components/pixel/PixelCharacter';
@@ -12,6 +12,12 @@ import Link from 'next/link';
 export default function ShareCardPage() {
   const { character, explorerName, college, level, xp } = usePlayer();
   const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleWhatsApp = () => {
+    const referralLink = `https://growthos.nxtwave.tech/join/${(explorerName || 'GUEST').replace(/\s+/g, '')}`;
+    const message = `Join my crew in GrowthOS! Initialize your explorer to join the AI deployment workshop.\n\nLink: ${referralLink}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+  };
 
   const handleDownload = async () => {
     if (!cardRef.current) return;
@@ -88,9 +94,17 @@ export default function ShareCardPage() {
         <Link href="/dashboard" className="flex items-center gap-2 text-mute hover:text-ink font-px text-[10px] tracking-widest transition-colors">
           <ArrowLeftIcon className="w-4 h-4" /> BACK TO DASHBOARD
         </Link>
-        <PixelButton onClick={handleDownload} icon={<DownloadIcon className="w-4 h-4" />}>
-          EXPORT SIGNAL
-        </PixelButton>
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={handleWhatsApp} 
+            className="hidden md:flex items-center gap-2 px-4 py-2 border-2 border-lime text-lime hover:bg-lime/10 font-px text-[10px] tracking-widest transition-colors"
+          >
+            <MessageCircleIcon className="w-4 h-4" /> WHATSAPP
+          </button>
+          <PixelButton onClick={handleDownload} icon={<DownloadIcon className="w-4 h-4" />}>
+            EXPORT SIGNAL
+          </PixelButton>
+        </div>
       </div>
 
       <main className="relative z-10 flex-1 flex items-center justify-center p-6">
