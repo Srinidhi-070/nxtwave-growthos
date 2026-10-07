@@ -12,11 +12,15 @@ export default function AdminLogin() {
 
   const handleLogin = () => {
     // Basic prototype protection
-    if (code === 'NXTWAVE2026') {
-      document.cookie = "growthos_admin_session=authorized; path=/";
-      router.push('/admin');
-    } else {
-      setError('ACCESS DENIED. INVALID DIRECTIVE.');
+    try {
+      if (code.trim().toUpperCase() === 'NXTWAVE2026') {
+        document.cookie = "growthos_admin_session=authorized; path=/";
+        window.location.href = '/admin';
+      } else {
+        setError('ACCESS DENIED. INVALID DIRECTIVE.');
+      }
+    } catch (err) {
+      setError('SYSTEM ERROR DURING AUTHENTICATION.');
     }
   };
 

@@ -128,7 +128,7 @@ export default function Landing() {
             
             <div className="flex">
               <PixelButton 
-                href="/admin" 
+                href="/admin/login" 
                 size="md" 
                 variant="ghost" 
                 className="w-full sm:w-auto border-dashed border-magenta/30 hover:bg-magenta/10 hover:border-magenta/50 transition-colors opacity-70 hover:opacity-100"
