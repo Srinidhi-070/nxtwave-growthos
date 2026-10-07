@@ -117,12 +117,12 @@ export default function WorkshopCountdown() {
             transition={{ delay: 0.8, duration: 0.5 }}
             className="lg:col-span-8"
           >
-            <PixelPanel tone="cyan" className="bg-void/95 p-6 md:p-8 flex flex-col shadow-2xl relative">
+            <PixelPanel tone="cyan" className="bg-void/95 p-6 md:p-8 h-full flex flex-col shadow-2xl relative">
               <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
                 <InfoIcon className="w-32 h-32" />
               </div>
               
-              <div className="relative z-10">
+              <div className="relative z-10 flex flex-col flex-1">
                 <p className="font-px text-[11px] tracking-widest text-cyan mb-4">MISSION BRIEFING</p>
                 <h2 className="font-pixel text-[18px] leading-[1.4] text-ink md:text-[24px]">
                   BUILD YOUR FIRST AI PROJECT <span className="text-cyan text-glow-cyan">IN 60 MINUTES</span>
@@ -146,7 +146,7 @@ export default function WorkshopCountdown() {
                   ))}
                 </div>
 
-                <div className="mt-10 flex flex-col gap-4 sm:flex-row border-t border-line/50 pt-8">
+                <div className="mt-auto pt-8 flex flex-col gap-4 sm:flex-row border-t border-line/50">
                   <PixelButton size="lg" disabled={!isLive} icon={isLive ? undefined : <LockIcon className="h-4 w-4" />} className="sm:flex-1 relative group">
                     <span className="tracking-widest">{isLive ? 'INITIALIZE CONNECTION' : 'SYSTEM LOCKED'}</span>
                   </PixelButton>
