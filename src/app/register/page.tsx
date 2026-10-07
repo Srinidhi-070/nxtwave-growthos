@@ -83,7 +83,7 @@ export default function InitializeId() {
     college: 'PES University',
     branch: initialStep > 2 ? 'Computer Science' : '',
     gradYear: initialStep > 2 ? '2026' : '',
-    email: initialStep > 3 ? 'srinidhi@pes.edu' : '', referralCode: '', password: '', password: ''
+    email: initialStep > 3 ? 'srinidhi@pes.edu' : '', referralCode: '', password: ''
   } :
   { name: '', college: '', branch: '', gradYear: '', email: '', referralCode: '', password: '' }
   );
