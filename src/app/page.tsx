@@ -99,30 +99,46 @@ export default function Landing() {
             initial={{ opacity: 1, y: 0 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 0.4 }}
-            className="flex flex-col sm:flex-row gap-5 pt-4"
+            className="flex flex-col gap-4 pt-4"
           >
-            <PixelButton 
-              href="/register" 
-              size="lg" 
-              className="w-full sm:w-auto relative group shadow-[0_0_15px_rgba(182,255,59,0.3)] hover:shadow-[0_0_25px_rgba(182,255,59,0.6)] transition-shadow"
-            >
-              <div className="flex items-center gap-3 px-2">
-                <span className="tracking-widest">START JOURNEY (SIGN UP)</span>
-                <ArrowRightIcon className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </PixelButton>
+            <div className="flex flex-col sm:flex-row gap-5">
+              <PixelButton 
+                href="/register" 
+                size="lg" 
+                className="w-full sm:w-auto relative group shadow-[0_0_15px_rgba(182,255,59,0.3)] hover:shadow-[0_0_25px_rgba(182,255,59,0.6)] transition-shadow"
+              >
+                <div className="flex items-center gap-3 px-2">
+                  <span className="tracking-widest">START JOURNEY (SIGN UP)</span>
+                  <ArrowRightIcon className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </PixelButton>
+              
+              <PixelButton 
+                href="/login" 
+                size="lg" 
+                variant="ghost" 
+                className="w-full sm:w-auto hover:bg-cyan/10 hover:border-cyan/50 transition-colors"
+              >
+                <div className="flex items-center gap-3 px-2">
+                  <TerminalIcon className="h-4 w-4 text-cyan" />
+                  <span className="tracking-widest text-cyan">LOGIN TO PORTAL</span>
+                </div>
+              </PixelButton>
+            </div>
             
-            <PixelButton 
-              href="/login" 
-              size="lg" 
-              variant="ghost" 
-              className="w-full sm:w-auto hover:bg-cyan/10 hover:border-cyan/50 transition-colors"
-            >
-              <div className="flex items-center gap-3 px-2">
-                <TerminalIcon className="h-4 w-4 text-cyan" />
-                <span className="tracking-widest text-cyan">LOGIN TO PORTAL</span>
-              </div>
-            </PixelButton>
+            <div className="flex">
+              <PixelButton 
+                href="/admin" 
+                size="md" 
+                variant="ghost" 
+                className="w-full sm:w-auto border-dashed border-magenta/30 hover:bg-magenta/10 hover:border-magenta/50 transition-colors opacity-70 hover:opacity-100"
+              >
+                <div className="flex items-center gap-3 px-2 py-1">
+                  <TerminalIcon className="h-3 w-3 text-magenta" />
+                  <span className="tracking-widest text-magenta font-px text-[10px]">ADMIN OVERRIDE</span>
+                </div>
+              </PixelButton>
+            </div>
           </motion.div>
         </motion.div>
       </main>
