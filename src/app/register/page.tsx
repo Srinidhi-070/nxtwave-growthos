@@ -22,7 +22,36 @@ const STEPS = [
 { key: 'CREATE EXPLORER', prompt: 'ID compiled. Ready to forge your explorer.' }];
 
 
-const COLLEGES = ['PES University', 'RV College of Engineering', 'VIT Vellore', 'SRM Chennai', 'Manipal Institute of Technology', 'NIT Trichy', 'CBIT Hyderabad', 'Anna University'];
+const COLLEGES = [
+  'Anna University',
+  'BMS College of Engineering',
+  'BITS Pilani',
+  'CBIT Hyderabad',
+  'Christ University',
+  'Dayananda Sagar College of Engineering',
+  'Delhi Technological University (DTU)',
+  'IIT Bombay',
+  'IIT Delhi',
+  'IIT Kanpur',
+  'IIT Kharagpur',
+  'IIT Madras',
+  'IIT Roorkee',
+  'IIIT Bangalore',
+  'IIIT Hyderabad',
+  'Jadavpur University',
+  'JNTU Hyderabad',
+  'Manipal Institute of Technology',
+  'MSRIT (Ramaiah Institute of Technology)',
+  'NIT Karnataka (Surathkal)',
+  'NIT Trichy',
+  'NIT Warangal',
+  'Osmania University',
+  'PES University',
+  'RV College of Engineering',
+  'SRM Institute of Science and Technology',
+  'VIT Vellore',
+  'Other / Not Listed'
+];
 const BRANCHES = ['Computer Science', 'Electronics', 'Information Tech', 'Electrical', 'Mechanical', 'AI & Data Science'];
 const YEARS = ['2025', '2026', '2027'];
 
