@@ -67,7 +67,7 @@ export default function LoginPage() {
               
               <h1 className="font-pixel text-[20px] text-ink mb-2">ACCESS TERMINAL</h1>
               <p className="font-term text-base text-mute mb-8">
-                Request a secure magic link to re-enter the GrowthOS campus.
+                Enter your authorized Explorer ID and password to access the portal.
               </p>
 
               {status === 'sent' ? (
@@ -95,6 +95,18 @@ export default function LoginPage() {
                       className="w-full h-12 bg-deep border-2 border-line/50 focus:border-cyan text-ink font-term text-lg px-4 outline-none transition-colors"
                       required
                     />
+                      <label htmlFor="password" className="font-px text-[10px] tracking-widest text-cyan mb-2 block mt-4">
+                        SECURITY PASSCODE
+                      </label>
+                      <input
+                        id="password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="��������"
+                        className="w-full h-12 bg-deep border-2 border-line/50 focus:border-cyan text-ink font-term text-lg px-4 outline-none transition-colors"
+                        required
+                      />
                   </div>
 
                   <PixelButton 
@@ -104,7 +116,7 @@ export default function LoginPage() {
                     icon={status === 'loading' ? <LoaderIcon className="w-5 h-5 animate-spin" /> : undefined}
                     className="w-full justify-center"
                   >
-                    {status === 'loading' ? 'TRANSMITTING...' : 'REQUEST UPLINK'}
+                    {status === 'loading' ? 'TRANSMITTING...' : 'AUTHENTICATE SESSION'}
                   </PixelButton>
                 </form>
               )}
