@@ -1,6 +1,7 @@
 <div align="center">
 
-# NXTWAVE GROWTHOS
+<img src="./public/logo.svg" alt="GrowthOS Logo" width="300" />
+
 
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=20&pause=1000&color=3EF2FF&center=true&vCenter=true&width=600&lines=Gamified+AI+Deployment+Workshop;Immersive+Terminal+OS+Experience;Dynamic+Viral+Referral+Engine" alt="Typing Animation" />
 
@@ -102,4 +103,5 @@ npm run dev
 `
 
 > The system will initialize and become available at http://localhost:3000.
+
 
