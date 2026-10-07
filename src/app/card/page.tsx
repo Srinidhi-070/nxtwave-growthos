@@ -13,9 +13,69 @@ export default function ShareCardPage() {
   const { character, explorerName, college, level, xp } = usePlayer();
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const handleDownload = () => {
-    // In a real app, use html2canvas to capture the cardRef
-    alert("Synthesizing image... (Download simulated)");
+  const handleDownload = async () => {
+    if (!cardRef.current) return;
+    try {
+      // 1. Give some immediate visual feedback if it takes a second
+      const btn = document.activeElement as HTMLElement;
+      if (btn) btn.style.opacity = '0.5';
+
+      // 2. Import html2canvas dynamically so it doesn't inflate initial bundle
+      const html2canvas = (await import('html2canvas')).default;
+      const canvas = await html2canvas(cardRef.current, { 
+        scale: 2, 
+        useCORS: true, 
+        backgroundColor: '#050314' 
+      });
+      
+      const referralLink = `https://growthos.nxtwave.tech/join/${(explorerName || 'GUEST').replace(/\s+/g, '')}`;
+      const message = `Join my crew in GrowthOS! Initialize your explorer to join the AI deployment workshop.\n\nLink: ${referralLink}`;
+      
+      // 3. Convert to blob
+      canvas.toBlob(async (blob) => {
+        if (btn) btn.style.opacity = '1';
+        if (!blob) return;
+        
+        // 4. Try Native Web Share API (Mobile devices & modern Safari/Edge)
+        if (navigator.share && navigator.canShare) {
+          const file = new File([blob], 'growthos-crew-card.png', { type: 'image/png' });
+          if (navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({
+                title: 'GrowthOS Crew Invite',
+                text: message,
+                files: [file]
+              });
+              return; // Successfully shared via native modal!
+            } catch (e) {
+              console.warn("Native share cancelled or failed, falling back to download...", e);
+            }
+          }
+        }
+        
+        // 5. Fallback: Download the image
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'growthos-crew-card.png';
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        // 6. Copy text to clipboard so user can just hit paste in WhatsApp/Discord
+        try {
+          await navigator.clipboard.writeText(message);
+          alert('Card downloaded!\n\nInvite link & message copied to your clipboard. You can now paste it anywhere.');
+        } catch (clipErr) {
+          alert('Card downloaded!');
+        }
+        
+      }, 'image/png');
+    } catch(err) {
+      console.error(err);
+      alert('Failed to synthesize card.');
+      const btn = document.activeElement as HTMLElement;
+      if (btn) btn.style.opacity = '1';
+    }
   };
 
   return (
