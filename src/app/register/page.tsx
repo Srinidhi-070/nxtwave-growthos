@@ -83,9 +83,9 @@ export default function InitializeId() {
     college: 'PES University',
     branch: initialStep > 2 ? 'Computer Science' : '',
     gradYear: initialStep > 2 ? '2026' : '',
-    email: initialStep > 3 ? 'srinidhi@pes.edu' : '', referralCode: ''
+    email: initialStep > 3 ? 'srinidhi@pes.edu' : '', referralCode: '', password: '', password: ''
   } :
-  { name: '', college: '', branch: '', gradYear: '', email: '', referralCode: '' }
+  { name: '', college: '', branch: '', gradYear: '', email: '', referralCode: '', password: '' }
   );
   const [error, setError] = useState<string | undefined>();
   const [query, setQuery] = useState('');
@@ -106,6 +106,7 @@ export default function InitializeId() {
     if (step === 1 && !form.college) return 'Select your campus to continue.';
     if (step === 2 && (!form.branch || !form.gradYear)) return 'Choose a branch and graduation year.';
     if (step === 3 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) return 'That email address looks invalid.';
+    if (step === 3 && form.password.length < 6) return 'Passcode must be at least 6 characters.';
     return undefined;
   };
 
@@ -254,7 +255,14 @@ export default function InitializeId() {
                         onChange={(e) => setForm({ ...form, email: e.target.value })}
                         onKeyDown={(e) => e.key === 'Enter' && next()}
                         error={error}
-                        hint="We'll send a magic sign-in link. No password to remember." 
+                      />
+                      <PixelInput
+                        label="CREATE PASSCODE"
+                        type="password"
+                        placeholder="Minimum 6 characters"
+                        value={form.password || ''}
+                        onChange={(e) => setForm({ ...form, password: e.target.value })}
+                        onKeyDown={(e) => e.key === 'Enter' && next()}
                       />
                       <PixelInput
                         label="REFERRAL CODE (OPTIONAL)"

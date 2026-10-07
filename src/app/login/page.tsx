@@ -8,6 +8,8 @@ import { PixelButton } from '@/components/pixel/PixelButton';
 import { CrtOverlay } from '@/components/pixel/CrtOverlay';
 import { PixelParticles } from '@/components/pixel/PixelParticles';
 import { IMAGES } from '@/data/images';
+import { TypeLine } from '@/components/pixel/TypeLine';
+import { AnimatePresence } from 'framer-motion';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -81,6 +83,18 @@ export default function LoginPage() {
                   <p className="font-term text-sm text-mute">Check your inbox for the uplink token.</p>
                 </motion.div>
               ) : (
+                <AnimatePresence>
+                  {status === 'loading' && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-void/90 backdrop-blur-sm"
+                    >
+                      <LoaderIcon className="mb-4 h-8 w-8 animate-spin text-lime" />
+                      <TypeLine text="ESTABLISHING SECURE UPLINK..." className="font-px text-xs tracking-widest text-lime" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
                 <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6">
                   <div className="text-left">
                     <label htmlFor="email" className="font-px text-[10px] tracking-widest text-cyan mb-2 block">
