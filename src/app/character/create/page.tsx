@@ -47,7 +47,7 @@ export default function CharacterCreator() {
   const { character, setCharacter, explorerName, setProfile, email } = usePlayer();
   const [cfg, setCfg] = useState<CharacterConfig>(character);
   const [cat, setCat] = useState<Category>('HAIR');
-  const [name, setName] = useState(explorerName);
+  const [name, setName] = useState(explorerName === 'GUEST' ? '' : explorerName);
   const [nameError, setNameError] = useState<string | undefined>();
   const [rollKey, setRollKey] = useState(0);
 
@@ -92,7 +92,7 @@ export default function CharacterCreator() {
       // 3. Update local cache & transition
       setCharacter(cfg);
       setProfile({ explorerName: clean });
-      if (explorerName) { router.push('/dashboard'); } else { router.push('/character/init'); }
+      if (explorerName && explorerName !== 'GUEST') { router.push('/dashboard'); } else { router.push('/character/init'); }
     } catch (e: any) {
       setNameError(e.message);
     }
