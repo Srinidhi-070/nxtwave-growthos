@@ -83,13 +83,21 @@ export default function InitializeId() {
     college: 'PES University',
     branch: initialStep > 2 ? 'Computer Science' : '',
     gradYear: initialStep > 2 ? '2026' : '',
-    email: initialStep > 3 ? 'srinidhi@pes.edu' : ''
+    email: initialStep > 3 ? 'srinidhi@pes.edu' : '', referralCode: ''
   } :
-  { name: '', college: '', branch: '', gradYear: '', email: '' }
+  { name: '', college: '', branch: '', gradYear: '', email: '', referralCode: '' }
   );
   const [error, setError] = useState<string | undefined>();
   const [query, setQuery] = useState('');
   const [compiling, setCompiling] = useState(false);
+  
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+    if (ref) {
+      setForm(prev => ({ ...prev, referralCode: ref }));
+    }
+  }, []);
 
   const colleges = useMemo(() => COLLEGES.filter((c) => c.toLowerCase().includes(query.toLowerCase())), [query]);
 
@@ -235,19 +243,29 @@ export default function InitializeId() {
                     </div>
                   }
 
-                  {step === 3 &&
-                  <PixelInput
-                    label="EMAIL"
-                    type="email"
-                    placeholder="you@college.edu"
-                    value={form.email}
-                    autoFocus
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    onKeyDown={(e) => e.key === 'Enter' && next()}
-                    error={error}
-                    hint="We'll send a magic sign-in link. No password to remember." />
-
-                  }
+                  {step === 3 && (
+                    <div className="space-y-6">
+                      <PixelInput
+                        label="EMAIL"
+                        type="email"
+                        placeholder="you@college.edu"
+                        value={form.email}
+                        autoFocus
+                        onChange={(e) => setForm({ ...form, email: e.target.value })}
+                        onKeyDown={(e) => e.key === 'Enter' && next()}
+                        error={error}
+                        hint="We'll send a magic sign-in link. No password to remember." 
+                      />
+                      <PixelInput
+                        label="REFERRAL CODE (OPTIONAL)"
+                        type="text"
+                        placeholder="Enter code if you have one"
+                        value={form.referralCode || ''}
+                        onChange={(e) => setForm({ ...form, referralCode: e.target.value.toUpperCase() })}
+                        onKeyDown={(e) => e.key === 'Enter' && next()}
+                      />
+                    </div>
+                  )}
 
                   {step === 4 &&
                   <div className="grid gap-px bg-line sm:grid-cols-2">
@@ -257,6 +275,7 @@ export default function InitializeId() {
                     ['BRANCH', form.branch],
                     ['CLASS OF', form.gradYear],
                     ['EMAIL', form.email],
+                      ['REFERRAL', form.referralCode || 'NONE'],
                     ['STATUS', 'READY TO FORGE']].
                     map(([k, v]) =>
                     <div key={k} className="bg-void p-4">

@@ -107,20 +107,20 @@ export default function Landing() {
               className="w-full sm:w-auto relative group shadow-[0_0_15px_rgba(182,255,59,0.3)] hover:shadow-[0_0_25px_rgba(182,255,59,0.6)] transition-shadow"
             >
               <div className="flex items-center gap-3 px-2">
-                <span className="tracking-widest">ENTER GROWTHOS</span>
+                <span className="tracking-widest">START JOURNEY (SIGN UP)</span>
                 <ArrowRightIcon className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </div>
             </PixelButton>
             
             <PixelButton 
-              href="/workshop" 
+              href="/login" 
               size="lg" 
               variant="ghost" 
               className="w-full sm:w-auto hover:bg-cyan/10 hover:border-cyan/50 transition-colors"
             >
               <div className="flex items-center gap-3 px-2">
                 <TerminalIcon className="h-4 w-4 text-cyan" />
-                <span className="tracking-widest text-cyan">EXPLORE WORKSHOP</span>
+                <span className="tracking-widest text-cyan">LOGIN TO PORTAL</span>
               </div>
             </PixelButton>
           </motion.div>

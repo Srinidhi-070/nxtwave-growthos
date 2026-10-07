@@ -22,9 +22,9 @@ export function PublicTopBar({ label, hideCta }: PublicTopBarProps) {
 
           <nav className="hidden items-center gap-5 md:flex" aria-label="Public">
               {[
-            { to: '/workshop', label: 'Workshop' },
-            { to: '/dashboard', label: 'Campus' },
-            { to: '/leaderboard', label: 'Champions' }].
+            { to: '/login', label: 'Login' },
+            { to: '/admin', label: 'Admin (Staff)' },
+            ].
             map((l) =>
             <Link
               key={l.to}

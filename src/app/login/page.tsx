@@ -11,11 +11,14 @@ import { IMAGES } from '@/data/images';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'sent'>('idle');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || !password) return;
+    e.preventDefault();
+
     setStatus('loading');
     // Simulate auth request
     setTimeout(() => {
