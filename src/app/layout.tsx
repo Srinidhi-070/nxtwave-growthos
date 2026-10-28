@@ -2,17 +2,20 @@ import type { Metadata } from "next";
 
 import "./globals.css";
 
-
-
-
+import { PlayerProvider } from '@/contexts/PlayerContext';
+import { ClientMotionConfig } from '@/components/layout/ClientMotionConfig';
 
 export const metadata: Metadata = {
   title: "GrowthOS | AI Workshop",
   description: "Build Your First AI Project in 60 Minutes",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
-
-import { PlayerProvider } from '@/contexts/PlayerContext';
-import { ClientMotionConfig } from '@/components/layout/ClientMotionConfig';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -27,9 +30,3 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
-
-
-
-
-
-
